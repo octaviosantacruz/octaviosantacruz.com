@@ -1,5 +1,19 @@
 :root {
-	color-scheme: light dark;
+	color-scheme: dark;
+
+	--bg: #0d0f10;
+	--bg-elevated: #16191b;
+	--fg: #ece7e0;
+	--fg-muted: #948d82;
+	--border: #2a2d2e;
+	--accent: #ece7e0;
+	--accent-dim: rgba(236, 231, 224, 0.14);
+
+	--font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	--font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+	--sidebar-width: 24rem;
+	--content-max-width: 40rem;
 }
 
 *,
@@ -8,16 +22,56 @@
 	box-sizing: border-box;
 }
 
+html {
+	scrollbar-gutter: stable;
+}
+
 body {
 	margin: 0;
-	font-family: system-ui, sans-serif;
-	line-height: 1.5;
+	background: var(--bg);
+	color: var(--fg);
+	font-family: var(--font-sans);
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
 }
 
 img,
 svg {
 	max-width: 100%;
 	display: block;
+}
+
+a {
+	color: inherit;
+}
+
+::selection {
+	background: var(--accent-dim);
+	color: var(--fg);
+}
+
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+}
+
+.skip-link {
+	position: absolute;
+	top: -3rem;
+	left: 1rem;
+	z-index: 100;
+	padding: 0.6rem 1rem;
+	background: var(--bg-elevated);
+	color: var(--fg);
+	border: 1px solid var(--border);
+	border-radius: 0.25rem;
+	font-family: var(--font-mono);
+	font-size: 0.875rem;
+	transition: top 0.15s ease;
+}
+
+.skip-link:focus-visible {
+	top: 1rem;
 }
 
 nav ul {
