@@ -1,5 +1,7 @@
 ---
+import { getRelativeLocaleUrl } from "astro:i18n";
 import { SITE, PERSON } from "../consts";
+import { translations, type Locale } from "../i18n/translations";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/500.css";
 import "../styles/global.css";
@@ -9,10 +11,15 @@ interface Props {
 	description?: string;
 }
 
-const { title = SITE.title, description = SITE.description } = Astro.props;
+const locale = (Astro.currentLocale ?? "es") as Locale;
+const t = translations[locale];
+
+const { title = t.siteTitle, description = t.siteDescription } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL("og-image.png", Astro.site);
+const esURL = new URL(getRelativeLocaleUrl("es", "/"), Astro.site);
+const enURL = new URL(getRelativeLocaleUrl("en", "/"), Astro.site);
 
 const personSchema = {
 	"@context": "https://schema.org",
@@ -32,9 +39,44 @@ const personSchema = {
 ---
 
 <!doctype html>
-<html lang={SITE.locale}>
+<html lang={locale}>
 	<head>
 		<meta charset="utf-8" />
+
+		<script is:inline>
+			(function () {
+				var COOKIE = "pref_locale";
+
+				function getCookie(name) {
+					var match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+					return match ? decodeURIComponent(match[1]) : null;
+				}
+
+				function setCookie(name, value) {
+					document.cookie = name + "=" + value + ";path=/;max-age=31536000;samesite=lax";
+				}
+
+				var currentLocale = document.documentElement.lang === "en" ? "en" : "es";
+				var pref = getCookie(COOKIE);
+
+				if (pref) {
+					if (pref !== currentLocale) setCookie(COOKIE, currentLocale);
+					return;
+				}
+
+				var browserWantsEnglish = (navigator.language || "es").slice(0, 2).toLowerCase() !== "es";
+				setCookie(COOKIE, currentLocale);
+				if (browserWantsEnglish === (currentLocale === "en")) return;
+
+				var path = location.pathname;
+				var target = browserWantsEnglish
+					? "/en" + (path === "/" ? "/" : path)
+					: path.replace(/^\/en(\/|$)/, "/") || "/";
+
+				if (target !== path) location.replace(target + location.search + location.hash);
+			})();
+		</script>
+
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
@@ -47,6 +89,9 @@ const personSchema = {
 		<meta name="description" content={description} />
 		<meta name="author" content={SITE.author} />
 		<link rel="canonical" href={canonicalURL} />
+		<link rel="alternate" hreflang="es" href={esURL} />
+		<link rel="alternate" hreflang="en" href={enURL} />
+		<link rel="alternate" hreflang="x-default" href={esURL} />
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
@@ -54,7 +99,7 @@ const personSchema = {
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={ogImageURL} />
-		<meta property="og:locale" content="es_PY" />
+		<meta property="og:locale" content={t.ogLocale} />
 		<meta property="og:site_name" content={SITE.name} />
 
 		<!-- Twitter -->

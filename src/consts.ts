@@ -1,10 +1,6 @@
 export const SITE = {
 	name: "Octavio Santacruz",
 	url: "https://octaviosantacruz.com",
-	title: "Octavio Santacruz — Security Operations Analyst",
-	description:
-		"Portfolio profesional de Octavio Santacruz, Security Operations Analyst / ingeniero en seguridad basado en Paraguay.",
-	locale: "es",
 	author: "Octavio Santacruz",
 } as const;
 
@@ -22,10 +18,11 @@ export const PERSON = {
 	],
 } as const;
 
-export const NAV_LINKS = [
-	{ href: "#sobre-mi", label: "Sobre mí" },
-	{ href: "#experiencia", label: "Experiencia" },
-	{ href: "#certificaciones", label: "Certificaciones" },
-	{ href: "#proyectos", label: "Proyectos" },
-	{ href: "#contacto", label: "Contacto" },
+// Anchors are language-agnostic; labels come from src/i18n/translations.ts.
+export const NAV_SECTIONS = [
+	{ href: "#sobre-mi", key: "sobreMi" },
+	{ href: "#experiencia", key: "experiencia" },
+	{ href: "#certificaciones", key: "certificaciones" },
+	{ href: "#proyectos", key: "proyectos" },
+	{ href: "#contacto", key: "contacto" },
 ] as const;

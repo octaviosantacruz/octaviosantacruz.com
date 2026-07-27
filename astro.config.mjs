@@ -7,4 +7,11 @@ export default defineConfig({
 	site: 'https://octaviosantacruz.com',
 	output: 'static',
 	integrations: [sitemap()],
+	i18n: {
+		defaultLocale: 'es',
+		locales: ['es', 'en'],
+		routing: {
+			prefixDefaultLocale: false,
+		},
+	},
 });

@@ -175,6 +175,31 @@ a {
 	background: var(--accent);
 }
 
+.lang-switch {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-top: 2rem;
+	font-family: var(--font-mono);
+	font-size: 0.75rem;
+}
+
+.lang-switch a {
+	text-decoration: none;
+	color: var(--fg-muted);
+	transition: color 0.2s ease;
+}
+
+.lang-switch a:hover,
+.lang-switch a:focus-visible,
+.lang-switch a[aria-current="page"] {
+	color: var(--fg);
+}
+
+.lang-switch span {
+	color: var(--fg-muted);
+}
+
 .content {
 	padding: 0 1.5rem 2rem;
 }

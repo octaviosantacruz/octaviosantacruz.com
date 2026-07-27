@@ -1,0 +1,100 @@
+---
+import TriangleMark from "./TriangleMark.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { SITE, PERSON, NAV_SECTIONS } from "../consts";
+import { translations, type Locale } from "../i18n/translations";
+
+const locale = (Astro.currentLocale ?? "es") as Locale;
+const t = translations[locale];
+---
+
+<a class="skip-link" href="#contenido">{t.skipLink}</a>
+
+<div class="layout">
+	<header class="sidebar">
+		<div class="sidebar-inner">
+			<a href="#top" class="brand">
+				<TriangleMark class="brand-mark" />
+			</a>
+
+			<h1>{PERSON.fullName}</h1>
+			<p class="role">{PERSON.jobTitle}</p>
+			<p class="location">{t.location}</p>
+
+			<nav aria-label={t.navLabel}>
+				<ul>
+					{
+						NAV_SECTIONS.map((section) => (
+							<li>
+								<a href={section.href} data-nav-link>
+									<span class="nav-line" aria-hidden="true" />
+									{t.nav[section.key]}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</nav>
+
+			<LanguageSwitcher />
+		</div>
+	</header>
+
+	<main id="top" class="content">
+		<div id="contenido">
+			<section id="sobre-mi" aria-labelledby="sobre-mi-heading" class="reveal">
+				<h2 id="sobre-mi-heading">
+					<span class="section-num" aria-hidden="true">{t.sections.sobreMi.num}</span>{
+						t.sections.sobreMi.title
+					}
+				</h2>
+				<p><!-- TODO: bio real / real bio --></p>
+			</section>
+
+			<section id="experiencia" aria-labelledby="experiencia-heading" class="reveal">
+				<h2 id="experiencia-heading">
+					<span class="section-num" aria-hidden="true">{t.sections.experiencia.num}</span>{
+						t.sections.experiencia.title
+					}
+				</h2>
+				<p><!-- TODO: experiencia laboral / work experience --></p>
+			</section>
+
+			<section id="certificaciones" aria-labelledby="certificaciones-heading" class="reveal">
+				<h2 id="certificaciones-heading">
+					<span class="section-num" aria-hidden="true">{t.sections.certificaciones.num}</span>{
+						t.sections.certificaciones.title
+					}
+				</h2>
+				<p><!-- TODO: certificaciones / certifications --></p>
+			</section>
+
+			<section id="proyectos" aria-labelledby="proyectos-heading" class="reveal">
+				<h2 id="proyectos-heading">
+					<span class="section-num" aria-hidden="true">{t.sections.proyectos.num}</span>{
+						t.sections.proyectos.title
+					}
+				</h2>
+				<p><!-- TODO: proyectos destacados / featured projects --></p>
+			</section>
+
+			<section id="contacto" aria-labelledby="contacto-heading" class="reveal">
+				<h2 id="contacto-heading">
+					<span class="section-num" aria-hidden="true">{t.sections.contacto.num}</span>{
+						t.sections.contacto.title
+					}
+				</h2>
+				<p><!-- TODO: información de contacto / contact information --></p>
+			</section>
+		</div>
+
+		<footer>
+			<TriangleMark class="footer-mark" />
+			<p>&copy; {new Date().getFullYear()} {SITE.name}</p>
+		</footer>
+	</main>
+</div>
+
+<script>
+	import "../scripts/scroll-spy";
+</script>
