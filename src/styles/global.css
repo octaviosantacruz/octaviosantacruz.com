@@ -26,6 +26,12 @@ html {
 	scrollbar-gutter: stable;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
 body {
 	margin: 0;
 	background: var(--bg);
@@ -228,6 +234,18 @@ footer p {
 	height: 1rem;
 	color: var(--fg-muted);
 	margin-bottom: 0.75rem;
+}
+
+/* Mobile: compact header, no in-page nav (rely on scroll) */
+
+@media (max-width: 63.9375rem) {
+	.sidebar nav {
+		display: none;
+	}
+
+	.sidebar .location {
+		margin-bottom: 0;
+	}
 }
 
 /* Desktop: fixed sidebar, scrollable content column */
