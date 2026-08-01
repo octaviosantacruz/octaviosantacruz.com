@@ -11,14 +11,9 @@ export const PERSON = {
 	jobTitle: "Security Operations Analyst",
 	addressCountry: "PY",
 	addressLocality: "Paraguay",
-	// TODO: reemplazar con las URLs reales antes del lanzamiento.
-	sameAs: [
-		"https://www.linkedin.com/in/TODO",
-		"https://github.com/TODO",
-	],
+	sameAs: ["https://github.com/octaviosantacruz"],
 } as const;
 
-// Anchors are language-agnostic; labels come from src/i18n/translations.ts.
 export const NAV_SECTIONS = [
 	{ href: "#sobre-mi", key: "sobreMi" },
 	{ href: "#experiencia", key: "experiencia" },
