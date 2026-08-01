@@ -8,10 +8,10 @@ export const PERSON = {
 	givenName: "Octavio",
 	familyName: "Santacruz",
 	fullName: "Octavio Santacruz",
-	jobTitle: "Security Operations Analyst",
+	jobTitle: "Cybersecurity Engineer",
 	addressCountry: "PY",
 	addressLocality: "Paraguay",
-	sameAs: ["https://github.com/octaviosantacruz"],
+	sameAs: ["https://linkedin.com/in/octaviosantacruz", "https://github.com/octaviosantacruz"],
 } as const;
 
 export const NAV_SECTIONS = [

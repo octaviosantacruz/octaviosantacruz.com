@@ -30,9 +30,9 @@ interface Translation {
 
 export const translations: Record<Locale, Translation> = {
 	es: {
-		siteTitle: "Octavio Santacruz — Security Operations Analyst",
+		siteTitle: "Octavio Santacruz — Cybersecurity Engineer",
 		siteDescription:
-			"Portfolio profesional de Octavio Santacruz, Security Operations Analyst / ingeniero en seguridad basado en Paraguay.",
+			"Portfolio profesional de Octavio Santacruz, ingeniero en ciberseguridad enfocado en operaciones de seguridad, identidad y proteccion de datos.",
 		ogLocale: "es_PY",
 		skipLink: "Saltar al contenido",
 		navLabel: "Navegación principal",
@@ -53,9 +53,9 @@ export const translations: Record<Locale, Translation> = {
 		},
 	},
 	en: {
-		siteTitle: "Octavio Santacruz — Security Operations Analyst",
+		siteTitle: "Octavio Santacruz — Cybersecurity Engineer",
 		siteDescription:
-			"Professional portfolio of Octavio Santacruz, Security Operations Analyst based in Paraguay.",
+			"Professional portfolio of Octavio Santacruz, Cybersecurity Engineer focused on security operations, identity, and data protection.",
 		ogLocale: "en_US",
 		skipLink: "Skip to content",
 		navLabel: "Primary navigation",

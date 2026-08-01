@@ -8,75 +8,201 @@ const t = translations[locale];
 const nameLines = [PERSON.givenName, PERSON.familyName].map((line) => line.split(""));
 
 const content = {
-	es: {
-		kicker: "Portfolio / Seguridad Operacional",
-		intro:
-			"Analizo senales, reduzco ruido y documento decisiones para que los equipos puedan responder con criterio.",
-		status: "Disponible para oportunidades",
-		about: [
-			"Este portfolio va a funcionar como una bitacora profesional: claro, sobrio y centrado en evidencia. La estetica queda definida primero; el contenido real puede entrar despues sin romper el sistema visual.",
-			"La direccion evita el look generico de ciberseguridad. No hay terminales falsas ni graficos decorativos: solo jerarquia, lectura comoda y detalles precisos.",
-		],
-		experience: {
-			period: "Actualidad",
-			title: "Security Operations Analyst",
-			body:
-				"Espacio reservado para describir monitoreo, triage, respuesta a incidentes, automatizacion o mejora de procesos con metricas concretas.",
-			tags: ["SOC", "Incident Response", "Detection", "Documentation"],
-		},
-		certifications: [
-			{ title: "Certificacion principal", detail: "Emisor, fecha y estado pendiente" },
-			{ title: "Formacion tecnica", detail: "Cursos relevantes y laboratorios pendientes" },
-		],
-		projects: [
-			{
-				title: "Caso de investigacion",
-				body:
-					"Formato sugerido: problema, senales observadas, decision tomada, resultado y aprendizajes.",
-			},
-			{
-				title: "Automatizacion operativa",
-				body:
-					"Formato sugerido: tarea repetitiva, solucion implementada, tiempo ahorrado y stack utilizado.",
-			},
-		],
-		contact:
-			"Cuando el contenido este listo, esta seccion deberia cerrar con una llamada directa: LinkedIn, correo profesional y enlaces verificados.",
-	},
 	en: {
 		kicker: "Portfolio / Security Operations",
 		intro:
-			"I analyze signals, reduce noise, and document decisions so teams can respond with context.",
-		status: "Open to opportunities",
+			"Cybersecurity engineer focused on security operations, identity, privileged access, and data protection.",
+		status: "Open to relocation and remote roles",
 		about: [
-			"This portfolio is structured as a professional field log: restrained, clear, and evidence-oriented. The aesthetic is defined first; real content can land later without breaking the visual system.",
-			"The direction avoids generic cybersecurity visuals. No fake terminals or decorative charts: just hierarchy, readable text, and precise details.",
+			"I work across security operations, privileged access, data protection, and vulnerability management, connecting offensive testing with defensive engineering.",
+			"My recent work includes enterprise-scale implementations across 40+ companies: CyberArk PAM and PSM, BigID data discovery, Netskope DLP governance, vulnerability remediation, and security automation.",
 		],
-		experience: {
-			period: "Present",
-			title: "Security Operations Analyst",
-			body:
-				"Reserved space for monitoring, triage, incident response, automation, or process improvement with concrete metrics.",
-			tags: ["SOC", "Incident Response", "Detection", "Documentation"],
-		},
+		competencies: [
+			"Security Operations",
+			"Vulnerability Management",
+			"Exposure Management",
+			"Privileged Access Management",
+			"Identity & Access Management",
+			"Data Loss Prevention",
+			"EDR / SIEM Monitoring",
+			"Incident Triage",
+			"Internal Penetration Testing",
+			"Risk-Based Remediation",
+			"Security Automation",
+			"MITRE ATT&CK",
+		],
+		experience: [
+			{
+				period: "Sep 2025 - Present",
+				title: "Security Operations Analyst",
+				company: "ITTI - Grupo Vazquez",
+				location: "Asuncion, Paraguay",
+				bullets: [
+					"Led the end-to-end reimplementation of CyberArk PAM across 40+ companies, migrating nominal accounts from Privilege Cloud to Secure Infrastructure Access and improving license utilization.",
+					"Deployed CyberArk PSM across 20+ companies, enabling centralized session recording and privileged session governance at enterprise scale.",
+					"Implemented BigID for sensitive-data discovery and classification across multiple environments, supporting GDPR-aligned governance.",
+					"Tuned Netskope DLP policies per business unit to improve detection accuracy and reduce false positives.",
+					"Built Netskope and BigID behavioral-analytics workflows that surfaced anomalous data-access patterns for internal fraud investigations.",
+				],
+				tags: ["CyberArk", "BigID", "Netskope", "PAM", "DLP"],
+			},
+			{
+				period: "May 2024 - Sep 2025",
+				title: "Information Security Analyst",
+				company: "Personal Paraguay",
+				location: "Asuncion, Paraguay",
+				bullets: [
+					"Led internal penetration testing and coordinated vulnerability remediation across 40+ production servers.",
+					"Designed a structured vulnerability-management process integrated with asset inventory and IAM controls.",
+					"Automated 5+ recurring security operations tasks using Ansible and custom scripts, reducing manual effort across the team.",
+				],
+				tags: ["Pentesting", "Vulnerability Management", "Ansible", "IAM"],
+			},
+			{
+				period: "Jul 2023 - May 2024",
+				title: "Information Security Analyst",
+				company: "NEST Security",
+				location: "Asuncion, Paraguay",
+				bullets: [
+					"Promoted from intern to full-time analyst after delivering vulnerability assessments supporting red-team exercises and defensive control improvements.",
+				],
+				tags: ["Vulnerability Assessment", "Red Team Support", "Reporting"],
+			},
+		],
 		certifications: [
-			{ title: "Primary certification", detail: "Issuer, date, and status pending" },
-			{ title: "Technical training", detail: "Relevant courses and labs pending" },
+			{ title: "Practical Junior Penetration Tester (PJPT)", detail: "TCM Security" },
+			{ title: "Netskope SASE/SSE Administration Accreditation", detail: "Netskope" },
+			{ title: "BigID Fundamentals - Core 4 Series", detail: "BigID University" },
+			{ title: "Nessus Fundamentals & Advanced", detail: "Tenable" },
+			{ title: "Privileged Access Management with CyberArk", detail: "Udemy" },
+			{ title: "Junior Cybersecurity Analyst Career Path", detail: "Cisco" },
 		],
 		projects: [
 			{
-				title: "Investigation case",
+				title: "Sigea Scan",
+				meta: "Open-source vulnerability scanning platform / 2025 - Present",
 				body:
-					"Suggested format: problem, observed signals, decision made, result, and lessons learned.",
+					"Developing an on-premise vulnerability scanning and management platform designed to simplify deployment and make security assessments more accessible to smaller organizations.",
 			},
 			{
-				title: "Operational automation",
+				title: "CyberPy",
+				meta: "Founder / Paraguay cybersecurity community",
 				body:
-					"Suggested format: repeated task, implemented solution, time saved, and stack used.",
+					"Founded Paraguay's first cybersecurity community, bringing together 100+ members through technical workshops and CTF activities.",
 			},
 		],
-		contact:
-			"When the content is ready, this section should close with a direct call: LinkedIn, professional email, and verified links.",
+		education: {
+			title: "B.Eng. Computer Science",
+			detail:
+				"Taiwan-Paraguay Polytechnic University (UPTP), Asuncion. Completed 15 months of full-time coursework in Taiwan through a merit-based academic exchange.",
+		},
+		contact: {
+			body:
+				"Based in Asuncion, Paraguay. Native Spanish speaker with C1 English, open to relocation and remote security roles.",
+			links: [
+				{ label: "Email", href: "mailto:octavio.santacruz3@gmail.com" },
+				{ label: "LinkedIn", href: "https://linkedin.com/in/octaviosantacruz" },
+				{ label: "GitHub", href: "https://github.com/octaviosantacruz" },
+			],
+		},
+	},
+	es: {
+		kicker: "Portfolio / Seguridad Operacional",
+		intro:
+			"Ingeniero en ciberseguridad enfocado en operaciones de seguridad, identidad, accesos privilegiados y proteccion de datos.",
+		status: "Abierto a relocation y roles remotos",
+		about: [
+			"Trabajo entre operaciones de seguridad, accesos privilegiados, proteccion de datos y gestion de vulnerabilidades, combinando pruebas ofensivas con ingenieria defensiva.",
+			"Mi experiencia reciente incluye implementaciones empresariales en mas de 40 companias: CyberArk PAM y PSM, descubrimiento de datos con BigID, gobierno DLP con Netskope, remediacion de vulnerabilidades y automatizacion de seguridad.",
+		],
+		competencies: [
+			"Security Operations",
+			"Gestion de Vulnerabilidades",
+			"Exposure Management",
+			"Privileged Access Management",
+			"Identity & Access Management",
+			"Data Loss Prevention",
+			"Monitoreo EDR / SIEM",
+			"Triage de Incidentes",
+			"Pentesting Interno",
+			"Remediacion Basada en Riesgo",
+			"Automatizacion de Seguridad",
+			"MITRE ATT&CK",
+		],
+		experience: [
+			{
+				period: "Sep 2025 - Actualidad",
+				title: "Security Operations Analyst",
+				company: "ITTI - Grupo Vazquez",
+				location: "Asuncion, Paraguay",
+				bullets: [
+					"Lidere la reimplementacion end-to-end de CyberArk PAM en mas de 40 companias, migrando cuentas nominales desde Privilege Cloud hacia Secure Infrastructure Access y mejorando la utilizacion de licencias.",
+					"Desplegue CyberArk PSM en mas de 20 companias, habilitando grabacion centralizada de sesiones y gobierno de accesos privilegiados a escala empresarial.",
+					"Implemente BigID para descubrimiento y clasificacion de datos sensibles en multiples entornos, apoyando gobierno de datos alineado a GDPR.",
+					"Ajuste politicas DLP de Netskope por unidad de negocio para mejorar precision de deteccion y reducir falsos positivos.",
+					"Construí flujos de analitica de comportamiento con Netskope y BigID para detectar patrones anomalos de acceso a datos en investigaciones internas de fraude.",
+				],
+				tags: ["CyberArk", "BigID", "Netskope", "PAM", "DLP"],
+			},
+			{
+				period: "May 2024 - Sep 2025",
+				title: "Information Security Analyst",
+				company: "Personal Paraguay",
+				location: "Asuncion, Paraguay",
+				bullets: [
+					"Lidere pentesting interno y coordine remediacion de vulnerabilidades en mas de 40 servidores productivos.",
+					"Disene un proceso estructurado de gestion de vulnerabilidades integrado con inventario de activos y controles IAM.",
+					"Automatice mas de 5 tareas recurrentes de operaciones de seguridad con Ansible y scripts propios, reduciendo esfuerzo manual del equipo.",
+				],
+				tags: ["Pentesting", "Vulnerability Management", "Ansible", "IAM"],
+			},
+			{
+				period: "Jul 2023 - May 2024",
+				title: "Information Security Analyst",
+				company: "NEST Security",
+				location: "Asuncion, Paraguay",
+				bullets: [
+					"Promovido de intern a analista full-time tras entregar evaluaciones de vulnerabilidades para ejercicios red-team y mejoras de controles defensivos.",
+				],
+				tags: ["Vulnerability Assessment", "Red Team Support", "Reporting"],
+			},
+		],
+		certifications: [
+			{ title: "Practical Junior Penetration Tester (PJPT)", detail: "TCM Security" },
+			{ title: "Netskope SASE/SSE Administration Accreditation", detail: "Netskope" },
+			{ title: "BigID Fundamentals - Core 4 Series", detail: "BigID University" },
+			{ title: "Nessus Fundamentals & Advanced", detail: "Tenable" },
+			{ title: "Privileged Access Management with CyberArk", detail: "Udemy" },
+			{ title: "Junior Cybersecurity Analyst Career Path", detail: "Cisco" },
+		],
+		projects: [
+			{
+				title: "Sigea Scan",
+				meta: "Plataforma open-source de gestion de vulnerabilidades / 2025 - Actualidad",
+				body:
+					"Desarrollo una plataforma on-premise de escaneo y gestion de vulnerabilidades pensada para simplificar despliegues y hacer evaluaciones de seguridad mas accesibles para organizaciones pequenas.",
+			},
+			{
+				title: "CyberPy",
+				meta: "Fundador / Comunidad de ciberseguridad en Paraguay",
+				body:
+					"Funde la primera comunidad de ciberseguridad de Paraguay, reuniendo a mas de 100 miembros mediante workshops tecnicos y actividades CTF.",
+			},
+		],
+		education: {
+			title: "B.Eng. Computer Science",
+			detail:
+				"Universidad Politecnica Taiwan-Paraguay (UPTP), Asuncion. Complete 15 meses de cursado full-time en Taiwan mediante un intercambio academico por merito.",
+		},
+		contact: {
+			body:
+				"Basado en Asuncion, Paraguay. Espanol nativo e ingles C1, abierto a relocation y roles remotos en seguridad.",
+			links: [
+				{ label: "Email", href: "mailto:octavio.santacruz3@gmail.com" },
+				{ label: "LinkedIn", href: "https://linkedin.com/in/octaviosantacruz" },
+				{ label: "GitHub", href: "https://github.com/octaviosantacruz" },
+			],
+		},
 	},
 }[locale];
 ---
@@ -134,6 +260,9 @@ const content = {
 				<div class="copy">
 					{content.about.map((paragraph) => <p>{paragraph}</p>)}
 				</div>
+				<ul class="competency-list" aria-label="Core competencies">
+					{content.competencies.map((competency) => <li>{competency}</li>)}
+				</ul>
 			</section>
 
 			<section id="experiencia" aria-labelledby="experiencia-heading" class="reveal">
@@ -142,16 +271,25 @@ const content = {
 						t.sections.experiencia.title
 					}
 				</h2>
-				<article class="timeline-item">
-					<p class="meta">{content.experience.period}</p>
-					<div>
-						<h3>{content.experience.title}</h3>
-						<p>{content.experience.body}</p>
-						<ul class="tag-list" aria-label="Stack">
-							{content.experience.tags.map((tag) => <li>{tag}</li>)}
-						</ul>
-					</div>
-				</article>
+				<div class="timeline-list">
+					{
+						content.experience.map((role) => (
+							<article class="timeline-item">
+								<p class="meta">{role.period}</p>
+								<div>
+									<h3>{role.title}</h3>
+									<p class="item-subtitle">{role.company} / {role.location}</p>
+									<ul class="detail-list">
+										{role.bullets.map((bullet) => <li>{bullet}</li>)}
+									</ul>
+									<ul class="tag-list" aria-label="Stack">
+										{role.tags.map((tag) => <li>{tag}</li>)}
+									</ul>
+								</div>
+							</article>
+						))
+					}
+				</div>
 			</section>
 
 			<section id="certificaciones" aria-labelledby="certificaciones-heading" class="reveal">
@@ -183,6 +321,7 @@ const content = {
 						content.projects.map((project) => (
 							<article class="project-card">
 								<h3>{project.title}</h3>
+								<p class="meta">{project.meta}</p>
 								<p>{project.body}</p>
 							</article>
 						))
@@ -196,7 +335,16 @@ const content = {
 						t.sections.contacto.title
 					}
 				</h2>
-				<p>{content.contact}</p>
+				<article class="record education-record">
+					<h3>{content.education.title}</h3>
+					<p>{content.education.detail}</p>
+				</article>
+				<div class="copy contact-copy">
+					<p>{content.contact.body}</p>
+				</div>
+				<ul class="contact-list" aria-label="Contact links">
+					{content.contact.links.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+				</ul>
 			</section>
 		</div>
 

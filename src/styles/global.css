@@ -139,7 +139,6 @@ a {
 	transform: translateY(-0.04em);
 }
 
-
 .sidebar .role {
 	color: var(--fg-soft);
 	font-weight: 600;
@@ -335,6 +334,37 @@ p {
 	gap: 1rem;
 }
 
+.competency-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	list-style: none;
+	padding: 0;
+	margin: 1.5rem 0 0;
+}
+
+.competency-list li {
+	padding: 0.4rem 0.7rem;
+	border: 1px solid var(--border);
+	border-radius: 999px;
+	color: var(--fg-muted);
+	font-family: var(--font-mono);
+	font-size: 0.72rem;
+	transition:
+		border-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.competency-list li:hover {
+	border-color: rgba(255, 255, 255, 0.28);
+	color: var(--fg);
+}
+
+.timeline-list {
+	display: grid;
+	gap: 1.35rem;
+}
+
 .timeline-item {
 	display: grid;
 	gap: 0.75rem;
@@ -378,6 +408,37 @@ p {
 	font-family: var(--font-mono);
 	font-size: 0.76rem;
 	text-transform: uppercase;
+}
+
+.item-subtitle {
+	margin-bottom: 0.85rem;
+	color: var(--fg-soft);
+	font-family: var(--font-mono);
+	font-size: 0.78rem;
+}
+
+.detail-list {
+	display: grid;
+	gap: 0.65rem;
+	padding: 0;
+	margin: 1rem 0 0;
+	list-style: none;
+}
+
+.detail-list li {
+	position: relative;
+	padding-left: 1.05rem;
+	color: var(--fg-muted);
+}
+
+.detail-list li::before {
+	content: "";
+	position: absolute;
+	top: 0.72em;
+	left: 0;
+	width: 0.35rem;
+	height: 1px;
+	background: var(--fg-muted);
 }
 
 h3 {
@@ -437,6 +498,47 @@ h3 {
 	background: rgba(255, 255, 255, 0.065);
 	border-color: rgba(255, 255, 255, 0.26);
 	transform: translateY(-0.15rem);
+}
+
+.education-record {
+	margin-bottom: 1.25rem;
+}
+
+.contact-copy {
+	margin-bottom: 1.25rem;
+}
+
+.contact-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.contact-list a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.25rem;
+	padding: 0 0.85rem;
+	border: 1px solid var(--border);
+	border-radius: 999px;
+	color: var(--fg-muted);
+	font-family: var(--font-mono);
+	font-size: 0.78rem;
+	text-decoration: none;
+	transition:
+		background 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.contact-list a:hover,
+.contact-list a:focus-visible {
+	background: rgba(255, 255, 255, 0.08);
+	border-color: rgba(255, 255, 255, 0.3);
+	color: var(--fg);
 }
 
 footer {
