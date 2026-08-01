@@ -6,6 +6,79 @@ import { translations, type Locale } from "../i18n/translations";
 
 const locale = (Astro.currentLocale ?? "es") as Locale;
 const t = translations[locale];
+
+const content = {
+	es: {
+		kicker: "Portfolio / Seguridad Operacional",
+		intro:
+			"Analizo senales, reduzco ruido y documento decisiones para que los equipos puedan responder con criterio.",
+		status: "Disponible para oportunidades",
+		about: [
+			"Este portfolio va a funcionar como una bitacora profesional: claro, sobrio y centrado en evidencia. La estetica queda definida primero; el contenido real puede entrar despues sin romper el sistema visual.",
+			"La direccion evita el look generico de ciberseguridad. No hay terminales falsas ni graficos decorativos: solo jerarquia, lectura comoda y detalles precisos.",
+		],
+		experience: {
+			period: "Actualidad",
+			title: "Security Operations Analyst",
+			body:
+				"Espacio reservado para describir monitoreo, triage, respuesta a incidentes, automatizacion o mejora de procesos con metricas concretas.",
+			tags: ["SOC", "Incident Response", "Detection", "Documentation"],
+		},
+		certifications: [
+			{ title: "Certificacion principal", detail: "Emisor, fecha y estado pendiente" },
+			{ title: "Formacion tecnica", detail: "Cursos relevantes y laboratorios pendientes" },
+		],
+		projects: [
+			{
+				title: "Caso de investigacion",
+				body:
+					"Formato sugerido: problema, senales observadas, decision tomada, resultado y aprendizajes.",
+			},
+			{
+				title: "Automatizacion operativa",
+				body:
+					"Formato sugerido: tarea repetitiva, solucion implementada, tiempo ahorrado y stack utilizado.",
+			},
+		],
+		contact:
+			"Cuando el contenido este listo, esta seccion deberia cerrar con una llamada directa: LinkedIn, correo profesional y enlaces verificados.",
+	},
+	en: {
+		kicker: "Portfolio / Security Operations",
+		intro:
+			"I analyze signals, reduce noise, and document decisions so teams can respond with context.",
+		status: "Open to opportunities",
+		about: [
+			"This portfolio is structured as a professional field log: restrained, clear, and evidence-oriented. The aesthetic is defined first; real content can land later without breaking the visual system.",
+			"The direction avoids generic cybersecurity visuals. No fake terminals or decorative charts: just hierarchy, readable text, and precise details.",
+		],
+		experience: {
+			period: "Present",
+			title: "Security Operations Analyst",
+			body:
+				"Reserved space for monitoring, triage, incident response, automation, or process improvement with concrete metrics.",
+			tags: ["SOC", "Incident Response", "Detection", "Documentation"],
+		},
+		certifications: [
+			{ title: "Primary certification", detail: "Issuer, date, and status pending" },
+			{ title: "Technical training", detail: "Relevant courses and labs pending" },
+		],
+		projects: [
+			{
+				title: "Investigation case",
+				body:
+					"Suggested format: problem, observed signals, decision made, result, and lessons learned.",
+			},
+			{
+				title: "Operational automation",
+				body:
+					"Suggested format: repeated task, implemented solution, time saved, and stack used.",
+			},
+		],
+		contact:
+			"When the content is ready, this section should close with a direct call: LinkedIn, professional email, and verified links.",
+	},
+}[locale];
 ---
 
 <a class="skip-link" href="#contenido">{t.skipLink}</a>
@@ -13,13 +86,16 @@ const t = translations[locale];
 <div class="layout">
 	<header class="sidebar">
 		<div class="sidebar-inner">
-			<a href="#top" class="brand" aria-label={PERSON.fullName}>
-				<BrandMark class="brand-mark" />
-			</a>
-
+			<BrandMark />
+			<p class="kicker">{content.kicker}</p>
 			<h1>{PERSON.fullName}</h1>
 			<p class="role">{PERSON.jobTitle}</p>
+			<p class="intro">{content.intro}</p>
 			<p class="location">{t.location}</p>
+			<p class="status">
+				<span aria-hidden="true"></span>
+				{content.status}
+			</p>
 
 			<nav aria-label={t.navLabel}>
 				<ul>
@@ -40,7 +116,7 @@ const t = translations[locale];
 		</div>
 	</header>
 
-	<main id="top" class="content">
+	<main class="content">
 		<div id="contenido">
 			<section id="sobre-mi" aria-labelledby="sobre-mi-heading" class="reveal">
 				<h2 id="sobre-mi-heading">
@@ -48,6 +124,9 @@ const t = translations[locale];
 						t.sections.sobreMi.title
 					}
 				</h2>
+				<div class="copy">
+					{content.about.map((paragraph) => <p>{paragraph}</p>)}
+				</div>
 			</section>
 
 			<section id="experiencia" aria-labelledby="experiencia-heading" class="reveal">
@@ -56,6 +135,16 @@ const t = translations[locale];
 						t.sections.experiencia.title
 					}
 				</h2>
+				<article class="timeline-item">
+					<p class="meta">{content.experience.period}</p>
+					<div>
+						<h3>{content.experience.title}</h3>
+						<p>{content.experience.body}</p>
+						<ul class="tag-list" aria-label="Stack">
+							{content.experience.tags.map((tag) => <li>{tag}</li>)}
+						</ul>
+					</div>
+				</article>
 			</section>
 
 			<section id="certificaciones" aria-labelledby="certificaciones-heading" class="reveal">
@@ -64,6 +153,16 @@ const t = translations[locale];
 						t.sections.certificaciones.title
 					}
 				</h2>
+				<div class="record-list">
+					{
+						content.certifications.map((certification) => (
+							<article class="record">
+								<h3>{certification.title}</h3>
+								<p>{certification.detail}</p>
+							</article>
+						))
+					}
+				</div>
 			</section>
 
 			<section id="proyectos" aria-labelledby="proyectos-heading" class="reveal">
@@ -72,6 +171,16 @@ const t = translations[locale];
 						t.sections.proyectos.title
 					}
 				</h2>
+				<div class="project-list">
+					{
+						content.projects.map((project) => (
+							<article class="project-card">
+								<h3>{project.title}</h3>
+								<p>{project.body}</p>
+							</article>
+						))
+					}
+				</div>
 			</section>
 
 			<section id="contacto" aria-labelledby="contacto-heading" class="reveal">
@@ -80,11 +189,11 @@ const t = translations[locale];
 						t.sections.contacto.title
 					}
 				</h2>
+				<p>{content.contact}</p>
 			</section>
 		</div>
 
 		<footer>
-			<BrandMark class="footer-mark" />
 			<p>&copy; {new Date().getFullYear()} {SITE.name}</p>
 		</footer>
 	</main>

@@ -1,24 +1,9 @@
 ---
-interface Props {
-	class?: string;
-}
+import { PERSON } from "../consts";
 
-const { class: className } = Astro.props;
+const initials = `${PERSON.givenName[0]}${PERSON.familyName[0]}`;
 ---
 
-<svg
-	class={className}
-	viewBox="0 0 48 48"
-	fill="none"
-	stroke="currentColor"
-	stroke-width="2.25"
-	aria-hidden="true"
-	focusable="false"
->
-	<circle cx="24" cy="24" r="18.5" />
-	<circle cx="24" cy="24" r="3.5" fill="currentColor" stroke="none" />
-	<line x1="24" y1="1.5" x2="24" y2="9" />
-	<line x1="24" y1="39" x2="24" y2="46.5" />
-	<line x1="1.5" y1="24" x2="9" y2="24" />
-	<line x1="39" y1="24" x2="46.5" y2="24" />
-</svg>
+<a class="brand-mark" href="/" aria-label={PERSON.fullName}>
+	<span aria-hidden="true">{initials}</span>
+</a>
