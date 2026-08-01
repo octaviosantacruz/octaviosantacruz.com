@@ -28,9 +28,6 @@ html {
 	scrollbar-gutter: stable;
 }
 
-
-
-
 @media (prefers-reduced-motion: no-preference) {
 	html {
 		scroll-behavior: smooth;
@@ -100,36 +97,6 @@ a {
 	max-width: 28rem;
 }
 
-.brand-mark {
-	width: 4.75rem;
-	height: 4.75rem;
-	display: inline-grid;
-	place-items: center;
-	margin-bottom: 3.25rem;
-	border: 1px solid rgba(255, 255, 255, 0.16);
-	border-radius: 50%;
-	background: var(--fg);
-	color: var(--bg);
-	text-decoration: none;
-	font-family: var(--font-mono);
-	font-size: 1.8rem;
-	line-height: 1;
-	font-weight: 800;
-	letter-spacing: 0;
-	box-shadow: 0 1rem 3rem rgba(255, 255, 255, 0.08);
-	transition:
-		background 0.2s ease,
-		border-color 0.2s ease,
-		transform 0.2s ease;
-}
-
-.brand-mark:hover,
-.brand-mark:focus-visible {
-	background: #d8d8d8;
-	border-color: rgba(255, 255, 255, 0.35);
-	transform: translateY(-2px);
-}
-
 .sidebar .kicker {
 	margin: 0 0 1.25rem;
 	color: var(--accent);
@@ -144,8 +111,34 @@ a {
 	font-size: 3rem;
 	line-height: 0.98;
 	margin: 0 0 0.75rem;
-	max-width: 9ch;
+	max-width: 12ch;
 }
+
+.name-line {
+	display: block;
+}
+
+.name-sign span span {
+	display: inline-block;
+	color: #7f7f7f;
+	text-shadow: none;
+	transition:
+		color 0.32s ease,
+		text-shadow 0.32s ease,
+		transform 0.32s ease;
+	transition-delay: calc(var(--i, 0) * 18ms);
+}
+
+.name-sign:hover .name-line span,
+.sidebar:focus-within .name-sign .name-line span {
+	color: var(--fg);
+	text-shadow: 0 0 1.15rem rgba(255, 255, 255, 0.18);
+}
+
+.name-sign:hover .name-line span {
+	transform: translateY(-0.04em);
+}
+
 
 .sidebar .role {
 	color: var(--fg-soft);
@@ -206,7 +199,6 @@ a {
 		animation: none;
 	}
 }
-
 
 .sidebar nav ul {
 	display: flex;
@@ -351,12 +343,34 @@ p {
 	border-bottom: 1px solid transparent;
 	transition:
 		border-color 0.2s ease,
+		color 0.2s ease,
 		transform 0.2s ease;
 }
 
 .timeline-item:hover {
 	border-color: var(--border);
 	transform: translateX(0.25rem);
+}
+
+.timeline-item h3,
+.timeline-item p,
+.record h3,
+.record p,
+.project-card h3,
+.project-card p {
+	transition: color 0.2s ease;
+}
+
+.timeline-item:hover h3,
+.record:hover h3,
+.project-card:hover h3 {
+	color: var(--fg);
+}
+
+.timeline-item:hover p,
+.record:hover p,
+.project-card:hover p {
+	color: var(--fg-soft);
 }
 
 .meta {
@@ -384,11 +398,20 @@ h3 {
 
 .tag-list li {
 	padding: 0.35rem 0.7rem;
+	border: 1px solid transparent;
 	border-radius: 999px;
 	background: var(--accent-dim);
-	color: var(--accent);
+	color: var(--fg-soft);
 	font-family: var(--font-mono);
 	font-size: 0.72rem;
+	transition:
+		border-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.timeline-item:hover .tag-list li {
+	border-color: rgba(255, 255, 255, 0.22);
+	color: var(--fg);
 }
 
 .record-list,
@@ -428,10 +451,6 @@ footer p {
 }
 
 @media (max-width: 63.9375rem) {
-	.brand-mark {
-		margin-bottom: 2.25rem;
-	}
-
 	.status {
 		margin-bottom: 2.25rem;
 	}
@@ -518,12 +537,6 @@ footer p {
 		padding-top: 4.25rem;
 	}
 
-	.brand-mark {
-		width: 4.25rem;
-		height: 4.25rem;
-		font-size: 1.6rem;
-	}
-
 	.sidebar h1 {
 		font-size: 2.55rem;
 	}
@@ -537,5 +550,14 @@ footer p {
 		min-width: 2.35rem;
 		min-height: 1.85rem;
 		padding: 0 0.55rem;
+	}
+}
+
+
+@media (hover: none) {
+	.name-sign .name-line span {
+		color: var(--fg);
+		text-shadow: none;
+		transition: none;
 	}
 }
