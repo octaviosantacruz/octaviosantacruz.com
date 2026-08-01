@@ -13,7 +13,7 @@ const t = translations[locale];
 <div class="layout">
 	<header class="sidebar">
 		<div class="sidebar-inner">
-			<a href="#top" class="brand">
+			<a href="#top" class="brand" aria-label={PERSON.fullName}>
 				<BrandMark class="brand-mark" />
 			</a>
 
@@ -48,7 +48,6 @@ const t = translations[locale];
 						t.sections.sobreMi.title
 					}
 				</h2>
-				<p><!-- TODO: bio real / real bio --></p>
 			</section>
 
 			<section id="experiencia" aria-labelledby="experiencia-heading" class="reveal">
@@ -57,7 +56,6 @@ const t = translations[locale];
 						t.sections.experiencia.title
 					}
 				</h2>
-				<p><!-- TODO: experiencia laboral / work experience --></p>
 			</section>
 
 			<section id="certificaciones" aria-labelledby="certificaciones-heading" class="reveal">
@@ -66,7 +64,6 @@ const t = translations[locale];
 						t.sections.certificaciones.title
 					}
 				</h2>
-				<p><!-- TODO: certificaciones / certifications --></p>
 			</section>
 
 			<section id="proyectos" aria-labelledby="proyectos-heading" class="reveal">
@@ -75,7 +72,6 @@ const t = translations[locale];
 						t.sections.proyectos.title
 					}
 				</h2>
-				<p><!-- TODO: proyectos destacados / featured projects --></p>
 			</section>
 
 			<section id="contacto" aria-labelledby="contacto-heading" class="reveal">
@@ -84,7 +80,6 @@ const t = translations[locale];
 						t.sections.contacto.title
 					}
 				</h2>
-				<p><!-- TODO: información de contacto / contact information --></p>
 			</section>
 		</div>
 
