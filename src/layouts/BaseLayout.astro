@@ -11,15 +11,15 @@ interface Props {
 	description?: string;
 }
 
-const locale = (Astro.currentLocale ?? "es") as Locale;
+const locale = (Astro.currentLocale ?? "en") as Locale;
 const t = translations[locale];
 
 const { title = t.siteTitle, description = t.siteDescription } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL("og-image.png", Astro.site);
-const esURL = new URL(getRelativeLocaleUrl("es", "/"), Astro.site);
 const enURL = new URL(getRelativeLocaleUrl("en", "/"), Astro.site);
+const esURL = new URL(getRelativeLocaleUrl("es", "/"), Astro.site);
 
 const personSchema = {
 	"@context": "https://schema.org",
@@ -42,41 +42,6 @@ const personSchema = {
 <html lang={locale}>
 	<head>
 		<meta charset="utf-8" />
-
-		<script is:inline>
-			(function () {
-				var COOKIE = "pref_locale";
-
-				function getCookie(name) {
-					var match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
-					return match ? decodeURIComponent(match[1]) : null;
-				}
-
-				function setCookie(name, value) {
-					document.cookie = name + "=" + value + ";path=/;max-age=31536000;samesite=lax";
-				}
-
-				var currentLocale = document.documentElement.lang === "en" ? "en" : "es";
-				var pref = getCookie(COOKIE);
-
-				if (pref) {
-					if (pref !== currentLocale) setCookie(COOKIE, currentLocale);
-					return;
-				}
-
-				var browserWantsEnglish = (navigator.language || "es").slice(0, 2).toLowerCase() !== "es";
-				setCookie(COOKIE, currentLocale);
-				if (browserWantsEnglish === (currentLocale === "en")) return;
-
-				var path = location.pathname;
-				var target = browserWantsEnglish
-					? "/en" + (path === "/" ? "/" : path)
-					: path.replace(/^\/en(\/|$)/, "/") || "/";
-
-				if (target !== path) location.replace(target + location.search + location.hash);
-			})();
-		</script>
-
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
@@ -90,7 +55,7 @@ const personSchema = {
 		<link rel="canonical" href={canonicalURL} />
 		<link rel="alternate" hreflang="es" href={esURL} />
 		<link rel="alternate" hreflang="en" href={enURL} />
-		<link rel="alternate" hreflang="x-default" href={esURL} />
+		<link rel="alternate" hreflang="x-default" href={enURL} />
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />

@@ -8,8 +8,8 @@ export default defineConfig({
 	output: 'static',
 	integrations: [sitemap()],
 	i18n: {
-		defaultLocale: 'es',
-		locales: ['es', 'en'],
+		defaultLocale: 'en',
+		locales: ['en', 'es'],
 		routing: {
 			prefixDefaultLocale: false,
 		},
