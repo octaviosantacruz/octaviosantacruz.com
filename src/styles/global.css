@@ -7,9 +7,9 @@
 	--fg-soft: #d7d7d7;
 	--fg-muted: #8d8d8d;
 	--border: rgba(245, 245, 245, 0.14);
-	--accent: #ffffff;
-	--accent-dim: rgba(255, 255, 255, 0.1);
-	--accent-line: rgba(255, 255, 255, 0.28);
+	--accent: #8fb7ff;
+	--accent-dim: rgba(143, 183, 255, 0.12);
+	--accent-line: rgba(143, 183, 255, 0.42);
 
 	--font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 	--font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -37,8 +37,15 @@ html {
 body {
 	margin: 0;
 	background:
-		radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.045), transparent 24rem),
+		linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+		radial-gradient(circle at 12% 18%, rgba(143, 183, 255, 0.08), transparent 24rem),
 		linear-gradient(145deg, #090909 0%, var(--bg) 48%, #000000 100%);
+	background-size:
+		4rem 4rem,
+		4rem 4rem,
+		auto,
+		auto;
 	color: var(--fg);
 	font-family: var(--font-sans);
 	line-height: 1.6;
@@ -177,7 +184,7 @@ a {
 	height: 0.5rem;
 	border-radius: 50%;
 	background: var(--accent);
-	box-shadow: 0 0 0.85rem rgba(255, 255, 255, 0.5);
+	box-shadow: 0 0 0.85rem rgba(143, 183, 255, 0.65);
 	animation: live-blink 1.45s ease-in-out infinite;
 }
 
@@ -234,7 +241,7 @@ a {
 .sidebar nav a:hover,
 .sidebar nav a:focus-visible,
 .sidebar nav a.is-active {
-	color: var(--fg-soft);
+	color: var(--fg);
 }
 
 .sidebar nav a:hover .nav-line,
@@ -334,6 +341,41 @@ p {
 	gap: 1rem;
 }
 
+.metric-strip {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	margin-top: 1.6rem;
+	border: 1px solid var(--border);
+	border-radius: 0.45rem;
+	background: rgba(255, 255, 255, 0.028);
+}
+
+.metric-item {
+	display: grid;
+	align-content: start;
+	gap: 0.45rem;
+	min-height: 8.25rem;
+	padding: 1rem;
+	border-right: 1px solid var(--border);
+}
+
+.metric-item:last-child {
+	border-right: 0;
+}
+
+.metric-item strong {
+	color: var(--accent);
+	font-family: var(--font-mono);
+	font-size: 1.35rem;
+	line-height: 1;
+}
+
+.metric-item span {
+	color: var(--fg-muted);
+	font-size: 0.82rem;
+	line-height: 1.45;
+}
+
 .competency-list {
 	display: flex;
 	flex-wrap: wrap;
@@ -347,6 +389,7 @@ p {
 	padding: 0.4rem 0.7rem;
 	border: 1px solid var(--border);
 	border-radius: 999px;
+	box-shadow: inset 0 1px 0 rgba(143, 183, 255, 0.14);
 	color: var(--fg-muted);
 	font-family: var(--font-mono);
 	font-size: 0.72rem;
@@ -356,7 +399,7 @@ p {
 }
 
 .competency-list li:hover {
-	border-color: rgba(255, 255, 255, 0.28);
+	border-color: var(--accent-line);
 	color: var(--fg);
 }
 
@@ -417,6 +460,10 @@ p {
 	font-size: 0.78rem;
 }
 
+.item-subtitle span {
+	color: var(--accent);
+}
+
 .detail-list {
 	display: grid;
 	gap: 0.65rem;
@@ -462,7 +509,7 @@ h3 {
 	border: 1px solid transparent;
 	border-radius: 999px;
 	background: var(--accent-dim);
-	color: var(--fg-soft);
+	color: var(--accent);
 	font-family: var(--font-mono);
 	font-size: 0.72rem;
 	transition:
@@ -471,8 +518,37 @@ h3 {
 }
 
 .timeline-item:hover .tag-list li {
-	border-color: rgba(255, 255, 255, 0.22);
+	border-color: var(--accent-line);
 	color: var(--fg);
+}
+
+.project-tags {
+	margin-top: 1rem;
+}
+
+.project-heading {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 0.85rem;
+}
+
+.project-heading h3 {
+	margin-bottom: 0.55rem;
+}
+
+.status-badge {
+	flex: 0 0 auto;
+	padding: 0.22rem 0.5rem;
+	border: 1px solid var(--accent-line);
+	border-radius: 999px;
+	background: var(--accent-dim);
+	color: var(--accent);
+	font-family: var(--font-mono);
+	font-size: 0.64rem;
+	font-weight: 700;
+	line-height: 1.2;
+	text-transform: uppercase;
 }
 
 .record-list,
@@ -500,6 +576,65 @@ h3 {
 	transform: translateY(-0.15rem);
 }
 
+.certification-card,
+.education-card {
+	position: relative;
+	overflow: hidden;
+}
+
+.certification-card::before,
+.education-card::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 2px;
+	height: 100%;
+	background: linear-gradient(180deg, var(--accent), transparent);
+	opacity: 0.72;
+}
+
+.certification-card:hover,
+.education-card:hover {
+	border-color: var(--accent-line);
+}
+
+.certification-link {
+	display: grid;
+	gap: 0.35rem;
+	text-decoration: none;
+}
+
+.certification-link h3 {
+	transition: color 0.2s ease;
+}
+
+.certification-link span {
+	color: var(--fg-muted);
+	font-family: var(--font-mono);
+	font-size: 0.68rem;
+	word-break: break-word;
+	transition: color 0.2s ease;
+}
+
+.certification-link:hover h3,
+.certification-link:focus-visible h3 {
+	color: var(--accent);
+}
+
+.certification-link-static:hover h3 {
+	color: var(--fg-soft);
+}
+
+.certification-link:hover span,
+.certification-link:focus-visible span {
+	color: var(--accent);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.2em;
+}
+
+
 .education-record {
 	margin-bottom: 1.25rem;
 }
@@ -520,25 +655,43 @@ h3 {
 .contact-list a {
 	display: inline-flex;
 	align-items: center;
-	min-height: 2.25rem;
-	padding: 0 0.85rem;
+	justify-content: center;
+	width: 2.75rem;
+	height: 2.75rem;
 	border: 1px solid var(--border);
 	border-radius: 999px;
 	color: var(--fg-muted);
-	font-family: var(--font-mono);
-	font-size: 0.78rem;
 	text-decoration: none;
 	transition:
 		background 0.2s ease,
 		border-color 0.2s ease,
-		color 0.2s ease;
+		color 0.2s ease,
+		transform 0.2s ease;
+}
+
+.contact-list svg {
+	width: 1.35rem;
+	height: 1.35rem;
 }
 
 .contact-list a:hover,
 .contact-list a:focus-visible {
-	background: rgba(255, 255, 255, 0.08);
-	border-color: rgba(255, 255, 255, 0.3);
-	color: var(--fg);
+	background: var(--accent-dim);
+	border-color: var(--accent-line);
+	color: var(--accent);
+	transform: translateY(-0.08rem);
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 footer {
@@ -631,6 +784,22 @@ footer p {
 
 	.sidebar .role {
 		font-size: 1.28rem;
+	}
+}
+
+@media (max-width: 48rem) {
+	.metric-strip {
+		grid-template-columns: 1fr;
+	}
+
+	.metric-item {
+		min-height: auto;
+		border-right: 0;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.metric-item:last-child {
+		border-bottom: 0;
 	}
 }
 

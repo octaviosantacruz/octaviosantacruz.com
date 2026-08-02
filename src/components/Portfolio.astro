@@ -19,17 +19,18 @@ const content = {
 		],
 		competencies: [
 			"Security Operations",
-			"Vulnerability Management",
-			"Exposure Management",
 			"Privileged Access Management",
 			"Identity & Access Management",
-			"Data Loss Prevention",
-			"EDR / SIEM Monitoring",
-			"Incident Triage",
-			"Internal Penetration Testing",
-			"Risk-Based Remediation",
+			"Data Protection",
+			"Vulnerability Management",
 			"Security Automation",
+			"Internal Penetration Testing",
 			"MITRE ATT&CK",
+		],
+		metrics: [
+			{ value: "40+", label: "companies covered by enterprise security implementations" },
+			{ value: "20+", label: "companies onboarded to CyberArk PSM governance" },
+			{ value: "5+", label: "security operations workflows automated" },
 		],
 		experience: [
 			{
@@ -66,29 +67,33 @@ const content = {
 				bullets: [
 					"Promoted from intern to full-time analyst after delivering vulnerability assessments supporting red-team exercises and defensive control improvements.",
 				],
-				tags: ["Vulnerability Assessment", "Red Team Support", "Reporting"],
+				tags: ["Vulnerability Assessment", "Red Team Support"],
 			},
 		],
 		certifications: [
-			{ title: "Practical Junior Penetration Tester (PJPT)", detail: "TCM Security" },
-			{ title: "Netskope SASE/SSE Administration Accreditation", detail: "Netskope" },
-			{ title: "BigID Fundamentals - Core 4 Series", detail: "BigID University" },
-			{ title: "Nessus Fundamentals & Advanced", detail: "Tenable" },
-			{ title: "Privileged Access Management with CyberArk", detail: "Udemy" },
-			{ title: "Junior Cybersecurity Analyst Career Path", detail: "Cisco" },
+			{ title: "Netskope Accredited SASE Associate", detail: "Netskope", href: "https://verify.skilljar.com/c/xqxmac7gawx6" },
+			{ title: "Netskope Accredited SSE Administrator", detail: "Netskope", href: "https://verify.skilljar.com/c/udnku33wxk5e" },
+			{ title: "Netskope Administrator Accreditation", detail: "Netskope", href: "https://verify.skilljar.com/c/rxx37fvsvrra" },
+			{ title: "BigID Fundamentals - Core 4 Series", detail: "BigID University", href: "https://university.bigid.com/student/award/nSnhLNrTkAcoAwUbbQcCvt5q" },
+			{ title: "Nessus Fundamentals", detail: "Tenable", href: "https://nessusfundamentals.tenable.com/528ba68c-841f-4e90-babf-7bbff58bfaea" },
+			{ title: "Privileged Access Management with CyberArk", detail: "Udemy", href: "https://www.udemy.com/certificate/UC-ed99a7b1-be02-4a5a-a85b-95c75fdfc24b/" },
+			{ title: "Junior Cybersecurity Analyst Career Path", detail: "Cisco / Credly", href: "https://www.credly.com/badges/6e52ad96-c457-438f-ba54-594f4f565ac6" },
 		],
 		projects: [
 			{
 				title: "Sigea Scan",
-				meta: "Open-source vulnerability scanning platform / 2025 - Present",
+				meta: "Security engineering / Vulnerability management platform / 2025 - Present",
 				body:
-					"Developing an on-premise vulnerability scanning and management platform designed to simplify deployment and make security assessments more accessible to smaller organizations.",
+					"Developing an on-premise vulnerability scanning and management platform designed to simplify deployment, normalize findings, and make security assessments more accessible to smaller organizations.",
+				tags: ["Python", "Go", "Cloudflare", "Docker"],
 			},
 			{
-				title: "CyberPy",
-				meta: "Founder / Paraguay cybersecurity community",
+				title: "AccessGraph",
+				meta: "CyberArk Access Visibility Tool / 2026 - Present",
+				status: "In progress",
 				body:
-					"Founded Paraguay's first cybersecurity community, bringing together 100+ members through technical workshops and CTF activities.",
+					"Building a lightweight CMDB that maps end-to-end privileged access visibility in CyberArk, from identity/user through access policy to PSM session target, consolidating data from both Privilege Cloud and SIA via API into a single queryable graph. Goal: answer 'what can this user actually reach, and how' in one lookup instead of cross-referencing multiple consoles.",
+				tags: ["CyberArk API", "PAM", "SIA", "Python", "FastAPI"],
 			},
 		],
 		education: {
@@ -100,9 +105,9 @@ const content = {
 			body:
 				"Based in Asuncion, Paraguay. Native Spanish speaker with C1 English, open to relocation and remote security roles.",
 			links: [
-				{ label: "Email", href: "mailto:octavio.santacruz3@gmail.com" },
-				{ label: "LinkedIn", href: "https://linkedin.com/in/octaviosantacruz" },
-				{ label: "GitHub", href: "https://github.com/octaviosantacruz" },
+				{ label: "Email", href: "mailto:octavio.santacruz3@gmail.com", icon: "email" },
+				{ label: "LinkedIn", href: "https://linkedin.com/in/octaviosantacruz", icon: "linkedin" },
+				{ label: "GitHub", href: "https://github.com/octaviosantacruz", icon: "github" },
 			],
 		},
 	},
@@ -117,17 +122,18 @@ const content = {
 		],
 		competencies: [
 			"Security Operations",
-			"Gestion de Vulnerabilidades",
-			"Exposure Management",
 			"Privileged Access Management",
 			"Identity & Access Management",
-			"Data Loss Prevention",
-			"Monitoreo EDR / SIEM",
-			"Triage de Incidentes",
-			"Pentesting Interno",
-			"Remediacion Basada en Riesgo",
+			"Data Protection",
+			"Gestion de Vulnerabilidades",
 			"Automatizacion de Seguridad",
+			"Pentesting Interno",
 			"MITRE ATT&CK",
+		],
+		metrics: [
+			{ value: "40+", label: "companias cubiertas por implementaciones de seguridad empresarial" },
+			{ value: "20+", label: "companias incorporadas a gobierno CyberArk PSM" },
+			{ value: "5+", label: "flujos de operaciones de seguridad automatizados" },
 		],
 		experience: [
 			{
@@ -164,29 +170,33 @@ const content = {
 				bullets: [
 					"Promovido de intern a analista full-time tras entregar evaluaciones de vulnerabilidades para ejercicios red-team y mejoras de controles defensivos.",
 				],
-				tags: ["Vulnerability Assessment", "Red Team Support", "Reporting"],
+				tags: ["Vulnerability Assessment", "Red Team Support"],
 			},
 		],
 		certifications: [
-			{ title: "Practical Junior Penetration Tester (PJPT)", detail: "TCM Security" },
-			{ title: "Netskope SASE/SSE Administration Accreditation", detail: "Netskope" },
-			{ title: "BigID Fundamentals - Core 4 Series", detail: "BigID University" },
-			{ title: "Nessus Fundamentals & Advanced", detail: "Tenable" },
-			{ title: "Privileged Access Management with CyberArk", detail: "Udemy" },
-			{ title: "Junior Cybersecurity Analyst Career Path", detail: "Cisco" },
+			{ title: "Netskope Accredited SASE Associate", detail: "Netskope", href: "https://verify.skilljar.com/c/xqxmac7gawx6" },
+			{ title: "Netskope Accredited SSE Administrator", detail: "Netskope", href: "https://verify.skilljar.com/c/udnku33wxk5e" },
+			{ title: "Netskope Administrator Accreditation", detail: "Netskope", href: "https://verify.skilljar.com/c/rxx37fvsvrra" },
+			{ title: "BigID Fundamentals - Core 4 Series", detail: "BigID University", href: "https://university.bigid.com/student/award/nSnhLNrTkAcoAwUbbQcCvt5q" },
+			{ title: "Nessus Fundamentals", detail: "Tenable", href: "https://nessusfundamentals.tenable.com/528ba68c-841f-4e90-babf-7bbff58bfaea" },
+			{ title: "Privileged Access Management with CyberArk", detail: "Udemy", href: "https://www.udemy.com/certificate/UC-ed99a7b1-be02-4a5a-a85b-95c75fdfc24b/" },
+			{ title: "Junior Cybersecurity Analyst Career Path", detail: "Cisco / Credly", href: "https://www.credly.com/badges/6e52ad96-c457-438f-ba54-594f4f565ac6" },
 		],
 		projects: [
 			{
 				title: "Sigea Scan",
-				meta: "Plataforma open-source de gestion de vulnerabilidades / 2025 - Actualidad",
+				meta: "Security engineering / Plataforma de gestion de vulnerabilidades / 2025 - Actualidad",
 				body:
-					"Desarrollo una plataforma on-premise de escaneo y gestion de vulnerabilidades pensada para simplificar despliegues y hacer evaluaciones de seguridad mas accesibles para organizaciones pequenas.",
+					"Desarrollo una plataforma on-premise de escaneo y gestion de vulnerabilidades pensada para simplificar despliegues, normalizar hallazgos y hacer evaluaciones de seguridad mas accesibles para organizaciones pequenas.",
+				tags: ["Python", "Go", "Cloudflare", "Docker"],
 			},
 			{
-				title: "CyberPy",
-				meta: "Fundador / Comunidad de ciberseguridad en Paraguay",
+				title: "AccessGraph",
+				meta: "CyberArk Access Visibility Tool / 2026 - Actualidad",
+				status: "En progreso",
 				body:
-					"Funde la primera comunidad de ciberseguridad de Paraguay, reuniendo a mas de 100 miembros mediante workshops tecnicos y actividades CTF.",
+					"Construyendo una CMDB ligera que mapea visibilidad end-to-end de accesos privilegiados en CyberArk, desde identidad/usuario hasta politica de acceso y target de sesion PSM, consolidando datos de Privilege Cloud y SIA via API en un grafo consultable. Objetivo: responder 'a que puede acceder realmente este usuario, y como' en una sola consulta sin cruzar multiples consolas.",
+				tags: ["CyberArk API", "PAM", "SIA", "Python", "FastAPI"],
 			},
 		],
 		education: {
@@ -198,9 +208,9 @@ const content = {
 			body:
 				"Basado en Asuncion, Paraguay. Espanol nativo e ingles C1, abierto a relocation y roles remotos en seguridad.",
 			links: [
-				{ label: "Email", href: "mailto:octavio.santacruz3@gmail.com" },
-				{ label: "LinkedIn", href: "https://linkedin.com/in/octaviosantacruz" },
-				{ label: "GitHub", href: "https://github.com/octaviosantacruz" },
+				{ label: "Email", href: "mailto:octavio.santacruz3@gmail.com", icon: "email" },
+				{ label: "LinkedIn", href: "https://linkedin.com/in/octaviosantacruz", icon: "linkedin" },
+				{ label: "GitHub", href: "https://github.com/octaviosantacruz", icon: "github" },
 			],
 		},
 	},
@@ -260,6 +270,14 @@ const content = {
 				<div class="copy">
 					{content.about.map((paragraph) => <p>{paragraph}</p>)}
 				</div>
+				<div class="metric-strip" aria-label="Selected impact metrics">
+					{content.metrics.map((metric) => (
+						<div class="metric-item">
+							<strong>{metric.value}</strong>
+							<span>{metric.label}</span>
+						</div>
+					))}
+				</div>
 				<ul class="competency-list" aria-label="Core competencies">
 					{content.competencies.map((competency) => <li>{competency}</li>)}
 				</ul>
@@ -278,7 +296,7 @@ const content = {
 								<p class="meta">{role.period}</p>
 								<div>
 									<h3>{role.title}</h3>
-									<p class="item-subtitle">{role.company} / {role.location}</p>
+									<p class="item-subtitle"><span>{role.company}</span> / {role.location}</p>
 									<ul class="detail-list">
 										{role.bullets.map((bullet) => <li>{bullet}</li>)}
 									</ul>
@@ -300,12 +318,26 @@ const content = {
 				</h2>
 				<div class="record-list">
 					{
-						content.certifications.map((certification) => (
-							<article class="record">
-								<h3>{certification.title}</h3>
-								<p>{certification.detail}</p>
-							</article>
-						))
+						content.certifications.map((certification) => {
+							const hasVerificationLink = !certification.href.startsWith("[VERIFY_URL_");
+
+							return (
+								<article class="record certification-card">
+									{hasVerificationLink ? (
+										<a class="certification-link" href={certification.href}>
+											<h3>{certification.title}</h3>
+											<p>{certification.detail}</p>
+											<span>Verify credential</span>
+										</a>
+									) : (
+										<div class="certification-link certification-link-static">
+											<h3>{certification.title}</h3>
+											<p>{certification.detail}</p>
+										</div>
+									)}
+								</article>
+							);
+						})
 					}
 				</div>
 			</section>
@@ -320,9 +352,15 @@ const content = {
 					{
 						content.projects.map((project) => (
 							<article class="project-card">
-								<h3>{project.title}</h3>
+								<div class="project-heading">
+									<h3>{project.title}</h3>
+									{project.status && <span class="status-badge">{project.status}</span>}
+								</div>
 								<p class="meta">{project.meta}</p>
 								<p>{project.body}</p>
+								<ul class="tag-list project-tags" aria-label="Project stack">
+									{project.tags.map((tag) => <li>{tag}</li>)}
+								</ul>
 							</article>
 						))
 					}
@@ -335,7 +373,7 @@ const content = {
 						t.sections.contacto.title
 					}
 				</h2>
-				<article class="record education-record">
+				<article class="record education-record education-card">
 					<h3>{content.education.title}</h3>
 					<p>{content.education.detail}</p>
 				</article>
@@ -343,7 +381,31 @@ const content = {
 					<p>{content.contact.body}</p>
 				</div>
 				<ul class="contact-list" aria-label="Contact links">
-					{content.contact.links.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+					{
+						content.contact.links.map((link) => (
+							<li>
+								<a href={link.href} aria-label={link.label} title={link.label}>
+									{link.icon === "email" && (
+										<svg viewBox="0 0 24 24" aria-hidden="true">
+											<path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8" />
+											<path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+										</svg>
+									)}
+									{link.icon === "linkedin" && (
+										<svg viewBox="0 0 24 24" aria-hidden="true">
+											<path fill="currentColor" d="M6.5 8.7H3.8V20h2.7V8.7Zm.2-3.5A1.55 1.55 0 1 0 3.6 5.2a1.55 1.55 0 0 0 3.1 0ZM20.4 13.5c0-3.2-1.7-4.9-4.1-4.9-1.9 0-2.7 1-3.2 1.8V8.7h-2.6V20h2.7v-6.3c0-1.7.8-2.7 2.2-2.7 1.3 0 2.2.9 2.2 2.8V20h2.8v-6.5Z" />
+										</svg>
+									)}
+									{link.icon === "github" && (
+										<svg viewBox="0 0 24 24" aria-hidden="true">
+											<path fill="currentColor" d="M12 2.5a9.5 9.5 0 0 0-3 18.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.6 1.1 1.6 1.1.9 1.6 2.5 1.1 3 .8.1-.7.4-1.1.7-1.4-2.3-.3-4.7-1.1-4.7-5 0-1.1.4-2 1.1-2.8-.1-.3-.5-1.4.1-2.8 0 0 .9-.3 2.9 1.1a10.1 10.1 0 0 1 5.2 0c2-1.4 2.9-1.1 2.9-1.1.6 1.4.2 2.5.1 2.8.7.8 1.1 1.7 1.1 2.8 0 3.9-2.4 4.7-4.7 5 .4.3.8 1 .8 2v3c0 .3.2.6.8.5A9.5 9.5 0 0 0 12 2.5Z" />
+										</svg>
+									)}
+									<span class="sr-only">{link.label}</span>
+								</a>
+							</li>
+						))
+					}
 				</ul>
 			</section>
 		</div>
