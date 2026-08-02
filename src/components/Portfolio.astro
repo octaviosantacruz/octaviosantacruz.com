@@ -71,7 +71,6 @@ const content = {
 			},
 		],
 		certifications: [
-			{ title: "Netskope Accredited SASE Associate", detail: "Netskope", href: "https://verify.skilljar.com/c/xqxmac7gawx6" },
 			{ title: "Netskope Accredited SSE Administrator", detail: "Netskope", href: "https://verify.skilljar.com/c/udnku33wxk5e" },
 			{ title: "Netskope Administrator Accreditation", detail: "Netskope", href: "https://verify.skilljar.com/c/rxx37fvsvrra" },
 			{ title: "BigID Fundamentals - Core 4 Series", detail: "BigID University", href: "https://university.bigid.com/student/award/nSnhLNrTkAcoAwUbbQcCvt5q" },
@@ -82,6 +81,7 @@ const content = {
 		projects: [
 			{
 				title: "Sigea Scan",
+				type: "Open source",
 				meta: "Security engineering / Vulnerability management platform / 2025 - Present",
 				body:
 					"Developing an on-premise vulnerability scanning and management platform designed to simplify deployment, normalize findings, and make security assessments more accessible to smaller organizations.",
@@ -89,9 +89,9 @@ const content = {
 			},
 			{
 				title: "AccessGraph",
+				type: "Private lab / closed source",
 				subtitle: "CyberArk privileged access visibility CMDB",
 				meta: "CyberArk Access Visibility Tool / 2026 - Present",
-				status: "In progress",
 				body:
 					"Building a lightweight CMDB that maps end-to-end privileged access visibility in CyberArk, from identity/user through access policy to PSM session target, consolidating data from both Privilege Cloud and SIA via API into a single queryable graph. Goal: answer 'what can this user actually reach, and how' in one lookup instead of cross-referencing multiple consoles.",
 				tags: ["CyberArk API", "PAM", "SIA", "Python", "FastAPI"],
@@ -175,7 +175,6 @@ const content = {
 			},
 		],
 		certifications: [
-			{ title: "Netskope Accredited SASE Associate", detail: "Netskope", href: "https://verify.skilljar.com/c/xqxmac7gawx6" },
 			{ title: "Netskope Accredited SSE Administrator", detail: "Netskope", href: "https://verify.skilljar.com/c/udnku33wxk5e" },
 			{ title: "Netskope Administrator Accreditation", detail: "Netskope", href: "https://verify.skilljar.com/c/rxx37fvsvrra" },
 			{ title: "BigID Fundamentals - Core 4 Series", detail: "BigID University", href: "https://university.bigid.com/student/award/nSnhLNrTkAcoAwUbbQcCvt5q" },
@@ -186,6 +185,7 @@ const content = {
 		projects: [
 			{
 				title: "Sigea Scan",
+				type: "Open source",
 				meta: "Security engineering / Plataforma de gestion de vulnerabilidades / 2025 - Actualidad",
 				body:
 					"Desarrollo una plataforma on-premise de escaneo y gestion de vulnerabilidades pensada para simplificar despliegues, normalizar hallazgos y hacer evaluaciones de seguridad mas accesibles para organizaciones pequenas.",
@@ -193,9 +193,9 @@ const content = {
 			},
 			{
 				title: "AccessGraph",
+				type: "Private lab / closed source",
 				subtitle: "CMDB de visibilidad de accesos privilegiados en CyberArk",
 				meta: "CyberArk Access Visibility Tool / 2026 - Actualidad",
-				status: "En progreso",
 				body:
 					"Construyendo una CMDB ligera que mapea visibilidad end-to-end de accesos privilegiados en CyberArk, desde identidad/usuario hasta politica de acceso y target de sesion PSM, consolidando datos de Privilege Cloud y SIA via API en un grafo consultable. Objetivo: responder 'a que puede acceder realmente este usuario, y como' en una sola consulta sin cruzar multiples consolas.",
 				tags: ["CyberArk API", "PAM", "SIA", "Python", "FastAPI"],
@@ -359,7 +359,9 @@ const content = {
 										<h3>{project.title}</h3>
 										{project.subtitle && <p class="project-subtitle">{project.subtitle}</p>}
 									</div>
-									{project.status && <span class="status-badge">{project.status}</span>}
+									<div class="project-badges">
+										<span class="type-badge">{project.type}</span>
+									</div>
 								</div>
 								<p class="meta">{project.meta}</p>
 								<p>{project.body}</p>
@@ -391,7 +393,7 @@ const content = {
 					}
 				</h2>
 				<div class="copy contact-copy">
-					<p>{content.contact.body}<br /><span class="contact-lead">{content.contact.lead}</span></p>
+					<p>{content.contact.body} <span class="contact-lead">{content.contact.lead}</span></p>
 				</div>
 				<ul class="contact-list" aria-label="Contact links">
 					{
