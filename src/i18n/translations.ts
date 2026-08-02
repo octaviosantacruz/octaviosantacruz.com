@@ -18,6 +18,7 @@ interface Translation {
 		certificaciones: string;
 		proyectos: string;
 		contacto: string;
+		educacion: string;
 	};
 	sections: {
 		sobreMi: Section;
@@ -25,6 +26,7 @@ interface Translation {
 		certificaciones: Section;
 		proyectos: Section;
 		contacto: Section;
+		educacion: Section;
 	};
 }
 
@@ -43,6 +45,7 @@ export const translations: Record<Locale, Translation> = {
 			certificaciones: "Certificaciones",
 			proyectos: "Proyectos",
 			contacto: "Contacto",
+			educacion: "Educación",
 		},
 		sections: {
 			sobreMi: { num: "01", title: "Sobre mí" },
@@ -50,6 +53,7 @@ export const translations: Record<Locale, Translation> = {
 			certificaciones: { num: "03", title: "Certificaciones" },
 			proyectos: { num: "04", title: "Proyectos" },
 			contacto: { num: "05", title: "Contacto" },
+			educacion: { num: "06", title: "Educación" },
 		},
 	},
 	en: {
@@ -66,6 +70,7 @@ export const translations: Record<Locale, Translation> = {
 			certificaciones: "Certifications",
 			proyectos: "Projects",
 			contacto: "Contact",
+			educacion: "Education",
 		},
 		sections: {
 			sobreMi: { num: "01", title: "About" },
@@ -73,6 +78,7 @@ export const translations: Record<Locale, Translation> = {
 			certificaciones: { num: "03", title: "Certifications" },
 			proyectos: { num: "04", title: "Projects" },
 			contacto: { num: "05", title: "Contact" },
+			educacion: { num: "06", title: "Education" },
 		},
 	},
 };

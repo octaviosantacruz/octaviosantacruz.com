@@ -89,6 +89,7 @@ const content = {
 			},
 			{
 				title: "AccessGraph",
+				subtitle: "CyberArk privileged access visibility CMDB",
 				meta: "CyberArk Access Visibility Tool / 2026 - Present",
 				status: "In progress",
 				body:
@@ -102,8 +103,8 @@ const content = {
 				"Taiwan-Paraguay Polytechnic University (UPTP), Asuncion. Completed 15 months of full-time coursework in Taiwan through a merit-based academic exchange.",
 		},
 		contact: {
-			body:
-				"Based in Asuncion, Paraguay. Native Spanish speaker with C1 English, open to relocation and remote security roles.",
+			body: "C1 English.",
+			lead: "You can find me on:",
 			links: [
 				{ label: "Email", href: "mailto:octavio.santacruz3@gmail.com", icon: "email" },
 				{ label: "LinkedIn", href: "https://linkedin.com/in/octaviosantacruz", icon: "linkedin" },
@@ -192,6 +193,7 @@ const content = {
 			},
 			{
 				title: "AccessGraph",
+				subtitle: "CMDB de visibilidad de accesos privilegiados en CyberArk",
 				meta: "CyberArk Access Visibility Tool / 2026 - Actualidad",
 				status: "En progreso",
 				body:
@@ -205,8 +207,8 @@ const content = {
 				"Universidad Politecnica Taiwan-Paraguay (UPTP), Asuncion. Complete 15 meses de cursado full-time en Taiwan mediante un intercambio academico por merito.",
 		},
 		contact: {
-			body:
-				"Basado en Asuncion, Paraguay. Espanol nativo e ingles C1, abierto a relocation y roles remotos en seguridad.",
+			body: "Inglés C1.",
+			lead: "Podés encontrarme en:",
 			links: [
 				{ label: "Email", href: "mailto:octavio.santacruz3@gmail.com", icon: "email" },
 				{ label: "LinkedIn", href: "https://linkedin.com/in/octaviosantacruz", icon: "linkedin" },
@@ -353,7 +355,10 @@ const content = {
 						content.projects.map((project) => (
 							<article class="project-card">
 								<div class="project-heading">
-									<h3>{project.title}</h3>
+									<div>
+										<h3>{project.title}</h3>
+										{project.subtitle && <p class="project-subtitle">{project.subtitle}</p>}
+									</div>
 									{project.status && <span class="status-badge">{project.status}</span>}
 								</div>
 								<p class="meta">{project.meta}</p>
@@ -373,12 +378,9 @@ const content = {
 						t.sections.contacto.title
 					}
 				</h2>
-				<article class="record education-record education-card">
-					<h3>{content.education.title}</h3>
-					<p>{content.education.detail}</p>
-				</article>
 				<div class="copy contact-copy">
 					<p>{content.contact.body}</p>
+					<p class="contact-lead">{content.contact.lead}</p>
 				</div>
 				<ul class="contact-list" aria-label="Contact links">
 					{
@@ -407,6 +409,18 @@ const content = {
 						))
 					}
 				</ul>
+			</section>
+
+			<section id="educacion" aria-labelledby="educacion-heading" class="reveal">
+				<h2 id="educacion-heading">
+					<span class="section-num" aria-hidden="true">{t.sections.educacion.num}</span>{
+						t.sections.educacion.title
+					}
+				</h2>
+				<article class="record education-record education-card">
+					<h3>{content.education.title}</h3>
+					<p>{content.education.detail}</p>
+				</article>
 			</section>
 		</div>
 

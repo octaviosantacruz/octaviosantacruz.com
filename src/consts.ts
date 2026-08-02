@@ -20,4 +20,5 @@ export const NAV_SECTIONS = [
 	{ href: "#certificaciones", key: "certificaciones" },
 	{ href: "#proyectos", key: "proyectos" },
 	{ href: "#contacto", key: "contacto" },
+	{ href: "#educacion", key: "educacion" },
 ] as const;
