@@ -93,6 +93,7 @@ a {
 
 .layout {
 	display: block;
+	isolation: isolate;
 	min-height: 100svh;
 }
 
