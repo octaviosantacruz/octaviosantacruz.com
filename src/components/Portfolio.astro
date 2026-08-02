@@ -74,7 +74,7 @@ const content = {
 			{ title: "Netskope Accredited SSE Administrator", detail: "Netskope", href: "https://verify.skilljar.com/c/udnku33wxk5e" },
 			{ title: "Netskope Administrator Accreditation", detail: "Netskope", href: "https://verify.skilljar.com/c/rxx37fvsvrra" },
 			{ title: "BigID Fundamentals - Core 4 Series", detail: "BigID University", href: "https://university.bigid.com/student/award/nSnhLNrTkAcoAwUbbQcCvt5q" },
-			{ title: "Nessus Fundamentals", detail: "Tenable", href: "https://nessusfundamentals.tenable.com/528ba68c-841f-4e90-babf-7bbff58bfaea" },
+			{ title: "Nessus Fundamentals", detail: "Tenable", note: "Expired Jan 17, 2026", href: "https://nessusfundamentals.tenable.com/528ba68c-841f-4e90-babf-7bbff58bfaea" },
 			{ title: "Privileged Access Management with CyberArk", detail: "Udemy", href: "https://www.udemy.com/certificate/UC-ed99a7b1-be02-4a5a-a85b-95c75fdfc24b/" },
 			{ title: "Junior Cybersecurity Analyst Career Path", detail: "Cisco / Credly", href: "https://www.credly.com/badges/6e52ad96-c457-438f-ba54-594f4f565ac6" },
 		],
@@ -178,7 +178,7 @@ const content = {
 			{ title: "Netskope Accredited SSE Administrator", detail: "Netskope", href: "https://verify.skilljar.com/c/udnku33wxk5e" },
 			{ title: "Netskope Administrator Accreditation", detail: "Netskope", href: "https://verify.skilljar.com/c/rxx37fvsvrra" },
 			{ title: "BigID Fundamentals - Core 4 Series", detail: "BigID University", href: "https://university.bigid.com/student/award/nSnhLNrTkAcoAwUbbQcCvt5q" },
-			{ title: "Nessus Fundamentals", detail: "Tenable", href: "https://nessusfundamentals.tenable.com/528ba68c-841f-4e90-babf-7bbff58bfaea" },
+			{ title: "Nessus Fundamentals", detail: "Tenable", note: "Expirada el 17 ene 2026", href: "https://nessusfundamentals.tenable.com/528ba68c-841f-4e90-babf-7bbff58bfaea" },
 			{ title: "Privileged Access Management with CyberArk", detail: "Udemy", href: "https://www.udemy.com/certificate/UC-ed99a7b1-be02-4a5a-a85b-95c75fdfc24b/" },
 			{ title: "Junior Cybersecurity Analyst Career Path", detail: "Cisco / Credly", href: "https://www.credly.com/badges/6e52ad96-c457-438f-ba54-594f4f565ac6" },
 		],
@@ -329,12 +329,14 @@ const content = {
 										<a class="certification-link" href={certification.href}>
 											<h3>{certification.title}</h3>
 											<p>{certification.detail}</p>
+											{certification.note && <small class="certification-note">{certification.note}</small>}
 											<span>Verify credential</span>
 										</a>
 									) : (
 										<div class="certification-link certification-link-static">
 											<h3>{certification.title}</h3>
 											<p>{certification.detail}</p>
+											{certification.note && <small class="certification-note">{certification.note}</small>}
 										</div>
 									)}
 								</article>

@@ -642,6 +642,13 @@ h3 {
 	transition: color 0.2s ease;
 }
 
+.certification-note {
+	color: var(--fg-muted);
+	font-family: var(--font-mono);
+	font-size: 0.62rem;
+	line-height: 1.35;
+}
+
 .certification-link:hover h3,
 .certification-link:focus-visible h3 {
 	color: var(--accent);
