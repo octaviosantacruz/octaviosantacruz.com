@@ -103,7 +103,7 @@ const content = {
 				"Taiwan-Paraguay Polytechnic University (UPTP), Asuncion. Completed 15 months of full-time coursework in Taiwan through a merit-based academic exchange.",
 		},
 		contact: {
-			body: "C1 English.",
+			body: "Feel free to contact me — always open to helping, collaborating, or participating in security projects.",
 			lead: "You can find me on:",
 			links: [
 				{ label: "Email", href: "mailto:octavio.santacruz3@gmail.com", icon: "email" },
@@ -207,7 +207,7 @@ const content = {
 				"Universidad Politecnica Taiwan-Paraguay (UPTP), Asuncion. Complete 15 meses de cursado full-time en Taiwan mediante un intercambio academico por merito.",
 		},
 		contact: {
-			body: "Inglés C1.",
+			body: "No dudes en contactarme — siempre abierto a ayudar, colaborar o participar en proyectos de seguridad.",
 			lead: "Podés encontrarme en:",
 			links: [
 				{ label: "Email", href: "mailto:octavio.santacruz3@gmail.com", icon: "email" },
@@ -318,7 +318,7 @@ const content = {
 						t.sections.certificaciones.title
 					}
 				</h2>
-				<div class="record-list">
+				<div class="record-list certifications-list">
 					{
 						content.certifications.map((certification) => {
 							const hasVerificationLink = !certification.href.startsWith("[VERIFY_URL_");
@@ -372,6 +372,18 @@ const content = {
 				</div>
 			</section>
 
+			<section id="educacion" aria-labelledby="educacion-heading" class="reveal">
+				<h2 id="educacion-heading">
+					<span class="section-num" aria-hidden="true">{t.sections.educacion.num}</span>{
+						t.sections.educacion.title
+					}
+				</h2>
+				<article class="record education-record education-card">
+					<h3>{content.education.title}</h3>
+					<p>{content.education.detail}</p>
+				</article>
+			</section>
+
 			<section id="contacto" aria-labelledby="contacto-heading" class="reveal">
 				<h2 id="contacto-heading">
 					<span class="section-num" aria-hidden="true">{t.sections.contacto.num}</span>{
@@ -379,8 +391,7 @@ const content = {
 					}
 				</h2>
 				<div class="copy contact-copy">
-					<p>{content.contact.body}</p>
-					<p class="contact-lead">{content.contact.lead}</p>
+					<p>{content.contact.body}<br /><span class="contact-lead">{content.contact.lead}</span></p>
 				</div>
 				<ul class="contact-list" aria-label="Contact links">
 					{
@@ -411,17 +422,6 @@ const content = {
 				</ul>
 			</section>
 
-			<section id="educacion" aria-labelledby="educacion-heading" class="reveal">
-				<h2 id="educacion-heading">
-					<span class="section-num" aria-hidden="true">{t.sections.educacion.num}</span>{
-						t.sections.educacion.title
-					}
-				</h2>
-				<article class="record education-record education-card">
-					<h3>{content.education.title}</h3>
-					<p>{content.education.detail}</p>
-				</article>
-			</section>
 		</div>
 
 		<footer>

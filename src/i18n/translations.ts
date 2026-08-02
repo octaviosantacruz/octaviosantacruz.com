@@ -52,8 +52,8 @@ export const translations: Record<Locale, Translation> = {
 			experiencia: { num: "02", title: "Experiencia" },
 			certificaciones: { num: "03", title: "Certificaciones" },
 			proyectos: { num: "04", title: "Proyectos" },
-			contacto: { num: "05", title: "Contacto" },
-			educacion: { num: "06", title: "Educación" },
+			educacion: { num: "05", title: "Educación" },
+			contacto: { num: "06", title: "Contacto" },
 		},
 	},
 	en: {
@@ -77,8 +77,8 @@ export const translations: Record<Locale, Translation> = {
 			experiencia: { num: "02", title: "Experience" },
 			certificaciones: { num: "03", title: "Certifications" },
 			proyectos: { num: "04", title: "Projects" },
-			contacto: { num: "05", title: "Contact" },
-			educacion: { num: "06", title: "Education" },
+			educacion: { num: "05", title: "Education" },
+			contacto: { num: "06", title: "Contact" },
 		},
 	},
 };
