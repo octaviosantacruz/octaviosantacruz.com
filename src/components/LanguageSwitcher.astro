@@ -6,7 +6,30 @@ const locale = (Astro.currentLocale ?? "en") as Locale;
 ---
 
 <div class="lang-switch" role="group" aria-label="Language / Idioma">
-	<a href={getRelativeLocaleUrl("es", "/")} aria-current={locale === "es" ? "page" : undefined}>ES</a>
+	<a
+		href={getRelativeLocaleUrl("es", "/")}
+		data-lang-link
+		aria-current={locale === "es" ? "page" : undefined}>ES</a
+	>
 	<span aria-hidden="true">·</span>
-	<a href={getRelativeLocaleUrl("en", "/")} aria-current={locale === "en" ? "page" : undefined}>EN</a>
+	<a
+		href={getRelativeLocaleUrl("en", "/")}
+		data-lang-link
+		aria-current={locale === "en" ? "page" : undefined}>EN</a
+	>
 </div>
+
+<script>
+	// The hash never reaches a static server, so carry the current section
+	// across a language switch on the client.
+	const links = document.querySelectorAll<HTMLAnchorElement>("[data-lang-link]");
+	const sync = () => {
+		const hash = window.location.hash;
+		for (const link of links) {
+			const base = link.getAttribute("href")?.split("#")[0] ?? "";
+			link.setAttribute("href", hash ? `${base}${hash}` : base);
+		}
+	};
+	sync();
+	window.addEventListener("hashchange", sync);
+</script>

@@ -10,7 +10,7 @@ export const PERSON = {
 	fullName: "Octavio Santacruz",
 	jobTitle: "Cybersecurity Engineer",
 	addressCountry: "PY",
-	addressLocality: "Paraguay",
+	addressLocality: "Asunción",
 	sameAs: ["https://linkedin.com/in/octaviosantacruz", "https://github.com/octaviosantacruz"],
 } as const;
 
