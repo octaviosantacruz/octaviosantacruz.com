@@ -2,8 +2,13 @@
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { SITE, PERSON } from "../consts";
 import { translations, type Locale } from "../i18n/translations";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 import "@fontsource/jetbrains-mono/400.css";
 import "@fontsource/jetbrains-mono/500.css";
+import "@fontsource/jetbrains-mono/600.css";
+import "@fontsource/jetbrains-mono/700.css";
 import "../styles/global.css";
 
 interface Props {
@@ -63,6 +68,9 @@ const personSchema = {
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={ogImageURL} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={t.ogImageAlt} />
 		<meta property="og:locale" content={t.ogLocale} />
 		<meta property="og:site_name" content={SITE.name} />
 
@@ -72,6 +80,7 @@ const personSchema = {
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={ogImageURL} />
+		<meta name="twitter:image:alt" content={t.ogImageAlt} />
 
 		<!-- JSON-LD: Person -->
 		<script type="application/ld+json" set:html={JSON.stringify(personSchema)} is:inline />
