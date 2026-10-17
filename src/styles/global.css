@@ -885,3 +885,12 @@ footer p {
 		transition: none;
 	}
 }
+
+/* Project status is separate from licensing and public availability. */
+.project-stage {
+ border-color: currentColor;
+}
+.project-availability {
+ font-size: .85em;
+ font-weight: 600;
+}

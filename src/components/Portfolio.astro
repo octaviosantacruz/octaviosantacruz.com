@@ -81,21 +81,25 @@ const content = {
 		projects: [
 			{
 				title: "Switchboard",
-				type: "Open source / in active development",
-				subtitle: "Transparent, self-hostable zero-trust access platform",
+				type: "Open source",
+				stage: "In development",
+				availability: "No public demo",
+				subtitle: "Identity-aware reverse proxy and static-site gateway",
 				meta: "Security engineering / Identity-aware gateway / 2026 - Present",
 				body:
-					"A year-long open-source project in Go: a single binary that publishes apps through outbound tunnels, gives humans, machines and AI agents short-lived identities via passwordless login and a private ACME CA, brokers SSH and database access with just-in-time approval and recorded sessions, and writes every trust decision to a verifiable transparency log. The idea: bring enterprise PAM and SSE concepts to everyone, with verifiability they lack.",
-				tags: ["Go", "Zero Trust", "PKI / ACME", "OIDC / Passkeys", "PAM"],
+					"A Go reverse proxy with host-based routing, external OIDC login, claim-based access policies, and static-site serving. Validated locally; public deployment is pending. Outbound tunnels, passwordless identity, a private CA, and infrastructure access are roadmap goals.",
+				tags: ["Go", "OIDC", "Reverse proxy", "Static sites"],
 			},
 			{
 				title: "Custodia",
 				type: "Private lab / closed source",
-				subtitle: "CyberArk privileged access visibility CMDB",
+				stage: "In development",
+				availability: "Private app · no public demo",
+				subtitle: "Operational CMDB for CyberArk and Netskope",
 				meta: "CyberArk Access Visibility Tool / 2026 - Present",
 				body:
-					"Building a lightweight CMDB that maps end-to-end privileged access visibility in CyberArk, from identity/user through access policy to PSM session target, consolidating data from both Privilege Cloud and SIA via API into a single queryable graph. Goal: answer 'what can this user actually reach, and how' in one lookup instead of cross-referencing multiple consoles.",
-				tags: ["CyberArk API", "PAM", "SIA", "Python", "FastAPI"],
+					"Operational inventory and source-specific views for CyberArk and Netskope, with access controls, audit trails, and human review. Private work in active development; no public access or demo is offered.",
+				tags: ["CyberArk", "Netskope", "FastAPI", "React", "PostgreSQL"],
 			},
 		],
 		education: {
@@ -186,21 +190,25 @@ const content = {
 		projects: [
 			{
 				title: "Switchboard",
-				type: "Código abierto / en desarrollo activo",
-				subtitle: "Plataforma de acceso zero-trust transparente y autohospedable",
+				type: "Código abierto",
+				stage: "En desarrollo",
+				availability: "Sin demo pública",
+				subtitle: "Proxy con identidad y publicación de sitios estáticos",
 				meta: "Ingeniería de seguridad / Gateway con identidad / 2026 - Actualidad",
 				body:
-					"Proyecto open source de un año en Go: un solo binario que publica aplicaciones mediante túneles salientes, da identidades efímeras a personas, máquinas y agentes de IA con login sin contraseñas y una CA ACME propia, gestiona acceso SSH y a bases de datos con aprobación just-in-time y sesiones grabadas, y registra cada decisión de confianza en un log de transparencia verificable. La idea: llevar conceptos de PAM y SSE empresarial a todos, con la verificabilidad que les falta.",
-				tags: ["Go", "Zero Trust", "PKI / ACME", "OIDC / Passkeys", "PAM"],
+					"Proxy en Go con enrutamiento por host, login OIDC externo, políticas de acceso por claims y publicación de sitios estáticos. Validado localmente; la publicación está pendiente. Los túneles salientes, la identidad sin contraseñas, una CA privada y el acceso a infraestructura son objetivos del roadmap.",
+				tags: ["Go", "OIDC", "Reverse proxy", "Static sites"],
 			},
 			{
 				title: "Custodia",
 				type: "Lab privado / código cerrado",
-				subtitle: "CMDB de visibilidad de accesos privilegiados en CyberArk",
+				stage: "En desarrollo",
+				availability: "App privada · sin demo pública",
+				subtitle: "CMDB operacional para CyberArk y Netskope",
 				meta: "Herramienta de visibilidad de accesos en CyberArk / 2026 - Actualidad",
 				body:
-					"Construyo una CMDB ligera que mapea la visibilidad end-to-end de accesos privilegiados en CyberArk, desde identidad/usuario hasta política de acceso y destino de sesión PSM, consolidando datos de Privilege Cloud y SIA vía API en un grafo consultable. Objetivo: responder «a qué puede acceder realmente este usuario, y cómo» en una sola consulta sin cruzar múltiples consolas.",
-				tags: ["CyberArk API", "PAM", "SIA", "Python", "FastAPI"],
+					"Inventario operacional y vistas separadas por fuente para CyberArk y Netskope, con controles de acceso, auditoría y revisión humana. Trabajo privado en desarrollo activo; no se ofrece acceso público ni una demo.",
+				tags: ["CyberArk", "Netskope", "FastAPI", "React", "PostgreSQL"],
 			},
 		],
 		education: {
@@ -364,11 +372,13 @@ const content = {
 										{project.subtitle && <p class="project-subtitle">{project.subtitle}</p>}
 									</div>
 									<div class="project-badges">
+										<span class="type-badge project-stage">{project.stage}</span>
 										<span class="type-badge">{project.type}</span>
 									</div>
 								</div>
 								<p class="meta">{project.meta}</p>
 								<p>{project.body}</p>
+								<p class="project-availability">{project.availability}</p>
 								<ul class="tag-list project-tags" aria-label={t.ui.projectStackLabel}>
 									{project.tags.map((tag) => <li>{tag}</li>)}
 								</ul>
