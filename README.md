@@ -4,6 +4,13 @@ Personal portfolio for Octavio Santacruz, focused on security operations, techni
 
 Built with [Astro](https://astro.build) and deployed as a static site.
 
+## Proposed visual redesign
+
+[Design review and proposal, 2026-10-21](docs/DESIGN-REVIEW-2026-10-21.md):
+current-site findings, screenshots, a hero concept, color palette, motion
+direction and an implementation plan. Pending owner review; not implemented
+or published.
+
 ## Stack
 
 - Astro
