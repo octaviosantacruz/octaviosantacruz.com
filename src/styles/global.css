@@ -28,6 +28,11 @@
 	box-sizing: border-box;
 }
 
+/* hidden must win over any display rule (tab panels, the tab bar). */
+[hidden] {
+	display: none !important;
+}
+
 html {
 	scrollbar-gutter: stable;
 }
@@ -481,44 +486,151 @@ h3 {
 	text-align: center;
 }
 
-.project-grid {
-	display: grid;
-	gap: 1.25rem;
-	margin-top: 1.25rem;
-}
-
-.project {
-	display: flex;
-	flex-direction: column;
-	gap: 0.75rem;
-	padding: 1.75rem 1.5rem;
-	border: 1px solid var(--border);
-	border-radius: 1rem;
-	background: var(--bg-band);
-}
-
-.project p {
-	color: var(--fg-soft);
-}
-
-.project,
 .credentials a {
 	transition:
 		transform 0.2s ease,
 		border-color 0.2s ease;
 }
 
-/* Lift only what a pointer can act on: cards with a link inside, and the
-   credential links. */
+/* Lift only what a pointer can act on: the credential links. */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-	.project:has(.text-link):hover,
 	.credentials a:hover {
 		transform: translateY(-3px);
 	}
+}
 
-	.project:has(.text-link):hover {
-		border-color: var(--accent-line);
+/* ── Project showcase ─────────────────────────────────────────────────── */
+
+/* Without JavaScript every project shows, one after another. */
+.showcase {
+	display: grid;
+	gap: 1.25rem;
+}
+
+.showcase.is-tabbed {
+	gap: 0;
+}
+
+.showcase-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	margin-bottom: 1.25rem;
+}
+
+.showcase-tabs {
+	display: flex;
+	gap: 0.35rem;
+	padding: 0.3rem;
+	border: 1px solid var(--border);
+	border-radius: 0.75rem;
+	background: var(--bg-band);
+	overflow-x: auto;
+}
+
+.showcase-tabs [role="tab"] {
+	position: relative;
+	min-height: 2.75rem;
+	padding: 0 1.1rem;
+	overflow: hidden;
+	border: 0;
+	border-radius: 0.5rem;
+	background: transparent;
+	color: var(--fg-muted);
+	font: inherit;
+	font-weight: 700;
+	white-space: nowrap;
+	cursor: pointer;
+	transition:
+		background 0.2s ease,
+		color 0.2s ease;
+}
+
+.showcase-tabs [role="tab"]:hover {
+	color: var(--fg);
+}
+
+.showcase-tabs [role="tab"][aria-selected="true"] {
+	background: var(--bg-raised);
+	color: var(--fg);
+}
+
+/* How long until the next project, on the selected tab. */
+.tab-progress {
+	position: absolute;
+	left: 0.75rem;
+	right: 0.75rem;
+	bottom: 0.3rem;
+	height: 2px;
+	border-radius: 2px;
+	background: var(--accent);
+	transform: scaleX(0);
+	transform-origin: left;
+}
+
+.is-counting .tab-progress {
+	animation: tab-count 12s linear forwards;
+}
+
+@keyframes tab-count {
+	to {
+		transform: scaleX(1);
 	}
+}
+
+.showcase-toggle {
+	min-height: 2.75rem;
+	padding: 0 0.9rem;
+	border: 1px solid var(--border);
+	border-radius: 0.5rem;
+	background: transparent;
+	color: var(--fg-muted);
+	font: inherit;
+	font-size: 0.85rem;
+	cursor: pointer;
+}
+
+.showcase-toggle:hover {
+	color: var(--fg);
+}
+
+/* A newly selected project fades in; reveal.ts handles the first arrival. */
+@media (prefers-reduced-motion: no-preference) {
+	.is-tabbed .feature:not([hidden]) {
+		animation: panel-in 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+	}
+
+	@keyframes panel-in {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+	}
+}
+
+.feature-soon {
+	display: grid;
+	place-content: center;
+	justify-items: center;
+	gap: 0.6rem;
+	min-height: 22rem;
+	padding: 2rem;
+	border: 1px dashed var(--border);
+	border-radius: 0.9rem;
+	background:
+		radial-gradient(circle at 50% 35%, oklch(0.79 0.1 252 / 0.08), transparent 16rem),
+		radial-gradient(oklch(0.33 0.01 260 / 0.5) 1px, transparent 1.2px) 0 0 / 22px 22px;
+	color: var(--fg-muted);
+	text-align: center;
+}
+
+.feature-soon-title {
+	color: var(--fg);
+	font-size: 1.5rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
 }
 
 .badges {
@@ -526,10 +638,6 @@ h3 {
 	flex-wrap: wrap;
 	gap: 0.4rem;
 	margin-bottom: 0.9rem;
-}
-
-.project .badges {
-	margin-bottom: 0.15rem;
 }
 
 .badge {
@@ -690,6 +798,22 @@ h3 {
 
 .decision-rows dt {
 	color: var(--fg-muted);
+}
+
+/* On a phone each label sits above its value, so the URL keeps one line. */
+@media (max-width: 30rem) {
+	.decision-rows {
+		gap: 0.55rem;
+	}
+
+	.decision-rows > div {
+		grid-template-columns: 1fr;
+		gap: 0;
+	}
+
+	.decision-rows dt {
+		font-size: 0.72rem;
+	}
 }
 
 .decision-rows dd {
@@ -939,7 +1063,6 @@ h3 {
 		grid-template-columns: repeat(3, 1fr);
 	}
 
-	.project-grid,
 	.credentials {
 		grid-template-columns: repeat(2, 1fr);
 	}

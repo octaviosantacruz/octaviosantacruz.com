@@ -24,9 +24,18 @@ interface Project {
 	meta: string;
 	body: string;
 	tags: string[];
-	// A featured project shows a real screenshot (src/assets/projects) and
-	// says what problem it answers, how, and what can be seen today.
-	featured?: { image: "switchboard-passkeys"; imageAlt: string; caption: string; points: Point[]; demo?: Demo };
+	// Each project in the showcase says what problem it answers, how, and
+	// what can be seen today. A visual is a real screenshot
+	// (src/assets/projects); until a project has one, comingSoon fills the
+	// space and says so.
+	featured: {
+		image?: "switchboard-passkeys";
+		imageAlt?: string;
+		caption?: string;
+		comingSoon?: string;
+		points: Point[];
+		demo?: Demo;
+	};
 }
 
 // A replay of how Switchboard decides, with example identities. The codes are
@@ -67,6 +76,7 @@ export interface Content {
 		now: Fact[];
 	};
 	sections: Record<"projects" | "experience" | "profile" | "certifications" | "education" | "contact", Heading>;
+	showcase: { label: string; pause: string; play: string };
 	about: string[];
 	competencies: string[];
 	metrics: { value: string; label: string }[];
@@ -107,6 +117,7 @@ export const content: Record<Locale, Content> = {
 			education: { kicker: "Education", title: "Education" },
 			contact: { kicker: "Contact", title: "Opportunities and collaboration" },
 		},
+		showcase: { label: "Projects", pause: "Pause rotation", play: "Resume rotation" },
 		about: [
 			"I work across security operations, privileged access, data protection, and vulnerability management, connecting offensive testing with defensive engineering.",
 			"My recent work includes enterprise-scale implementations across 40+ companies: CyberArk PAM and PSM, BigID data discovery, Netskope DLP governance, vulnerability remediation, and security automation.",
@@ -224,6 +235,14 @@ export const content: Record<Locale, Content> = {
 				body:
 					"An agent inside the network inventories the services you expose and compares every scan with the previous comparable one, so you see what appeared, changed or went away, with the evidence behind it. A partial scan never counts as a service going away. The v2 rebuild in Go and PostgreSQL is documented in a public devlog with per-module progress.",
 				tags: ["Go", "PostgreSQL", "Nmap", "React"],
+				featured: {
+					comingSoon: "Screenshots on the way",
+					points: [
+						{ label: "Problem", text: "Teams rarely know what they expose until someone else scans them for them." },
+						{ label: "Approach", text: "An agent inside the network inventories services and compares every scan with the previous comparable one; a partial scan never counts as a service going away." },
+						{ label: "Today", text: "The v2 rebuild in Go and PostgreSQL, documented in a public devlog with per-module progress." },
+					],
+				},
 			},
 			{
 				title: "Custodia",
@@ -235,6 +254,14 @@ export const content: Record<Locale, Content> = {
 				body:
 					"Operational inventory and source-specific views for CyberArk and Netskope, with access controls, audit trails, and human review. Private work in active development; no public access or demo is offered.",
 				tags: ["CyberArk", "Netskope", "FastAPI", "React", "PostgreSQL"],
+				featured: {
+					comingSoon: "Screenshots with demo data on the way",
+					points: [
+						{ label: "Problem", text: "CyberArk and Netskope each hold part of the access picture, in separate consoles." },
+						{ label: "Approach", text: "One operational inventory with views kept separate by source, access controls, audit trails and human review; nothing is inferred across sources." },
+						{ label: "Today", text: "Private work in active development; no public access or demo." },
+					],
+				},
 			},
 		],
 		education: {
@@ -273,6 +300,7 @@ export const content: Record<Locale, Content> = {
 			education: { kicker: "Formación", title: "Educación" },
 			contact: { kicker: "Contacto", title: "Oportunidades y colaboración" },
 		},
+		showcase: { label: "Proyectos", pause: "Pausar rotación", play: "Reanudar rotación" },
 		about: [
 			"Trabajo entre operaciones de seguridad, accesos privilegiados, protección de datos y gestión de vulnerabilidades, combinando pruebas ofensivas con ingeniería defensiva.",
 			"Mi experiencia reciente incluye implementaciones empresariales en más de 40 compañías: CyberArk PAM y PSM, descubrimiento de datos con BigID, gobierno DLP con Netskope, remediación de vulnerabilidades y automatización de seguridad.",
@@ -390,6 +418,14 @@ export const content: Record<Locale, Content> = {
 				body:
 					"Un agente dentro de la red inventaría los servicios expuestos y compara cada escaneo con el anterior comparable: muestra qué apareció, cambió o desapareció, con la evidencia que lo respalda. Un escaneo parcial nunca cuenta como un servicio que desapareció. La reconstrucción v2 en Go y PostgreSQL se documenta en un devlog público con progreso por módulo.",
 				tags: ["Go", "PostgreSQL", "Nmap", "React"],
+				featured: {
+					comingSoon: "Capturas en camino",
+					points: [
+						{ label: "Problema", text: "Los equipos rara vez saben qué exponen hasta que otro los escanea por ellos." },
+						{ label: "Enfoque", text: "Un agente dentro de la red inventaría los servicios y compara cada escaneo con el anterior comparable; un escaneo parcial nunca cuenta como un servicio que desapareció." },
+						{ label: "Hoy", text: "La reconstrucción v2 en Go y PostgreSQL, documentada en un devlog público con progreso por módulo." },
+					],
+				},
 			},
 			{
 				title: "Custodia",
@@ -401,6 +437,14 @@ export const content: Record<Locale, Content> = {
 				body:
 					"Inventario operacional y vistas separadas por fuente para CyberArk y Netskope, con controles de acceso, auditoría y revisión humana. Trabajo privado en desarrollo activo; no se ofrece acceso público ni una demo.",
 				tags: ["CyberArk", "Netskope", "FastAPI", "React", "PostgreSQL"],
+				featured: {
+					comingSoon: "Capturas con datos de demostración en camino",
+					points: [
+						{ label: "Problema", text: "CyberArk y Netskope tienen cada uno una parte del panorama de accesos, en consolas separadas." },
+						{ label: "Enfoque", text: "Un inventario operacional con vistas separadas por fuente, controles de acceso, auditoría y revisión humana; nada se infiere entre fuentes." },
+						{ label: "Hoy", text: "Trabajo privado en desarrollo activo; sin acceso público ni demo." },
+					],
+				},
 			},
 		],
 		education: {
