@@ -1,9 +1,5 @@
 export type Locale = "es" | "en";
 
-interface Section {
-	num: string;
-	title: string;
-}
 
 interface Translation {
 	siteTitle: string;
@@ -20,22 +16,6 @@ interface Translation {
 		projectStackLabel: string;
 		contactLinksLabel: string;
 		verifyCredential: string;
-	};
-	nav: {
-		sobreMi: string;
-		experiencia: string;
-		certificaciones: string;
-		proyectos: string;
-		contacto: string;
-		educacion: string;
-	};
-	sections: {
-		sobreMi: Section;
-		experiencia: Section;
-		certificaciones: Section;
-		proyectos: Section;
-		contacto: Section;
-		educacion: Section;
 	};
 }
 
@@ -58,22 +38,6 @@ export const translations: Record<Locale, Translation> = {
 			contactLinksLabel: "Enlaces de contacto",
 			verifyCredential: "Verificar credencial",
 		},
-		nav: {
-			sobreMi: "Sobre mí",
-			experiencia: "Experiencia",
-			certificaciones: "Certificaciones",
-			proyectos: "Proyectos",
-			contacto: "Contacto",
-			educacion: "Educación",
-		},
-		sections: {
-			sobreMi: { num: "01", title: "Sobre mí" },
-			experiencia: { num: "03", title: "Experiencia" },
-			certificaciones: { num: "04", title: "Certificaciones" },
-			proyectos: { num: "02", title: "Proyectos" },
-			educacion: { num: "05", title: "Educación" },
-			contacto: { num: "06", title: "Contacto" },
-		},
 	},
 	en: {
 		siteTitle: "Octavio Santacruz — Cybersecurity Engineer",
@@ -92,22 +56,6 @@ export const translations: Record<Locale, Translation> = {
 			projectStackLabel: "Project stack",
 			contactLinksLabel: "Contact links",
 			verifyCredential: "Verify credential",
-		},
-		nav: {
-			sobreMi: "About",
-			experiencia: "Experience",
-			certificaciones: "Certifications",
-			proyectos: "Projects",
-			contacto: "Contact",
-			educacion: "Education",
-		},
-		sections: {
-			sobreMi: { num: "01", title: "About" },
-			experiencia: { num: "03", title: "Experience" },
-			certificaciones: { num: "04", title: "Certifications" },
-			proyectos: { num: "02", title: "Projects" },
-			educacion: { num: "05", title: "Education" },
-			contacto: { num: "06", title: "Contact" },
 		},
 	},
 };
