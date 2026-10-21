@@ -1,0 +1,113 @@
+---
+import type { Content, Decision } from "../data/content";
+
+type Demo = NonNullable<NonNullable<Content["projects"][number]["featured"]>["demo"]>;
+
+interface Props {
+	demo: Demo;
+}
+
+const { demo } = Astro.props;
+const first: Decision = demo.decisions[0];
+---
+
+<!--
+	A replay of Switchboard's decisions with example identities. Without
+	JavaScript it shows the first one, complete; the script steps through all
+	of them, can be paused (it changes on its own), and stops while off screen.
+-->
+<figure class="decision" data-decisions={JSON.stringify(demo.decisions)} data-pause={demo.pause} data-play={demo.play}>
+	<div class="decision-head">
+		<p class="decision-title"><span class="lamp" data-lamp={first.outcome} aria-hidden="true"></span>{demo.title}</p>
+		<button type="button" class="decision-toggle" hidden>{demo.pause}</button>
+	</div>
+	<dl class="decision-rows" aria-hidden="true">
+		<div><dt>{demo.labels.request}</dt><dd>{demo.request}</dd></div>
+		<div data-step="1"><dt>{demo.labels.identity}</dt><dd data-field="identity">{first.identity}</dd></div>
+		<div data-step="2"><dt>{demo.labels.policy}</dt><dd data-field="policy">{first.policy}</dd></div>
+		<div data-step="3">
+			<dt>{demo.labels.decision}</dt>
+			<dd>
+				<span class="outcome" data-field="outcomeLabel" data-outcome={first.outcome}>{first.outcomeLabel}</span>
+				<code data-field="code">{first.code}</code>
+			</dd>
+		</div>
+		<div data-step="4"><dt>{demo.labels.reason}</dt><dd data-field="reason">{first.reason}</dd></div>
+	</dl>
+	<figcaption>
+		<span class="sr-only">{demo.summary}</span>
+		<span aria-hidden="true">{demo.note}</span>
+	</figcaption>
+</figure>
+
+<script>
+	import type { Decision } from "../data/content";
+
+	const STEP = 450; // between rows
+	const HOLD = 2600; // a complete decision stays this long
+
+	for (const panel of document.querySelectorAll<HTMLElement>(".decision")) {
+		const decisions: Decision[] = JSON.parse(panel.dataset.decisions ?? "[]");
+		const toggle = panel.querySelector<HTMLButtonElement>(".decision-toggle")!;
+		const lamp = panel.querySelector<HTMLElement>(".lamp")!;
+		const steps = [...panel.querySelectorAll<HTMLElement>("[data-step]")];
+		const field = (name: string) => panel.querySelector<HTMLElement>(`[data-field="${name}"]`)!;
+		const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+		let index = 0;
+		let timers: number[] = [];
+		let paused = false;
+		let visible = false;
+
+		const clear = () => {
+			timers.forEach(clearTimeout);
+			timers = [];
+		};
+
+		const show = (decision: Decision, animate: boolean) => {
+			for (const name of ["identity", "policy", "code", "reason", "outcomeLabel"] as const) {
+				field(name).textContent = decision[name];
+			}
+			field("outcomeLabel").dataset.outcome = decision.outcome;
+			lamp.dataset.lamp = "pending";
+			steps.forEach((row) => row.classList.toggle("is-hidden", animate));
+			steps.forEach((row, i) => {
+				const reveal = () => {
+					row.classList.remove("is-hidden");
+					if (i === 2) lamp.dataset.lamp = decision.outcome;
+				};
+				if (animate) timers.push(window.setTimeout(reveal, STEP * (i + 1)));
+				else reveal();
+			});
+		};
+
+		const cycle = () => {
+			clear();
+			if (paused || !visible) return;
+			show(decisions[index], !still);
+			timers.push(window.setTimeout(() => {
+				index = (index + 1) % decisions.length;
+				cycle();
+			}, STEP * (steps.length + 1) + HOLD));
+		};
+
+		toggle.hidden = false;
+		toggle.addEventListener("click", () => {
+			paused = !paused;
+			toggle.textContent = paused ? panel.dataset.play! : panel.dataset.pause!;
+			toggle.setAttribute("aria-pressed", String(paused));
+			if (paused) {
+				// Never stop halfway: a paused panel shows a whole decision.
+				clear();
+				show(decisions[index], false);
+			} else {
+				cycle();
+			}
+		});
+
+		new IntersectionObserver(([entry]) => {
+			visible = entry.isIntersecting;
+			cycle();
+		}, { threshold: 0.3 }).observe(panel);
+	}
+</script>

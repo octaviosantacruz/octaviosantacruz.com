@@ -7,7 +7,23 @@ for (const link of navLinks) {
 	if (href?.startsWith("#")) linkByTargetId.set(href.slice(1), link);
 }
 
+const indicator = document.querySelector<HTMLElement>(".nav-indicator");
 let activeId = "";
+
+// One bar under the header links moves to the active one instead of each
+// link switching its own underline on and off.
+function placeIndicator(link: HTMLAnchorElement | undefined): void {
+	if (!indicator) return;
+	if (!link || link.offsetParent === null) {
+		indicator.style.opacity = "0";
+		return;
+	}
+	const nav = indicator.parentElement!.getBoundingClientRect();
+	const box = link.getBoundingClientRect();
+	indicator.style.opacity = "1";
+	indicator.style.width = `${box.width - 24}px`;
+	indicator.style.transform = `translateX(${box.left - nav.left + 12}px)`;
+}
 
 function setActive(id: string): void {
 	if (id === activeId) return;
@@ -21,7 +37,10 @@ function setActive(id: string): void {
 		link.classList.add("is-active");
 		link.setAttribute("aria-current", "true");
 	}
+	placeIndicator(link);
 }
+
+window.addEventListener("resize", () => placeIndicator(linkByTargetId.get(activeId)));
 
 if (sections.length && navLinks.length) {
 	const lastSection = sections[sections.length - 1];

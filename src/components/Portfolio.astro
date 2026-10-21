@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import DecisionDemo from "./DecisionDemo.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { SITE, PERSON } from "../consts";
 import { translations, type Locale } from "../i18n/translations";
@@ -30,6 +31,7 @@ const nav = [
 			<ul>
 				{nav.map((item) => <li><a href={item.href} data-nav-link>{item.label}</a></li>)}
 			</ul>
+			<span class="nav-indicator" aria-hidden="true"></span>
 		</nav>
 		<LanguageSwitcher />
 	</div>
@@ -71,7 +73,7 @@ const nav = [
 			<p class="kicker">{content.sections.projects.kicker}</p>
 			<h2 id="proyectos-heading">{content.sections.projects.title}</h2>
 
-			<article class="feature">
+			<article class="feature" data-reveal>
 				<div class="feature-copy">
 					<div class="badges">
 						<span class="badge badge-stage">{featured.stage}</span>
@@ -91,6 +93,7 @@ const nav = [
 							</dl>
 						)
 					}
+					{featured.featured?.demo && <DecisionDemo demo={featured.featured.demo} />}
 					<ul class="tags" aria-label={t.ui.projectStackLabel}>
 						{featured.tags.map((tag) => <li>{tag}</li>)}
 					</ul>
@@ -116,7 +119,7 @@ const nav = [
 			<div class="project-grid">
 				{
 					others.map((project) => (
-						<article class="project">
+						<article class="project" data-reveal>
 							<div class="badges">
 								<span class="badge badge-stage">{project.stage}</span>
 								<span class="badge">{project.type}</span>
@@ -143,7 +146,7 @@ const nav = [
 			<ul class="metrics" aria-label={t.ui.metricsLabel}>
 				{
 					content.metrics.map((metric) => (
-						<li>
+						<li data-reveal>
 							<strong>{metric.value}</strong>
 							<span>{metric.label}</span>
 						</li>
@@ -153,7 +156,7 @@ const nav = [
 			<div class="timeline">
 				{
 					content.experience.map((role) => (
-						<article class="role">
+						<article class="role" data-reveal>
 							<p class="period">{role.period}</p>
 							<div>
 								<h3>{role.title}</h3>
@@ -196,7 +199,7 @@ const nav = [
 			<ul class="credentials">
 				{
 					content.certifications.map((certification) => (
-						<li>
+						<li data-reveal>
 							<a href={certification.href}>
 								<span class="credential-title">{certification.title}</span>
 								<span class="credential-issuer">{certification.detail}</span>
@@ -267,4 +270,5 @@ const nav = [
 
 <script>
 	import "../scripts/scroll-spy";
+	import "../scripts/reveal";
 </script>

@@ -26,7 +26,29 @@ interface Project {
 	tags: string[];
 	// A featured project shows a real screenshot (src/assets/projects) and
 	// says what problem it answers, how, and what can be seen today.
-	featured?: { image: "switchboard-passkeys"; imageAlt: string; caption: string; points: Point[] };
+	featured?: { image: "switchboard-passkeys"; imageAlt: string; caption: string; points: Point[]; demo?: Demo };
+}
+
+// A replay of how Switchboard decides, with example identities. The codes are
+// Switchboard's real decision codes (internal/auth/authz.go).
+export interface Decision {
+	identity: string;
+	policy: string;
+	outcome: "allowed" | "denied" | "stepup";
+	outcomeLabel: string;
+	code: string;
+	reason: string;
+}
+
+interface Demo {
+	title: string;
+	note: string;
+	summary: string;
+	pause: string;
+	play: string;
+	labels: { request: string; identity: string; policy: string; decision: string; reason: string };
+	request: string;
+	decisions: Decision[];
 }
 
 interface Heading {
@@ -159,6 +181,21 @@ export const content: Record<Locale, Content> = {
 				href: "https://switchboard.octaviosantacruz.com/",
 				linkLabel: "Visit the project site",
 				featured: {
+					demo: {
+						title: "How it decides",
+						note: "Example identities",
+						summary:
+							"Example of three Switchboard decisions for the same private site: a member of the admins group is allowed; someone outside the group is refused with the code missing_required_group; a member whose sign-in is three hours old is asked to confirm with a passkey again, code reauthentication_required.",
+						pause: "Pause",
+						play: "Play",
+						labels: { request: "request", identity: "identity", policy: "policy", decision: "decision", reason: "reason" },
+						request: "GET private.octaviosantacruz.com/",
+						decisions: [
+							{ identity: "ana@example.com · passkey", policy: "group admins", outcome: "allowed", outcomeLabel: "Allowed", code: "allowed", reason: "ana is in admins" },
+							{ identity: "leo@example.com · passkey", policy: "group admins", outcome: "denied", outcomeLabel: "Refused", code: "missing_required_group", reason: "leo is not in admins" },
+							{ identity: "ana@example.com · signed in 3 h ago", policy: "admins · sign-in within 15 min", outcome: "stepup", outcomeLabel: "Confirm", code: "reauthentication_required", reason: "asks for a fresh passkey" },
+						],
+					},
 					image: "switchboard-passkeys",
 					imageAlt:
 						"Switchboard's passkey page listing three passkeys (Google Password Manager, Apple Passwords and a device passkey) with buttons to remove one or add another.",
@@ -310,6 +347,21 @@ export const content: Record<Locale, Content> = {
 				href: "https://switchboard.octaviosantacruz.com/",
 				linkLabel: "Ver el sitio del proyecto",
 				featured: {
+					demo: {
+						title: "Cómo decide",
+						note: "Identidades de ejemplo",
+						summary:
+							"Ejemplo de tres decisiones de Switchboard para el mismo sitio privado: a un miembro del grupo admins lo deja pasar; a alguien fuera del grupo lo rechaza con el código missing_required_group; a un miembro que inició sesión hace tres horas le pide volver a confirmar con su passkey, código reauthentication_required.",
+						pause: "Pausar",
+						play: "Reanudar",
+						labels: { request: "solicitud", identity: "identidad", policy: "política", decision: "decisión", reason: "motivo" },
+						request: "GET private.octaviosantacruz.com/",
+						decisions: [
+							{ identity: "ana@example.com · passkey", policy: "grupo admins", outcome: "allowed", outcomeLabel: "Permitido", code: "allowed", reason: "ana está en admins" },
+							{ identity: "leo@example.com · passkey", policy: "grupo admins", outcome: "denied", outcomeLabel: "Rechazado", code: "missing_required_group", reason: "leo no está en admins" },
+							{ identity: "ana@example.com · sesión de hace 3 h", policy: "admins · login de menos de 15 min", outcome: "stepup", outcomeLabel: "Confirmar", code: "reauthentication_required", reason: "pide una passkey reciente" },
+						],
+					},
 					image: "switchboard-passkeys",
 					imageAlt:
 						"Página de passkeys de Switchboard con tres passkeys (Google Password Manager, Apple Passwords y una passkey del dispositivo) y botones para quitar una o agregar otra.",

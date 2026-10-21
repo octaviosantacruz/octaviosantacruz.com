@@ -106,6 +106,18 @@ p {
 	top: 1rem;
 }
 
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
 /* ── Header ───────────────────────────────────────────────────────────── */
 
 .site-header {
@@ -131,7 +143,23 @@ p {
 }
 
 .site-header nav {
+	position: relative;
 	margin-left: auto;
+}
+
+.nav-indicator {
+	position: absolute;
+	left: 0;
+	bottom: 0.35rem;
+	width: 0;
+	height: 2px;
+	border-radius: 2px;
+	background: var(--accent);
+	opacity: 0;
+	transition:
+		transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+		width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+		opacity 0.2s ease;
 }
 
 .site-header nav ul {
@@ -383,11 +411,12 @@ h3 {
 		animation-delay: 280ms;
 	}
 
-	@keyframes rise {
-		from {
-			opacity: 0;
-			transform: translateY(16px);
-		}
+}
+
+@keyframes rise {
+	from {
+		opacity: 0;
+		transform: translateY(16px);
 	}
 }
 
@@ -472,6 +501,26 @@ h3 {
 	color: var(--fg-soft);
 }
 
+.project,
+.credentials a {
+	transition:
+		transform 0.2s ease,
+		border-color 0.2s ease;
+}
+
+/* Lift only what a pointer can act on: cards with a link inside, and the
+   credential links. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+	.project:has(.text-link):hover,
+	.credentials a:hover {
+		transform: translateY(-3px);
+	}
+
+	.project:has(.text-link):hover {
+		border-color: var(--accent-line);
+	}
+}
+
 .badges {
 	display: flex;
 	flex-wrap: wrap;
@@ -548,6 +597,135 @@ h3 {
 
 .text-link:hover span {
 	transform: translateX(3px);
+}
+
+/* ── Decision replay ──────────────────────────────────────────────────── */
+
+/* Switchboard's lamps: green allowed, red refused, amber waiting. */
+.decision {
+	margin: 0 0 1.5rem;
+	padding: 1rem 1.1rem;
+	border: 1px solid var(--border);
+	border-radius: 0.75rem;
+	background: var(--bg);
+	font-family: var(--font-mono);
+	font-size: 0.82rem;
+}
+
+.decision-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	margin-bottom: 0.75rem;
+}
+
+.decision-title {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	color: var(--fg);
+	font-weight: 500;
+}
+
+.decision-toggle {
+	min-height: 2.75rem;
+	padding: 0 0.75rem;
+	border: 1px solid var(--border);
+	border-radius: 0.4rem;
+	background: transparent;
+	color: var(--fg-muted);
+	font: inherit;
+	cursor: pointer;
+}
+
+.decision-toggle:hover {
+	color: var(--fg);
+}
+
+.lamp {
+	width: 0.6rem;
+	height: 0.6rem;
+	border-radius: 50%;
+	background: oklch(0.45 0.01 260);
+	transition:
+		background 0.25s ease,
+		box-shadow 0.25s ease;
+}
+
+.lamp[data-lamp="allowed"] {
+	background: oklch(0.82 0.07 155);
+	box-shadow: 0 0 10px oklch(0.82 0.07 155 / 0.7);
+}
+
+.lamp[data-lamp="denied"] {
+	background: oklch(0.78 0.11 25);
+	box-shadow: 0 0 10px oklch(0.78 0.11 25 / 0.7);
+}
+
+.lamp[data-lamp="stepup"] {
+	background: oklch(0.83 0.13 75);
+	box-shadow: 0 0 10px oklch(0.83 0.13 75 / 0.7);
+}
+
+.decision-rows {
+	display: grid;
+	gap: 0.35rem;
+	margin: 0;
+}
+
+.decision-rows > div {
+	display: grid;
+	grid-template-columns: 6.5rem 1fr;
+	gap: 0.75rem;
+	transition:
+		opacity 0.3s ease,
+		transform 0.3s ease;
+}
+
+.decision-rows > div.is-hidden {
+	opacity: 0;
+	transform: translateX(-6px);
+}
+
+.decision-rows dt {
+	color: var(--fg-muted);
+}
+
+.decision-rows dd {
+	margin: 0;
+	min-width: 0;
+	color: var(--fg-soft);
+	overflow-wrap: anywhere;
+}
+
+.outcome {
+	margin-right: 0.5rem;
+	font-weight: 500;
+}
+
+.outcome[data-outcome="allowed"] {
+	color: oklch(0.82 0.07 155);
+}
+
+.outcome[data-outcome="denied"] {
+	color: oklch(0.78 0.11 25);
+}
+
+.outcome[data-outcome="stepup"] {
+	color: oklch(0.83 0.13 75);
+}
+
+.decision code {
+	color: var(--fg-muted);
+	font-family: inherit;
+}
+
+.decision figcaption {
+	margin-top: 0.75rem;
+	color: var(--fg-muted);
+	font-family: var(--font-sans);
+	font-size: 0.8rem;
 }
 
 /* ── Experience ───────────────────────────────────────────────────────── */
@@ -800,6 +978,18 @@ h3 {
 	.profile .prose {
 		margin-top: 2.2rem;
 	}
+}
+
+/* Scroll reveal: only once reveal.ts has run, and never with reduced motion
+   (the script does not add the class then). */
+.reveal-ready [data-reveal]:not(.is-in) {
+	opacity: 0;
+}
+
+/* An animation that does not hold its end state ("backwards"), so hover
+   transitions keep working once the item has arrived. */
+.reveal-ready [data-reveal].is-in {
+	animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-delay, 0ms) backwards;
 }
 
 @media print {
