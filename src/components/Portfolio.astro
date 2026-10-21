@@ -13,6 +13,7 @@ const content = {
 		intro:
 			"Cybersecurity engineer focused on security operations, identity, privileged access, and data protection.",
 		status: "Open to relocation and remote roles",
+		cta: { projects: "See my projects", contact: "Contact me" },
 		about: [
 			"I work across security operations, privileged access, data protection, and vulnerability management, connecting offensive testing with defensive engineering.",
 			"My recent work includes enterprise-scale implementations across 40+ companies: CyberArk PAM and PSM, BigID data discovery, Netskope DLP governance, vulnerability remediation, and security automation.",
@@ -81,14 +82,29 @@ const content = {
 		projects: [
 			{
 				title: "Switchboard",
-				type: "Open source",
+				type: "Source opens with the first alpha",
 				stage: "In development",
-				availability: "No public demo",
-				subtitle: "Identity-aware reverse proxy and static-site gateway",
-				meta: "Security engineering / Identity-aware gateway / 2026 - Present",
+				availability: "Project site · no public demo",
+				href: "https://switchboard.octaviosantacruz.com/",
+				linkLabel: "Visit the project site",
+				subtitle: "Self-hosted, identity-aware gateway in one Go binary",
+				meta: "Security engineering / Zero-trust access / 2026 - Present",
 				body:
-					"A Go reverse proxy with host-based routing, external OIDC login, claim-based access policies, and static-site serving. Validated locally; public deployment is pending. Outbound tunnels, passwordless identity, a private CA, and infrastructure access are roadmap goals.",
-				tags: ["Go", "OIDC", "Reverse proxy", "Static sites"],
+					"Routes apps by name with automatic certificates, signs people in with passkeys (step-up and device-bound rules included), and explains why each request was allowed or refused. It already runs my public edge: it serves the SIGEA and Switchboard sites, deploys static sites with rollback, and reaches a homelab through its own outbound tunnel. A private CA and infrastructure access are next on the roadmap.",
+				tags: ["Go", "Passkeys", "OIDC", "Tunnels", "Static sites"],
+			},
+			{
+				title: "SIGEA",
+				type: "Self-hosted pilot",
+				stage: "Rebuilding (v2)",
+				availability: "Project site and devlog · no public demo",
+				href: "https://sigea.octaviosantacruz.com/",
+				linkLabel: "Visit the project site",
+				subtitle: "Exposure inventory that tells you what changed",
+				meta: "Security engineering / Exposure management",
+				body:
+					"An agent inside the network inventories the services you expose and compares every scan with the previous comparable one, so you see what appeared, changed or went away, with the evidence behind it. A partial scan never counts as a service going away. The v2 rebuild in Go and PostgreSQL is documented in a public devlog with per-module progress.",
+				tags: ["Go", "PostgreSQL", "Nmap", "React"],
 			},
 			{
 				title: "Custodia",
@@ -122,6 +138,7 @@ const content = {
 		intro:
 			"Ingeniero en ciberseguridad enfocado en operaciones de seguridad, identidad, accesos privilegiados y protección de datos.",
 		status: "Abierto a reubicación y roles remotos",
+		cta: { projects: "Ver mis proyectos", contact: "Contactarme" },
 		about: [
 			"Trabajo entre operaciones de seguridad, accesos privilegiados, protección de datos y gestión de vulnerabilidades, combinando pruebas ofensivas con ingeniería defensiva.",
 			"Mi experiencia reciente incluye implementaciones empresariales en más de 40 compañías: CyberArk PAM y PSM, descubrimiento de datos con BigID, gobierno DLP con Netskope, remediación de vulnerabilidades y automatización de seguridad.",
@@ -190,14 +207,29 @@ const content = {
 		projects: [
 			{
 				title: "Switchboard",
-				type: "Código abierto",
+				type: "Código abierto desde la primera alfa",
 				stage: "En desarrollo",
-				availability: "Sin demo pública",
-				subtitle: "Proxy con identidad y publicación de sitios estáticos",
-				meta: "Ingeniería de seguridad / Gateway con identidad / 2026 - Actualidad",
+				availability: "Sitio del proyecto · sin demo pública",
+				href: "https://switchboard.octaviosantacruz.com/",
+				linkLabel: "Ver el sitio del proyecto",
+				subtitle: "Gateway autohospedado con identidad, en un solo binario Go",
+				meta: "Ingeniería de seguridad / Acceso zero trust / 2026 - Actualidad",
 				body:
-					"Proxy en Go con enrutamiento por host, login OIDC externo, políticas de acceso por claims y publicación de sitios estáticos. Validado localmente; la publicación está pendiente. Los túneles salientes, la identidad sin contraseñas, una CA privada y el acceso a infraestructura son objetivos del roadmap.",
-				tags: ["Go", "OIDC", "Reverse proxy", "Static sites"],
+					"Enruta aplicaciones por nombre con certificados automáticos, autentica personas con passkeys (incluye reautenticación y reglas por dispositivo) y explica por qué permitió o rechazó cada solicitud. Ya opera mi borde público: sirve los sitios de SIGEA y Switchboard, publica sitios estáticos con rollback y llega a un homelab por su propio túnel saliente. Una CA privada y el acceso a infraestructura son los próximos pasos del roadmap.",
+				tags: ["Go", "Passkeys", "OIDC", "Túneles", "Sitios estáticos"],
+			},
+			{
+				title: "SIGEA",
+				type: "Piloto autohospedado",
+				stage: "Reconstrucción (v2)",
+				availability: "Sitio del proyecto y devlog · sin demo pública",
+				href: "https://sigea.octaviosantacruz.com/",
+				linkLabel: "Ver el sitio del proyecto",
+				subtitle: "Inventario de exposición que te dice qué cambió",
+				meta: "Ingeniería de seguridad / Gestión de exposición",
+				body:
+					"Un agente dentro de la red inventaría los servicios expuestos y compara cada escaneo con el anterior comparable: muestra qué apareció, cambió o desapareció, con la evidencia que lo respalda. Un escaneo parcial nunca cuenta como un servicio que desapareció. La reconstrucción v2 en Go y PostgreSQL se documenta en un devlog público con progreso por módulo.",
+				tags: ["Go", "PostgreSQL", "Nmap", "React"],
 			},
 			{
 				title: "Custodia",
@@ -252,6 +284,11 @@ const content = {
 				{content.status}
 			</p>
 
+			<div class="hero-actions">
+				<a class="button button-primary" href="#proyectos">{content.cta.projects}</a>
+				<a class="button" href="#contacto">{content.cta.contact}</a>
+			</div>
+
 			<nav aria-label={t.navLabel}>
 				<ul>
 					{
@@ -293,6 +330,41 @@ const content = {
 				<ul class="competency-list" aria-label={t.ui.competenciesLabel}>
 					{content.competencies.map((competency) => <li>{competency}</li>)}
 				</ul>
+			</section>
+
+			<section id="proyectos" aria-labelledby="proyectos-heading" class="reveal">
+				<h2 id="proyectos-heading">
+					<span class="section-num" aria-hidden="true">{t.sections.proyectos.num}</span>{
+						t.sections.proyectos.title
+					}
+				</h2>
+				<div class="project-list">
+					{
+						content.projects.map((project) => (
+							<article class="project-card">
+								<div class="project-heading">
+									<div>
+										<h3>{project.title}</h3>
+										{project.subtitle && <p class="project-subtitle">{project.subtitle}</p>}
+									</div>
+									<div class="project-badges">
+										<span class="type-badge project-stage">{project.stage}</span>
+										<span class="type-badge">{project.type}</span>
+									</div>
+								</div>
+								<p class="meta">{project.meta}</p>
+								<p>{project.body}</p>
+								<p class="project-availability">
+									{project.availability}
+									{project.href && <a class="project-link" href={project.href}>{project.linkLabel} <span aria-hidden="true">→</span></a>}
+								</p>
+								<ul class="tag-list project-tags" aria-label={t.ui.projectStackLabel}>
+									{project.tags.map((tag) => <li>{tag}</li>)}
+								</ul>
+							</article>
+						))
+					}
+				</div>
 			</section>
 
 			<section id="experiencia" aria-labelledby="experiencia-heading" class="reveal">
@@ -356,38 +428,6 @@ const content = {
 				</div>
 			</section>
 
-			<section id="proyectos" aria-labelledby="proyectos-heading" class="reveal">
-				<h2 id="proyectos-heading">
-					<span class="section-num" aria-hidden="true">{t.sections.proyectos.num}</span>{
-						t.sections.proyectos.title
-					}
-				</h2>
-				<div class="project-list">
-					{
-						content.projects.map((project) => (
-							<article class="project-card">
-								<div class="project-heading">
-									<div>
-										<h3>{project.title}</h3>
-										{project.subtitle && <p class="project-subtitle">{project.subtitle}</p>}
-									</div>
-									<div class="project-badges">
-										<span class="type-badge project-stage">{project.stage}</span>
-										<span class="type-badge">{project.type}</span>
-									</div>
-								</div>
-								<p class="meta">{project.meta}</p>
-								<p>{project.body}</p>
-								<p class="project-availability">{project.availability}</p>
-								<ul class="tag-list project-tags" aria-label={t.ui.projectStackLabel}>
-									{project.tags.map((tag) => <li>{tag}</li>)}
-								</ul>
-							</article>
-						))
-					}
-				</div>
-			</section>
-
 			<section id="educacion" aria-labelledby="educacion-heading" class="reveal">
 				<h2 id="educacion-heading">
 					<span class="section-num" aria-hidden="true">{t.sections.educacion.num}</span>{
@@ -413,7 +453,7 @@ const content = {
 					{
 						content.contact.links.map((link) => (
 							<li>
-								<a href={link.href} aria-label={link.label} title={link.label}>
+								<a href={link.href}>
 									{link.icon === "email" && (
 										<svg viewBox="0 0 24 24" aria-hidden="true">
 											<path d="M4 6h16v12H4z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8" />
@@ -430,7 +470,7 @@ const content = {
 											<path fill="currentColor" d="M12 2.5a9.5 9.5 0 0 0-3 18.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.6 1.1 1.6 1.1.9 1.6 2.5 1.1 3 .8.1-.7.4-1.1.7-1.4-2.3-.3-4.7-1.1-4.7-5 0-1.1.4-2 1.1-2.8-.1-.3-.5-1.4.1-2.8 0 0 .9-.3 2.9 1.1a10.1 10.1 0 0 1 5.2 0c2-1.4 2.9-1.1 2.9-1.1.6 1.4.2 2.5.1 2.8.7.8 1.1 1.7 1.1 2.8 0 3.9-2.4 4.7-4.7 5 .4.3.8 1 .8 2v3c0 .3.2.6.8.5A9.5 9.5 0 0 0 12 2.5Z" />
 										</svg>
 									)}
-									<span class="sr-only">{link.label}</span>
+									<span>{link.label}</span>
 								</a>
 							</li>
 						))

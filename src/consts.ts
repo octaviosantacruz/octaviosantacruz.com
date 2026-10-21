@@ -16,9 +16,9 @@ export const PERSON = {
 
 export const NAV_SECTIONS = [
 	{ href: "#sobre-mi", key: "sobreMi" },
+	{ href: "#proyectos", key: "proyectos" },
 	{ href: "#experiencia", key: "experiencia" },
 	{ href: "#certificaciones", key: "certificaciones" },
-	{ href: "#proyectos", key: "proyectos" },
 	{ href: "#educacion", key: "educacion" },
 	{ href: "#contacto", key: "contacto" },
 ] as const;
