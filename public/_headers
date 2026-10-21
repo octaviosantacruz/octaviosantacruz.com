@@ -1,3 +1,16 @@
+# Read by Cloudflare Pages and by Switchboard Pages (PAGES-003). They merge a
+# header set twice differently (Pages joins the values, Switchboard keeps the
+# last), so no header appears in two rules that can match the same path.
+
+/*
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# HTML is revalidated on every visit, so a deploy shows at once.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+/es/
+  Cache-Control: public, max-age=0, must-revalidate
+
 /favicon.svg
   Cache-Control: public, max-age=3600, must-revalidate
 
