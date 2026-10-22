@@ -18,6 +18,7 @@ interface Project {
 	type: string;
 	stage: string;
 	availability: string;
+	lang?: "en";
 	href?: string;
 	linkLabel?: string;
 	subtitle: string;
@@ -29,7 +30,8 @@ interface Project {
 	// (src/assets/projects); until a project has one, comingSoon fills the
 	// space and says so.
 	featured: {
-		image?: "switchboard-passkeys" | "custodia-inventory";
+		image?: "switchboard-passkeys";
+		visual?: "custodia-story";
 		imageAlt?: string;
 		caption?: string;
 		comingSoon?: string;
@@ -246,20 +248,40 @@ export const content: Record<Locale, Content> = {
 			},
 			{
 				title: "Custodia",
-				type: "Personal product lab",
-				stage: "Product standardization",
-				availability: "Original experience retained · Go migration planned",
-				subtitle: "Security inventory with explainable changes",
+				type: "Personal product · open source intended",
+				stage: "Live demo · fictional company · Go planned",
+				availability: "Demo online with a fictional company · no real tool connected",
+				href: "https://custodia.octaviosantacruz.com/",
+				linkLabel: "Open the live demo",
+				subtitle: "A CMDB for security tools",
 				meta: "Custodia product / 2026 - Present",
 				body:
-					"Inventory across cybersecurity tools, with explainable links and inferences. The existing CyberArk/Netskope workflows and React interface are the product reference. Standardization and the Go backend are planned; CrowdStrike is a future integration.",
+					"Inventories each security tool separately and correlates them to find what none of them sees alone: privileged access without a protected device, ambiguous identities, stale evidence. The demo runs a fictional company, Acme Corp, on simulated CyberArk and Netskope data; the Go backend and the CrowdStrike, Cortex, Tenable, BigID and firewall adapters are not built yet.",
 				tags: ["React", "TypeScript", "Go (planned)", "PostgreSQL (planned)"],
+				lang: "en",
 				featured: {
-					comingSoon: "Faro Digital base accepted · visual refinement pending",
+					demo: {
+						title: "How it works",
+						note: "Fictional company Acme Corp",
+						summary:
+							"Example of three Custodia conclusions on the question who has privileged access but no device. Alice Morgan has a CyberArk Safe and a Netskope user with no device in a complete capture: a gap. Bob Chen has a device silent for 12 days: partial. Carol Diaz is covered by a recent device.",
+						pause: "Pause",
+						play: "Play",
+						labels: { request: "question", identity: "CyberArk", policy: "Netskope", decision: "verdict", reason: "why" },
+						request: "Privileged access, no device?",
+						decisions: [
+							{ identity: "alice.morgan · Safe ACME-DEV-SERVICES", policy: "user found · 0 devices", outcome: "denied", outcomeLabel: "Gap", code: "CONN-001 v1", reason: "no client signal in a complete capture" },
+							{ identity: "bob.chen · Safe ACME-PROD-PLATFORM", policy: "2 devices · 1 silent for 12 days", outcome: "stepup", outcomeLabel: "Partial", code: "CONN-001 v1", reason: "review the old device; not proof of abandonment" },
+							{ identity: "carol.diaz · no privileged access", policy: "1 device · signal 1 h ago", outcome: "allowed", outcomeLabel: "Covered", code: "CONN-001 v1", reason: "recent Netskope client signal" },
+						],
+					},
+					visual: "custodia-story",
+					imageAlt: "Animation: CyberArk and Netskope each report on Alice Morgan; Custodia joins them by exact email and concludes a gap, privileged access with no device observed, under rule CONN-001.",
+					caption: "Two tools, one person: Custodia joins them and shows the gap.",
 					points: [
-						{ label: "Problem", text: "Security tools hold different pieces of the inventory, and a missing response does not prove a resource is gone." },
-						{ label: "Approach", text: "Keep each connection and its evidence separate, explain changes and preserve human review. Partial runs never retire records." },
-						{ label: "Today", text: "Local fictional-company demo using the original interface: people, equipment, privileged access and evidence. Go backend planned; no public product demo." },
+						{ label: "Problem", text: "Each tool holds part of the picture. The real gaps sit between them, and an incomplete source does not prove anything is missing." },
+						{ label: "Approach", text: "Keep each inventory as it arrived and correlate with written rules: four answers (covered, partial, gap, unknown) and the evidence behind each one." },
+						{ label: "Today", text: "Product site and demo online: six fictional people across CyberArk and Netskope. Go backend and more adapters planned; code not released." },
 					],
 				},
 			},
@@ -429,20 +451,40 @@ export const content: Record<Locale, Content> = {
 			},
 			{
 				title: "Custodia",
-				type: "Laboratorio de producto personal",
-				stage: "Estandarización de producto",
-				availability: "Experiencia original conservada · migración a Go prevista",
-				subtitle: "Inventario de seguridad con cambios explicables",
-				meta: "Producto Custodia / 2026 - Actualidad",
+				type: "Personal product · open source intended",
+				stage: "Live demo · fictional company · Go planned",
+				availability: "Demo online with a fictional company · no real tool connected",
+				href: "https://custodia.octaviosantacruz.com/",
+				linkLabel: "Open the live demo",
+				subtitle: "A CMDB for security tools",
+				meta: "Custodia product / 2026 - Present",
 				body:
-					"Inventario de herramientas de ciberseguridad, con cruces e inferencias explicables. Los flujos CyberArk/Netskope y la interfaz React existentes son la referencia del producto. La estandarización y el backend Go están previstos; CrowdStrike es una integración futura.",
-				tags: ["React", "TypeScript", "Go (previsto)", "PostgreSQL (previsto)"],
+					"Inventories each security tool separately and correlates them to find what none of them sees alone: privileged access without a protected device, ambiguous identities, stale evidence. The demo runs a fictional company, Acme Corp, on simulated CyberArk and Netskope data; the Go backend and the CrowdStrike, Cortex, Tenable, BigID and firewall adapters are not built yet.",
+				tags: ["React", "TypeScript", "Go (planned)", "PostgreSQL (planned)"],
+				lang: "en",
 				featured: {
-					comingSoon: "Faro Digital: base aceptada · estilo en revisión",
+					demo: {
+						title: "How it works",
+						note: "Fictional company Acme Corp",
+						summary:
+							"Example of three Custodia conclusions on the question who has privileged access but no device. Alice Morgan has a CyberArk Safe and a Netskope user with no device in a complete capture: a gap. Bob Chen has a device silent for 12 days: partial. Carol Diaz is covered by a recent device.",
+						pause: "Pause",
+						play: "Play",
+						labels: { request: "question", identity: "CyberArk", policy: "Netskope", decision: "verdict", reason: "why" },
+						request: "Privileged access, no device?",
+						decisions: [
+							{ identity: "alice.morgan · Safe ACME-DEV-SERVICES", policy: "user found · 0 devices", outcome: "denied", outcomeLabel: "Gap", code: "CONN-001 v1", reason: "no client signal in a complete capture" },
+							{ identity: "bob.chen · Safe ACME-PROD-PLATFORM", policy: "2 devices · 1 silent for 12 days", outcome: "stepup", outcomeLabel: "Partial", code: "CONN-001 v1", reason: "review the old device; not proof of abandonment" },
+							{ identity: "carol.diaz · no privileged access", policy: "1 device · signal 1 h ago", outcome: "allowed", outcomeLabel: "Covered", code: "CONN-001 v1", reason: "recent Netskope client signal" },
+						],
+					},
+					visual: "custodia-story",
+					imageAlt: "Animation: CyberArk and Netskope each report on Alice Morgan; Custodia joins them by exact email and concludes a gap, privileged access with no device observed, under rule CONN-001.",
+					caption: "Two tools, one person: Custodia joins them and shows the gap.",
 					points: [
-						{ label: "Problema", text: "Las herramientas tienen partes distintas del inventario; una respuesta incompleta no demuestra que un recurso desapareció." },
-						{ label: "Enfoque", text: "Separar conexiones y evidencia, explicar los cambios y conservar la revisión humana. Las corridas parciales nunca retiran registros." },
-						{ label: "Hoy", text: "Demo local de una empresa ficticia sobre la interfaz original: personas, equipos, accesos privilegiados y evidencia. Backend Go previsto; sin demo pública del producto." },
+						{ label: "Problem", text: "Each tool holds part of the picture. The real gaps sit between them, and an incomplete source does not prove anything is missing." },
+						{ label: "Approach", text: "Keep each inventory as it arrived and correlate with written rules: four answers (covered, partial, gap, unknown) and the evidence behind each one." },
+						{ label: "Today", text: "Product site and demo online: six fictional people across CyberArk and Netskope. Go backend and more adapters planned; code not released." },
 					],
 				},
 			},

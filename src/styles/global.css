@@ -700,6 +700,10 @@ h3 {
 	text-underline-offset: 0.25em;
 }
 
+.text-link + .text-link {
+	margin-left: 1.25rem;
+}
+
 .text-link span {
 	display: inline-block;
 	margin-left: 0.25rem;
@@ -1127,6 +1131,46 @@ h3 {
 }
 
 /* ── Case study page ──────────────────────────────────────────────────── */
+
+.badge-covered {
+	border-color: currentColor;
+	color: oklch(0.8 0.13 155);
+}
+
+.badge-partial {
+	border-color: currentColor;
+	color: oklch(0.85 0.12 85);
+}
+
+.badge-gap {
+	border-color: currentColor;
+	color: oklch(0.76 0.14 25);
+}
+
+.badge-unknown {
+	border-color: currentColor;
+	color: var(--fg-soft);
+	border-style: dashed;
+}
+
+.case-person {
+	display: block;
+	font-weight: 700;
+}
+
+.case-area,
+.case-reading {
+	display: block;
+	margin-top: 0.3rem;
+	color: var(--fg-muted);
+	font-size: 0.85rem;
+	font-weight: 400;
+}
+
+.case-table td .badge {
+	display: inline-block;
+	white-space: nowrap;
+}
 
 .badge-ok {
 	border-color: currentColor;
