@@ -1,0 +1,221 @@
+---
+import { Image } from "astro:assets";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { PERSON, SITE } from "../consts";
+import { translations, type Locale } from "../i18n/translations";
+import { content as allContent } from "../data/content";
+import { caseContent } from "../data/custodia-case";
+import inventoryEs from "../assets/projects/custodia-case-inventory-es.png";
+import inventoryEn from "../assets/projects/custodia-case-inventory-en.png";
+import changesEs from "../assets/projects/custodia-case-changes-es.png";
+import changesEn from "../assets/projects/custodia-case-changes-en.png";
+
+const locale = (Astro.currentLocale ?? "en") as Locale;
+const t = translations[locale];
+const site = allContent[locale];
+const c = caseContent[locale];
+const home = getRelativeLocaleUrl(locale, "/");
+const images = {
+	es: { inventory: inventoryEs, changes: changesEs },
+	en: { inventory: inventoryEn, changes: changesEn },
+}[locale];
+---
+
+<a class="skip-link" href="#contenido">{t.skipLink}</a>
+
+<header class="site-header">
+	<div class="wrap header-row">
+		<a class="wordmark" href={home}>{PERSON.fullName}</a>
+		<nav aria-label={t.navLabel}>
+			<ul>
+				<li><a href={`${home}#proyectos`}>{c.back}</a></li>
+				<li><a href={`${home}#contacto`}>{site.nav.contact}</a></li>
+			</ul>
+		</nav>
+		<LanguageSwitcher path="/custodia/" />
+	</div>
+</header>
+
+<main class="content case" id="contenido">
+	<section class="hero" aria-labelledby="case-heading">
+		<div class="wrap hero-grid">
+			<div class="hero-copy">
+				<p class="kicker">{c.hero.kicker}</p>
+				<h1 id="case-heading" class="case-title">
+					<span class="case-name">{c.hero.name}</span>
+					<span class="case-role">{c.hero.role}</span>
+				</h1>
+				<p class="case-lead">{c.hero.statement}</p>
+				<p class="support">{c.hero.support}</p>
+				<ul class="badges case-badges">
+					{c.hero.badges.map((badge) => <li class="badge badge-stage">{badge}</li>)}
+				</ul>
+				<div class="actions">
+					<a class="button button-primary" href="#capturas">{c.hero.ctaShots}</a>
+					<a class="button" href={`${home}#proyectos`}>{c.hero.ctaProjects}</a>
+				</div>
+			</div>
+			<aside class="glance" aria-label={c.hero.nowLabel}>
+				<p class="kicker">{c.hero.nowLabel}</p>
+				<dl>
+					{
+						c.hero.now.map((fact) => (
+							<div>
+								<dt>{fact.label}</dt>
+								<dd>{fact.value}</dd>
+							</div>
+						))
+					}
+				</dl>
+			</aside>
+		</div>
+	</section>
+
+	<section class="band" aria-labelledby="problema-heading">
+		<div class="wrap">
+			<p class="kicker">{c.problem.kicker}</p>
+			<h2 id="problema-heading">{c.problem.title}</h2>
+			<ul class="case-cards case-cards-3">
+				{
+					c.problem.items.map((item) => (
+						<li>
+							<h3>{item.title}</h3>
+							<p>{item.text}</p>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+
+	<section class="band" aria-labelledby="diseno-heading">
+		<div class="wrap">
+			<p class="kicker">{c.design.kicker}</p>
+			<h2 id="diseno-heading">{c.design.title}</h2>
+			<p class="case-intro">{c.design.intro}</p>
+			<ul class="case-cards case-cards-2">
+				{
+					c.design.principles.map((item) => (
+						<li>
+							<p class="case-label">{item.label}</p>
+							<h3>{item.title}</h3>
+							<p>{item.text}</p>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+
+	<section class="band" aria-labelledby="bajas-heading">
+		<div class="wrap">
+			<p class="kicker">{c.runs.kicker}</p>
+			<h2 id="bajas-heading">{c.runs.title}</h2>
+			<p class="case-intro">{c.runs.intro}</p>
+			<div class="case-table" tabindex="0" role="region" aria-labelledby="bajas-heading">
+				<table>
+					<caption class="sr-only">{c.runs.caption}</caption>
+					<thead>
+						<tr>
+							<th scope="col">{c.runs.columns.run}</th>
+							<th scope="col">{c.runs.columns.completeness}</th>
+							<th scope="col">{c.runs.columns.returned}</th>
+							<th scope="col">{c.runs.columns.effect}</th>
+						</tr>
+					</thead>
+					<tbody>
+						{
+							c.runs.rows.map((row) => (
+								<tr class:list={{ "is-key": row.key }}>
+									<th scope="row"><code>{row.id}</code></th>
+									<td>
+										<span class:list={["badge", row.complete ? "badge-ok" : "badge-warn"]}>
+											{(row.complete ? "✓ " : "◐ ") + (row.complete ? c.runs.complete : c.runs.partial)}
+										</span>
+									</td>
+									<td><code>{row.returned}</code></td>
+									<td>{row.effect}</td>
+								</tr>
+							))
+						}
+					</tbody>
+				</table>
+			</div>
+			<p class="case-note">{c.runs.note}</p>
+		</div>
+	</section>
+
+	<section class="band" id="capturas" aria-labelledby="capturas-heading">
+		<div class="wrap">
+			<p class="kicker">{c.shots.kicker}</p>
+			<h2 id="capturas-heading">{c.shots.title}</h2>
+			<div class="case-shots">
+				{
+					c.shots.items.map((shot) => (
+						<figure>
+							<Image
+								src={images[shot.key]}
+								alt={shot.alt}
+								widths={[480, 720, 1100, 1500]}
+								sizes="(min-width: 64rem) 66rem, 92vw"
+								loading="lazy"
+							/>
+							<figcaption>{shot.caption}</figcaption>
+						</figure>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="band" aria-labelledby="pruebas-heading">
+		<div class="wrap">
+			<p class="kicker">{c.evidence.kicker}</p>
+			<h2 id="pruebas-heading">{c.evidence.title}</h2>
+			<p class="case-intro">{c.evidence.intro}</p>
+			<ul class="bullets case-evidence">
+				{c.evidence.items.map((item) => <li>{item}</li>)}
+			</ul>
+			<p class="case-note">{c.evidence.note}</p>
+		</div>
+	</section>
+
+	<section class="band" aria-labelledby="estado-heading">
+		<div class="wrap">
+			<p class="kicker">{c.status.kicker}</p>
+			<h2 id="estado-heading">{c.status.title}</h2>
+			<div class="case-status">
+				<div>
+					<h3>{c.status.done.title}</h3>
+					<ul class="case-marks case-done">
+						{c.status.done.items.map((item) => <li>{item}</li>)}
+					</ul>
+				</div>
+				<div>
+					<h3>{c.status.pending.title}</h3>
+					<ul class="case-marks case-pending">
+						{c.status.pending.items.map((item) => <li>{item}</li>)}
+					</ul>
+				</div>
+			</div>
+			<p class="case-note">{c.status.note}</p>
+		</div>
+	</section>
+
+	<section class="band band-contact" aria-labelledby="cierre-heading">
+		<div class="wrap">
+			<h2 id="cierre-heading">{c.close.title}</h2>
+			<div class="actions">
+				<a class="button button-primary" href={`${home}#proyectos`}>{c.close.projects}</a>
+				<a class="button" href={`${home}#contacto`}>{c.close.contact}</a>
+			</div>
+		</div>
+	</section>
+</main>
+
+<footer class="site-footer">
+	<div class="wrap">
+		<p>&copy; {new Date().getFullYear()} {SITE.name}</p>
+	</div>
+</footer>

@@ -2,18 +2,24 @@
 import { getRelativeLocaleUrl } from "astro:i18n";
 import type { Locale } from "../i18n/translations";
 
+interface Props {
+	// Route without the language prefix; the other language links to it.
+	path?: string;
+}
+
+const { path = "/" } = Astro.props;
 const locale = (Astro.currentLocale ?? "en") as Locale;
 ---
 
 <div class="lang-switch" role="group" aria-label="Language / Idioma">
 	<a
-		href={getRelativeLocaleUrl("es", "/")}
+		href={getRelativeLocaleUrl("es", path)}
 		data-lang-link
 		aria-current={locale === "es" ? "page" : undefined}>ES</a
 	>
 	<span aria-hidden="true">·</span>
 	<a
-		href={getRelativeLocaleUrl("en", "/")}
+		href={getRelativeLocaleUrl("en", path)}
 		data-lang-link
 		aria-current={locale === "en" ? "page" : undefined}>EN</a
 	>

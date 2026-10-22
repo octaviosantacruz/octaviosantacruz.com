@@ -12,17 +12,20 @@ import "../styles/global.css";
 interface Props {
 	title?: string;
 	description?: string;
+	// Route without the language prefix, so the alternates of a subpage
+	// point at the same page in the other language.
+	path?: string;
 }
 
 const locale = (Astro.currentLocale ?? "en") as Locale;
 const t = translations[locale];
 
-const { title = t.siteTitle, description = t.siteDescription } = Astro.props;
+const { title = t.siteTitle, description = t.siteDescription, path = "/" } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL("og-image.png", Astro.site);
-const enURL = new URL(getRelativeLocaleUrl("en", "/"), Astro.site);
-const esURL = new URL(getRelativeLocaleUrl("es", "/"), Astro.site);
+const enURL = new URL(getRelativeLocaleUrl("en", path), Astro.site);
+const esURL = new URL(getRelativeLocaleUrl("es", path), Astro.site);
 
 const personSchema = {
 	"@context": "https://schema.org",

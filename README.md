@@ -33,3 +33,10 @@ separate implemented capabilities from roadmap goals and show development
 status and public-demo availability. Add demo links only after a public demo
 has been verified and authorized; authenticated/private apps are not public
 demos. Switchboard and Custodia currently have no public demo linked here.
+
+Custodia's ES/EN showcase now describes the original-interface company demo
+Faro Digital, accepted as a base with visual refinement pending. The reduced
+laboratory screenshots and case-study routes remain local drafts; the card
+does not link to them. Go, live integrations and public release remain
+planned. No public demo link was added. Context and remaining presentation
+work: [Custodia presentation](docs/CUSTODIA-2026-10-22.md).

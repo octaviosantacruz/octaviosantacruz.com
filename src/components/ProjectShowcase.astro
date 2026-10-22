@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import DecisionDemo from "./DecisionDemo.astro";
 import type { Content } from "../data/content";
 import switchboardPasskeys from "../assets/projects/switchboard-passkeys.png";
+import custodiaInventory from "../assets/projects/custodia-inventory.png";
 
 interface Props {
 	projects: Content["projects"];
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const { projects, labels, stackLabel } = Astro.props;
-const images = { "switchboard-passkeys": switchboardPasskeys };
+const images = { "switchboard-passkeys": switchboardPasskeys, "custodia-inventory": custodiaInventory };
 const id = (title: string) => `project-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
 ---
 

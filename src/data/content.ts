@@ -29,7 +29,7 @@ interface Project {
 	// (src/assets/projects); until a project has one, comingSoon fills the
 	// space and says so.
 	featured: {
-		image?: "switchboard-passkeys";
+		image?: "switchboard-passkeys" | "custodia-inventory";
 		imageAlt?: string;
 		caption?: string;
 		comingSoon?: string;
@@ -246,20 +246,20 @@ export const content: Record<Locale, Content> = {
 			},
 			{
 				title: "Custodia",
-				type: "Private lab / closed source",
-				stage: "In development",
-				availability: "Private app · no public demo",
-				subtitle: "Operational CMDB for CyberArk and Netskope",
-				meta: "CyberArk Access Visibility Tool / 2026 - Present",
+				type: "Personal product lab",
+				stage: "Product standardization",
+				availability: "Original experience retained · Go migration planned",
+				subtitle: "Security inventory with explainable changes",
+				meta: "Custodia product / 2026 - Present",
 				body:
-					"Operational inventory and source-specific views for CyberArk and Netskope, with access controls, audit trails, and human review. Private work in active development; no public access or demo is offered.",
-				tags: ["CyberArk", "Netskope", "FastAPI", "React", "PostgreSQL"],
+					"Inventory across cybersecurity tools, with explainable links and inferences. The existing CyberArk/Netskope workflows and React interface are the product reference. Standardization and the Go backend are planned; CrowdStrike is a future integration.",
+				tags: ["React", "TypeScript", "Go (planned)", "PostgreSQL (planned)"],
 				featured: {
-					comingSoon: "Screenshots with demo data on the way",
+					comingSoon: "Faro Digital base accepted · visual refinement pending",
 					points: [
-						{ label: "Problem", text: "CyberArk and Netskope each hold part of the access picture, in separate consoles." },
-						{ label: "Approach", text: "One operational inventory with views kept separate by source, access controls, audit trails and human review; nothing is inferred across sources." },
-						{ label: "Today", text: "Private work in active development; no public access or demo." },
+						{ label: "Problem", text: "Security tools hold different pieces of the inventory, and a missing response does not prove a resource is gone." },
+						{ label: "Approach", text: "Keep each connection and its evidence separate, explain changes and preserve human review. Partial runs never retire records." },
+						{ label: "Today", text: "Local fictional-company demo using the original interface: people, equipment, privileged access and evidence. Go backend planned; no public product demo." },
 					],
 				},
 			},
@@ -429,20 +429,20 @@ export const content: Record<Locale, Content> = {
 			},
 			{
 				title: "Custodia",
-				type: "Lab privado / código cerrado",
-				stage: "En desarrollo",
-				availability: "App privada · sin demo pública",
-				subtitle: "CMDB operacional para CyberArk y Netskope",
-				meta: "Herramienta de visibilidad de accesos en CyberArk / 2026 - Actualidad",
+				type: "Laboratorio de producto personal",
+				stage: "Estandarización de producto",
+				availability: "Experiencia original conservada · migración a Go prevista",
+				subtitle: "Inventario de seguridad con cambios explicables",
+				meta: "Producto Custodia / 2026 - Actualidad",
 				body:
-					"Inventario operacional y vistas separadas por fuente para CyberArk y Netskope, con controles de acceso, auditoría y revisión humana. Trabajo privado en desarrollo activo; no se ofrece acceso público ni una demo.",
-				tags: ["CyberArk", "Netskope", "FastAPI", "React", "PostgreSQL"],
+					"Inventario de herramientas de ciberseguridad, con cruces e inferencias explicables. Los flujos CyberArk/Netskope y la interfaz React existentes son la referencia del producto. La estandarización y el backend Go están previstos; CrowdStrike es una integración futura.",
+				tags: ["React", "TypeScript", "Go (previsto)", "PostgreSQL (previsto)"],
 				featured: {
-					comingSoon: "Capturas con datos de demostración en camino",
+					comingSoon: "Faro Digital: base aceptada · estilo en revisión",
 					points: [
-						{ label: "Problema", text: "CyberArk y Netskope tienen cada uno una parte del panorama de accesos, en consolas separadas." },
-						{ label: "Enfoque", text: "Un inventario operacional con vistas separadas por fuente, controles de acceso, auditoría y revisión humana; nada se infiere entre fuentes." },
-						{ label: "Hoy", text: "Trabajo privado en desarrollo activo; sin acceso público ni demo." },
+						{ label: "Problema", text: "Las herramientas tienen partes distintas del inventario; una respuesta incompleta no demuestra que un recurso desapareció." },
+						{ label: "Enfoque", text: "Separar conexiones y evidencia, explicar los cambios y conservar la revisión humana. Las corridas parciales nunca retiran registros." },
+						{ label: "Hoy", text: "Demo local de una empresa ficticia sobre la interfaz original: personas, equipos, accesos privilegiados y evidencia. Backend Go previsto; sin demo pública del producto." },
 					],
 				},
 			},

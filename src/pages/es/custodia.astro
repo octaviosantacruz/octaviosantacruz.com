@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CustodiaCase from "../../components/CustodiaCase.astro";
+import { caseContent } from "../../data/custodia-case";
+
+const { meta } = caseContent.es;
+---
+
+<BaseLayout title={meta.title} description={meta.description} path="/custodia/">
+	<CustodiaCase />
+</BaseLayout>
