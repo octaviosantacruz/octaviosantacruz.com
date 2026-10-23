@@ -65,11 +65,11 @@ const nav = [
 	</section>
 
 	<section id="proyectos" class="band" aria-labelledby="proyectos-heading">
-		<div class="wrap">
+		<div class="wrap projects-wrap">
 			<p class="kicker">{content.sections.projects.kicker}</p>
 			<h2 id="proyectos-heading">{content.sections.projects.title}</h2>
 
-			<ProjectShowcase projects={content.projects} labels={content.showcase} stackLabel={t.ui.projectStackLabel} />
+			<ProjectShowcase projects={content.projects} labels={content.showcase} stackLabel={t.ui.projectStackLabel} locale={locale} />
 		</div>
 	</section>
 

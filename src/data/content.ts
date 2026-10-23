@@ -8,58 +8,17 @@ interface Fact {
 	value: string;
 }
 
-interface Point {
-	label: string;
-	text: string;
-}
-
 interface Project {
+	key: "switchboard" | "sigea" | "custodia";
 	title: string;
-	type: string;
 	stage: string;
-	availability: string;
-	lang?: "en";
-	href?: string;
-	linkLabel?: string;
+	href: string;
+	linkLabel: string;
 	subtitle: string;
-	meta: string;
 	body: string;
+	today: string;
+	next: string;
 	tags: string[];
-	// Each project in the showcase says what problem it answers, how, and
-	// what can be seen today. A visual is a real screenshot
-	// (src/assets/projects); until a project has one, comingSoon fills the
-	// space and says so.
-	featured: {
-		image?: "switchboard-passkeys";
-		visual?: "custodia-story";
-		imageAlt?: string;
-		caption?: string;
-		comingSoon?: string;
-		points: Point[];
-		demo?: Demo;
-	};
-}
-
-// A replay of how Switchboard decides, with example identities. The codes are
-// Switchboard's real decision codes (internal/auth/authz.go).
-export interface Decision {
-	identity: string;
-	policy: string;
-	outcome: "allowed" | "denied" | "stepup";
-	outcomeLabel: string;
-	code: string;
-	reason: string;
-}
-
-interface Demo {
-	title: string;
-	note: string;
-	summary: string;
-	pause: string;
-	play: string;
-	labels: { request: string; identity: string; policy: string; decision: string; reason: string };
-	request: string;
-	decisions: Decision[];
 }
 
 interface Heading {
@@ -78,7 +37,7 @@ export interface Content {
 		now: Fact[];
 	};
 	sections: Record<"projects" | "experience" | "profile" | "certifications" | "education" | "contact", Heading>;
-	showcase: { label: string; pause: string; play: string };
+	showcase: { label: string; today: string; next: string };
 	about: string[];
 	competencies: string[];
 	metrics: { value: string; label: string }[];
@@ -112,14 +71,14 @@ export const content: Record<Locale, Content> = {
 			],
 		},
 		sections: {
-			projects: { kicker: "Selected work", title: "Projects I build and run" },
+			projects: { kicker: "In progress", title: "Projects I’m working on" },
 			experience: { kicker: "Experience", title: "Enterprise security, hands on" },
 			profile: { kicker: "Profile", title: "How I work" },
 			certifications: { kicker: "Credentials", title: "Certifications" },
 			education: { kicker: "Education", title: "Education" },
 			contact: { kicker: "Contact", title: "Opportunities and collaboration" },
 		},
-		showcase: { label: "Projects", pause: "Pause rotation", play: "Resume rotation" },
+		showcase: { label: "Projects", today: "Today", next: "What’s next" },
 		about: [
 			"I work across security operations, privileged access, data protection, and vulnerability management, connecting offensive testing with defensive engineering.",
 			"My recent work includes enterprise-scale implementations across 40+ companies: CyberArk PAM and PSM, BigID data discovery, Netskope DLP governance, vulnerability remediation, and security automation.",
@@ -187,105 +146,58 @@ export const content: Record<Locale, Content> = {
 		],
 		projects: [
 			{
+				key: "switchboard",
 				title: "Switchboard",
-				type: "Source opens with the first alpha",
-				stage: "In development",
-				availability: "Project site · no public demo",
+				stage: "Running on my own infrastructure",
 				href: "https://switchboard.octaviosantacruz.com/",
-				linkLabel: "Visit the project site",
-				featured: {
-					demo: {
-						title: "How it decides",
-						note: "Example identities",
-						summary:
-							"Example of three Switchboard decisions for the same private site: a member of the admins group is allowed; someone outside the group is refused with the code missing_required_group; a member whose sign-in is three hours old is asked to confirm with a passkey again, code reauthentication_required.",
-						pause: "Pause",
-						play: "Play",
-						labels: { request: "request", identity: "identity", policy: "policy", decision: "decision", reason: "reason" },
-						request: "GET private.octaviosantacruz.com/",
-						decisions: [
-							{ identity: "ana@example.com · passkey", policy: "group admins", outcome: "allowed", outcomeLabel: "Allowed", code: "allowed", reason: "ana is in admins" },
-							{ identity: "leo@example.com · passkey", policy: "group admins", outcome: "denied", outcomeLabel: "Refused", code: "missing_required_group", reason: "leo is not in admins" },
-							{ identity: "ana@example.com · signed in 3 h ago", policy: "admins · sign-in within 15 min", outcome: "stepup", outcomeLabel: "Confirm", code: "reauthentication_required", reason: "asks for a fresh passkey" },
-						],
-					},
-					image: "switchboard-passkeys",
-					imageAlt:
-						"Switchboard's passkey page listing three passkeys (Google Password Manager, Apple Passwords and a device passkey) with buttons to remove one or add another.",
-					caption: "Switchboard's passkey page, with example data.",
-					points: [
-						{ label: "Problem", text: "Small teams put internal apps online with no sign-in, or behind a VPN everyone shares." },
-						{ label: "Approach", text: "One Go binary at the edge: passkey sign-in, per-route policies, and a reason recorded for every request it allows or refuses." },
-						{ label: "Today", text: "It serves the SIGEA and Switchboard sites and signs me in at auth.octaviosantacruz.com." },
-					],
-				},
-				subtitle: "Self-hosted, identity-aware gateway in one Go binary",
-				meta: "Security engineering / Zero-trust access / 2026 - Present",
-				body:
-					"Routes apps by name with automatic certificates, signs people in with passkeys (step-up and device-bound rules included), and explains why each request was allowed or refused. It already runs my public edge: it serves the SIGEA and Switchboard sites, deploys static sites with rollback, and reaches a homelab through its own outbound tunnel. A private CA and infrastructure access are next on the roadmap.",
-				tags: ["Go", "Passkeys", "OIDC", "Tunnels", "Static sites"],
+				linkLabel: "Explore Switchboard",
+				subtitle: "Your apps. Your access rules.",
+				body: "A front door for self-hosted applications. Identify the person, check the policy and explain every access decision, from the public edge to a service at home.",
+				today: "Passkeys, route policies, static sites and an outbound homelab tunnel run on my own edge.",
+				next: "Let applications verify the identity from Switchboard, starting with Custodia.",
+				tags: [
+					"Go",
+					"Passkeys",
+					"Policies",
+					"Tunnels"
+				]
 			},
 			{
+				key: "sigea",
 				title: "SIGEA",
-				type: "Self-hosted pilot",
-				stage: "Rebuilding (v2)",
-				availability: "Project site and devlog · no public demo",
+				stage: "Rebuilding for a self-hosted pilot",
 				href: "https://sigea.octaviosantacruz.com/",
-				linkLabel: "Visit the project site",
-				subtitle: "Exposure inventory that tells you what changed",
-				meta: "Security engineering / Exposure management",
-				body:
-					"An agent inside the network inventories the services you expose and compares every scan with the previous comparable one, so you see what appeared, changed or went away, with the evidence behind it. A partial scan never counts as a service going away. The v2 rebuild in Go and PostgreSQL is documented in a public devlog with per-module progress.",
-				tags: ["Go", "PostgreSQL", "Nmap", "React"],
-				featured: {
-					comingSoon: "Screenshots on the way",
-					points: [
-						{ label: "Problem", text: "Teams rarely know what they expose until someone else scans them for them." },
-						{ label: "Approach", text: "An agent inside the network inventories services and compares every scan with the previous comparable one; a partial scan never counts as a service going away." },
-						{ label: "Today", text: "The v2 rebuild in Go and PostgreSQL, documented in a public devlog with per-module progress." },
-					],
-				},
+				linkLabel: "Follow the SIGEA devlog",
+				subtitle: "Know what changed on your network.",
+				body: "An exposure inventory with a memory. Collect what a network exposes, compare it with a previous observation and keep the evidence that makes each change explainable.",
+				today: "A Go agent, a backend foundation and a public devlog. The v2 product is still being rebuilt.",
+				next: "Prove the inventory → change → evidence workflow in a self-hosted pilot.",
+				tags: [
+					"Go",
+					"PostgreSQL",
+					"Network inventory",
+					"Evidence"
+				]
 			},
 			{
+				key: "custodia",
 				title: "Custodia",
-				type: "Personal product · open source intended",
-				stage: "Live demo · fictional company · Go planned",
-				availability: "Demo online with a fictional company · no real tool connected",
+				stage: "Public demo with a fictional company",
 				href: "https://custodia.octaviosantacruz.com/",
-				linkLabel: "Open the live demo",
-				subtitle: "A CMDB for security tools",
-				meta: "Custodia product / 2026 - Present",
-				body:
-					"Inventories each security tool separately and correlates them to find what none of them sees alone: privileged access without a protected device, ambiguous identities, stale evidence. The demo runs a fictional company, Acme Corp, on simulated CyberArk and Netskope data; the Go backend and the CrowdStrike, Cortex, Tenable, BigID and firewall adapters are not built yet.",
-				tags: ["React", "TypeScript", "Go (planned)", "PostgreSQL (planned)"],
-				lang: "en",
-				featured: {
-					demo: {
-						title: "How it works",
-						note: "Fictional company Acme Corp",
-						summary:
-							"Example of three Custodia conclusions on the question who has privileged access but no device. Alice Morgan has a CyberArk Safe and a Netskope user with no device in a complete capture: a gap. Bob Chen has a device silent for 12 days: partial. Carol Diaz is covered by a recent device.",
-						pause: "Pause",
-						play: "Play",
-						labels: { request: "question", identity: "CyberArk", policy: "Netskope", decision: "verdict", reason: "why" },
-						request: "Privileged access, no device?",
-						decisions: [
-							{ identity: "alice.morgan · Safe ACME-DEV-SERVICES", policy: "user found · 0 devices", outcome: "denied", outcomeLabel: "Gap", code: "CONN-001 v1", reason: "no client signal in a complete capture" },
-							{ identity: "bob.chen · Safe ACME-PROD-PLATFORM", policy: "2 devices · 1 silent for 12 days", outcome: "stepup", outcomeLabel: "Partial", code: "CONN-001 v1", reason: "review the old device; not proof of abandonment" },
-							{ identity: "carol.diaz · no privileged access", policy: "1 device · signal 1 h ago", outcome: "allowed", outcomeLabel: "Covered", code: "CONN-001 v1", reason: "recent Netskope client signal" },
-						],
-					},
-					visual: "custodia-story",
-					imageAlt: "Animation: CyberArk and Netskope each report on Alice Morgan; Custodia joins them by exact email and concludes a gap, privileged access with no device observed, under rule CONN-001.",
-					caption: "Two tools, one person: Custodia joins them and shows the gap.",
-					points: [
-						{ label: "Problem", text: "Each tool holds part of the picture. The real gaps sit between them, and an incomplete source does not prove anything is missing." },
-						{ label: "Approach", text: "Keep each inventory as it arrived and correlate with written rules: four answers (covered, partial, gap, unknown) and the evidence behind each one." },
-						{ label: "Today", text: "Product site and demo online: six fictional people across CyberArk and Netskope. Go backend and more adapters planned; code not released." },
-					],
-				},
-			},
+				linkLabel: "Explore the site and demo",
+				subtitle: "The picture between your security tools.",
+				body: "People, devices and access belong in the same investigation. Keep each tool’s inventory intact, connect records with explicit rules and show the evidence behind the conclusion.",
+				today: "An interactive Acme Corp demo with synthetic CyberArk and Netskope records. No live tool is connected.",
+				next: "Verified access through Switchboard, a Go backend and more tools with explicit integration contracts.",
+				tags: [
+					"React",
+					"TypeScript",
+					"Correlation",
+					"Go planned"
+				]
+			}
 		],
+
 		education: {
 			title: "B.Eng. Computer Science",
 			detail:
@@ -315,14 +227,14 @@ export const content: Record<Locale, Content> = {
 			],
 		},
 		sections: {
-			projects: { kicker: "Trabajo seleccionado", title: "Proyectos que construyo y opero" },
+			projects: { kicker: "En desarrollo", title: "Proyectos en los que estoy trabajando" },
 			experience: { kicker: "Experiencia", title: "Seguridad empresarial, en la práctica" },
 			profile: { kicker: "Perfil", title: "Cómo trabajo" },
 			certifications: { kicker: "Credenciales", title: "Certificaciones" },
 			education: { kicker: "Formación", title: "Educación" },
 			contact: { kicker: "Contacto", title: "Oportunidades y colaboración" },
 		},
-		showcase: { label: "Proyectos", pause: "Pausar rotación", play: "Reanudar rotación" },
+		showcase: { label: "Proyectos", today: "Hoy", next: "Lo que sigue" },
 		about: [
 			"Trabajo entre operaciones de seguridad, accesos privilegiados, protección de datos y gestión de vulnerabilidades, combinando pruebas ofensivas con ingeniería defensiva.",
 			"Mi experiencia reciente incluye implementaciones empresariales en más de 40 compañías: CyberArk PAM y PSM, descubrimiento de datos con BigID, gobierno DLP con Netskope, remediación de vulnerabilidades y automatización de seguridad.",
@@ -390,105 +302,58 @@ export const content: Record<Locale, Content> = {
 		],
 		projects: [
 			{
+				key: "switchboard",
 				title: "Switchboard",
-				type: "Código abierto desde la primera alfa",
-				stage: "En desarrollo",
-				availability: "Sitio del proyecto · sin demo pública",
+				stage: "En uso en mi infraestructura",
 				href: "https://switchboard.octaviosantacruz.com/",
-				linkLabel: "Ver el sitio del proyecto",
-				featured: {
-					demo: {
-						title: "Cómo decide",
-						note: "Identidades de ejemplo",
-						summary:
-							"Ejemplo de tres decisiones de Switchboard para el mismo sitio privado: a un miembro del grupo admins lo deja pasar; a alguien fuera del grupo lo rechaza con el código missing_required_group; a un miembro que inició sesión hace tres horas le pide volver a confirmar con su passkey, código reauthentication_required.",
-						pause: "Pausar",
-						play: "Reanudar",
-						labels: { request: "solicitud", identity: "identidad", policy: "política", decision: "decisión", reason: "motivo" },
-						request: "GET private.octaviosantacruz.com/",
-						decisions: [
-							{ identity: "ana@example.com · passkey", policy: "grupo admins", outcome: "allowed", outcomeLabel: "Permitido", code: "allowed", reason: "ana está en admins" },
-							{ identity: "leo@example.com · passkey", policy: "grupo admins", outcome: "denied", outcomeLabel: "Rechazado", code: "missing_required_group", reason: "leo no está en admins" },
-							{ identity: "ana@example.com · sesión de hace 3 h", policy: "admins · login de menos de 15 min", outcome: "stepup", outcomeLabel: "Confirmar", code: "reauthentication_required", reason: "pide una passkey reciente" },
-						],
-					},
-					image: "switchboard-passkeys",
-					imageAlt:
-						"Página de passkeys de Switchboard con tres passkeys (Google Password Manager, Apple Passwords y una passkey del dispositivo) y botones para quitar una o agregar otra.",
-					caption: "Página de passkeys de Switchboard, con datos de ejemplo.",
-					points: [
-						{ label: "Problema", text: "Los equipos chicos publican apps internas sin login, o detrás de una VPN que comparten todos." },
-						{ label: "Enfoque", text: "Un binario Go en el borde: login con passkeys, políticas por ruta y el motivo registrado de cada solicitud que permite o rechaza." },
-						{ label: "Hoy", text: "Sirve los sitios de SIGEA y Switchboard y me autentica en auth.octaviosantacruz.com." },
-					],
-				},
-				subtitle: "Gateway autohospedado con identidad, en un solo binario Go",
-				meta: "Ingeniería de seguridad / Acceso zero trust / 2026 - Actualidad",
-				body:
-					"Enruta aplicaciones por nombre con certificados automáticos, autentica personas con passkeys (incluye reautenticación y reglas por dispositivo) y explica por qué permitió o rechazó cada solicitud. Ya opera mi borde público: sirve los sitios de SIGEA y Switchboard, publica sitios estáticos con rollback y llega a un homelab por su propio túnel saliente. Una CA privada y el acceso a infraestructura son los próximos pasos del roadmap.",
-				tags: ["Go", "Passkeys", "OIDC", "Túneles", "Sitios estáticos"],
+				linkLabel: "Explorar Switchboard",
+				subtitle: "Tus aplicaciones. Tus reglas de acceso.",
+				body: "Una puerta de entrada para aplicaciones autohospedadas. Identificar a la persona, comprobar la política y explicar cada decisión, desde el borde público hasta un servicio en casa.",
+				today: "Passkeys, políticas por ruta, sitios estáticos y un túnel saliente al homelab funcionan en mi propio edge.",
+				next: "Que las aplicaciones verifiquen la identidad de Switchboard, empezando por Custodia.",
+				tags: [
+					"Go",
+					"Passkeys",
+					"Políticas",
+					"Túneles"
+				]
 			},
 			{
+				key: "sigea",
 				title: "SIGEA",
-				type: "Piloto autohospedado",
-				stage: "Reconstrucción (v2)",
-				availability: "Sitio del proyecto y devlog · sin demo pública",
+				stage: "Reconstrucción para un piloto autohospedado",
 				href: "https://sigea.octaviosantacruz.com/",
-				linkLabel: "Ver el sitio del proyecto",
-				subtitle: "Inventario de exposición que te dice qué cambió",
-				meta: "Ingeniería de seguridad / Gestión de exposición",
-				body:
-					"Un agente dentro de la red inventaría los servicios expuestos y compara cada escaneo con el anterior comparable: muestra qué apareció, cambió o desapareció, con la evidencia que lo respalda. Un escaneo parcial nunca cuenta como un servicio que desapareció. La reconstrucción v2 en Go y PostgreSQL se documenta en un devlog público con progreso por módulo.",
-				tags: ["Go", "PostgreSQL", "Nmap", "React"],
-				featured: {
-					comingSoon: "Capturas en camino",
-					points: [
-						{ label: "Problema", text: "Los equipos rara vez saben qué exponen hasta que otro los escanea por ellos." },
-						{ label: "Enfoque", text: "Un agente dentro de la red inventaría los servicios y compara cada escaneo con el anterior comparable; un escaneo parcial nunca cuenta como un servicio que desapareció." },
-						{ label: "Hoy", text: "La reconstrucción v2 en Go y PostgreSQL, documentada en un devlog público con progreso por módulo." },
-					],
-				},
+				linkLabel: "Seguir el devlog de SIGEA",
+				subtitle: "Saber qué cambió en tu red.",
+				body: "Un inventario de exposición con memoria. Observar lo que expone una red, compararlo con una captura anterior y conservar la evidencia que permite explicar cada cambio.",
+				today: "Agente Go, base del backend y devlog público. El producto v2 sigue en reconstrucción.",
+				next: "Probar el recorrido inventario → cambio → evidencia en un piloto autohospedado.",
+				tags: [
+					"Go",
+					"PostgreSQL",
+					"Inventario de red",
+					"Evidencia"
+				]
 			},
 			{
+				key: "custodia",
 				title: "Custodia",
-				type: "Personal product · open source intended",
-				stage: "Live demo · fictional company · Go planned",
-				availability: "Demo online with a fictional company · no real tool connected",
+				stage: "Demo pública de una empresa ficticia",
 				href: "https://custodia.octaviosantacruz.com/",
-				linkLabel: "Open the live demo",
-				subtitle: "A CMDB for security tools",
-				meta: "Custodia product / 2026 - Present",
-				body:
-					"Inventories each security tool separately and correlates them to find what none of them sees alone: privileged access without a protected device, ambiguous identities, stale evidence. The demo runs a fictional company, Acme Corp, on simulated CyberArk and Netskope data; the Go backend and the CrowdStrike, Cortex, Tenable, BigID and firewall adapters are not built yet.",
-				tags: ["React", "TypeScript", "Go (planned)", "PostgreSQL (planned)"],
-				lang: "en",
-				featured: {
-					demo: {
-						title: "How it works",
-						note: "Fictional company Acme Corp",
-						summary:
-							"Example of three Custodia conclusions on the question who has privileged access but no device. Alice Morgan has a CyberArk Safe and a Netskope user with no device in a complete capture: a gap. Bob Chen has a device silent for 12 days: partial. Carol Diaz is covered by a recent device.",
-						pause: "Pause",
-						play: "Play",
-						labels: { request: "question", identity: "CyberArk", policy: "Netskope", decision: "verdict", reason: "why" },
-						request: "Privileged access, no device?",
-						decisions: [
-							{ identity: "alice.morgan · Safe ACME-DEV-SERVICES", policy: "user found · 0 devices", outcome: "denied", outcomeLabel: "Gap", code: "CONN-001 v1", reason: "no client signal in a complete capture" },
-							{ identity: "bob.chen · Safe ACME-PROD-PLATFORM", policy: "2 devices · 1 silent for 12 days", outcome: "stepup", outcomeLabel: "Partial", code: "CONN-001 v1", reason: "review the old device; not proof of abandonment" },
-							{ identity: "carol.diaz · no privileged access", policy: "1 device · signal 1 h ago", outcome: "allowed", outcomeLabel: "Covered", code: "CONN-001 v1", reason: "recent Netskope client signal" },
-						],
-					},
-					visual: "custodia-story",
-					imageAlt: "Animation: CyberArk and Netskope each report on Alice Morgan; Custodia joins them by exact email and concludes a gap, privileged access with no device observed, under rule CONN-001.",
-					caption: "Two tools, one person: Custodia joins them and shows the gap.",
-					points: [
-						{ label: "Problem", text: "Each tool holds part of the picture. The real gaps sit between them, and an incomplete source does not prove anything is missing." },
-						{ label: "Approach", text: "Keep each inventory as it arrived and correlate with written rules: four answers (covered, partial, gap, unknown) and the evidence behind each one." },
-						{ label: "Today", text: "Product site and demo online: six fictional people across CyberArk and Netskope. Go backend and more adapters planned; code not released." },
-					],
-				},
-			},
+				linkLabel: "Explorar el sitio y la demo",
+				subtitle: "La imagen entre tus herramientas de seguridad.",
+				body: "Personas, equipos y accesos forman parte de la misma investigación. Conservar el inventario de cada herramienta, vincular registros con reglas explícitas y mostrar la evidencia de cada conclusión.",
+				today: "Demo interactiva de Acme Corp con registros sintéticos de CyberArk y Netskope. Sin herramientas reales conectadas.",
+				next: "Acceso verificable por Switchboard, backend Go y más herramientas con contratos de integración explícitos.",
+				tags: [
+					"React",
+					"TypeScript",
+					"Correlación",
+					"Go previsto"
+				]
+			}
 		],
+
 		education: {
 			title: "B.Eng. Computer Science",
 			detail:

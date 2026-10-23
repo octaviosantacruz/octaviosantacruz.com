@@ -1,0 +1,302 @@
+---
+import type { Locale } from "../i18n/translations";
+
+interface Props { kind: "switchboard" | "sigea" | "custodia"; locale: Locale }
+const { kind, locale } = Astro.props;
+const es = locale === "es";
+const common = es
+	? { pause: "Pausar", play: "Reproducir", example: "Secuencia ilustrativa · datos ficticios", stages: "Pasos de la explicación" }
+	: { pause: "Pause", play: "Play", example: "Illustrative sequence · fictional data", stages: "Explanation steps" };
+const scenes = {
+	switchboard: {
+		title: es ? "Una solicitud, una decisión explicable" : "One request, an explainable decision",
+		steps: es ? ["Identificar", "Comprobar", "Decidir"] : ["Identify", "Evaluate", "Decide"],
+		details: es ? [
+			"La persona inicia sesión con su passkey. La aplicación sigue detrás del gateway.",
+			"La ruta exige el grupo correcto y, cuando corresponde, una autenticación reciente.",
+			"Permitir, rechazar o pedir otra confirmación. Cada respuesta tiene un motivo.",
+		] : [
+			"The person signs in with a passkey. The application stays behind the gateway.",
+			"The route requires the right group and, when needed, a recent authentication.",
+			"Allow, refuse or ask for confirmation. Each answer carries a reason.",
+		],
+	},
+	sigea: {
+		title: es ? "Del inventario a lo que cambió" : "From an inventory to what changed",
+		steps: es ? ["Observar", "Comparar", "Explicar"] : ["Observe", "Compare", "Explain"],
+		details: es ? [
+			"El agente observa los servicios de un mismo equipo y conserva la captura.",
+			"Dos capturas completas del mismo alcance permiten comparar lo que estaba y lo que está.",
+			"8443 apareció; 22 dejó de observarse. Una captura parcial no justificaría esa baja.",
+		] : [
+			"The agent observes services on the same host and keeps the observation.",
+			"Two complete captures with the same scope let it compare what was there with what is there.",
+			"8443 appeared; 22 is no longer observed. A partial capture would not justify that removal.",
+		],
+	},
+	custodia: {
+		title: es ? "Lo que ninguna herramienta dice sola" : "What neither tool says alone",
+		steps: es ? ["Recolectar", "Vincular", "Concluir"] : ["Collect", "Connect", "Conclude"],
+		details: es ? [
+			"CyberArk observa un acceso privilegiado. Netskope observa a la usuaria, sin equipos en su captura.",
+			"Un correo exacto y único vincula los registros. Los inventarios originales se conservan.",
+			"La regla explica una brecha de señal del cliente, no la ausencia de toda protección. Ambigüedad o evidencia vieja: desconocido.",
+		] : [
+			"CyberArk observes privileged access. Netskope observes the user, with no devices in its capture.",
+			"An exact, unique email links the records. The original inventories stay intact.",
+			"The rule explains a client-signal gap, not the absence of all protection. Ambiguity or stale evidence: unknown.",
+		],
+	},
+};
+const scene = scenes[kind];
+---
+
+<!-- A readable diagram first, enhanced with a three-step replay. Every label
+     remains present while playing; animation moves attention, not layout. -->
+<figure class="project-scene" data-scene data-kind={kind} data-frame="2"
+	data-details={JSON.stringify(scene.details)} data-pause={common.pause} data-play={common.play}>
+	<div class="scene-topline">
+		<p>{scene.title}</p>
+		<button class="scene-toggle" type="button" aria-pressed="false" hidden>{common.pause}</button>
+	</div>
+	<div class="scene-canvas">
+		<svg class="scene-wires" viewBox="0 0 700 300" preserveAspectRatio="none" aria-hidden="true">
+			<path d="M 180 90 C 280 90 265 150 350 150 M 180 210 C 280 210 265 150 350 150" />
+			<path d="M 350 150 H 560" />
+			<circle class="signal signal-in" cx="0" cy="0" r="3" />
+			<circle class="signal signal-out" cx="0" cy="0" r="3" />
+		</svg>
+		<div class="scene-inputs" data-phase="0">
+			{kind === "switchboard" && <>
+				<div class="scene-node">
+					<span class="node-label">{es ? "Identidad" : "Identity"}</span>
+					<strong>Ana / Leo</strong>
+					<span class="node-detail">{es ? "Una persona, su passkey" : "A person, their passkey"}</span>
+				</div>
+				<div class="scene-node">
+					<span class="node-label">{es ? "Política de la ruta" : "Route policy"}</span>
+					<strong>group: admins</strong>
+					<span class="node-detail">{es ? "Reconfirmar después de 15 min" : "Reconfirm after 15 min"}</span>
+				</div>
+			</>}
+			{kind === "sigea" && <>
+				<div class="scene-node snapshot">
+					<span class="node-label">{es ? "Captura anterior · completa" : "Previous capture · complete"}</span>
+					<strong>192.0.2.10</strong>
+					<div class="port-list"><span>22 <small>SSH</small></span><span>443 <small>HTTPS</small></span></div>
+				</div>
+				<div class="scene-node snapshot">
+					<span class="node-label">{es ? "Captura nueva · completa" : "New capture · complete"}</span>
+					<strong>192.0.2.10</strong>
+					<div class="port-list"><span>443 <small>HTTPS</small></span><span class="port-new">8443 <small>HTTPS</small></span></div>
+				</div>
+			</>}
+			{kind === "custodia" && <>
+				<div class="scene-node">
+					<span class="node-label">CyberArk · PAM</span>
+					<strong>{es ? "Acceso privilegiado" : "Privileged access"}</strong>
+					<span class="node-detail">alice.morgan@acme.example</span>
+				</div>
+				<div class="scene-node">
+					<span class="node-label">Netskope · SSE</span>
+					<strong>{es ? "Usuaria, sin equipos observados" : "User, no devices observed"}</strong>
+					<span class="node-detail">{es ? "Captura completa y vigente" : "Complete, fresh capture"}</span>
+				</div>
+			</>}
+		</div>
+		<div class="scene-hub" data-phase="1">
+			<div class="hub-mark" class:list={{ "hub-person": kind === "custodia" }}>
+				<span>{kind === "switchboard" ? "SB" : kind === "custodia" ? "AM" : "DIFF"}</span>
+			</div>
+			<strong>{kind === "switchboard" ? "Switchboard" : kind === "custodia" ? "Alice Morgan" : es ? "Comparación" : "Comparison"}</strong>
+			<span class="hub-detail">{kind === "switchboard" ? es ? "identidad + política" : "identity + policy" : kind === "custodia" ? es ? "correo exacto y único" : "exact, unique email" : es ? "mismo equipo y alcance" : "same host and scope"}</span>
+		</div>
+		<div class="scene-output" data-phase="2">
+			{kind === "switchboard" && <div class="result-list">
+				<div class="result-row" data-tone="positive"><span class="result-symbol" aria-hidden="true"></span><div><strong>{es ? "Permitir" : "Allow"}</strong><span>Ana · admins</span></div></div>
+				<div class="result-row" data-tone="negative"><span class="result-symbol" aria-hidden="true"></span><div><strong>{es ? "Rechazar" : "Refuse"}</strong><span>{es ? "Leo · sin el grupo" : "Leo · group missing"}</span></div></div>
+				<div class="result-row" data-tone="caution"><span class="result-symbol" aria-hidden="true"></span><div><strong>{es ? "Reconfirmar" : "Confirm again"}</strong><span>{es ? "Ana · sesión de hace 3 h" : "Ana · signed in 3 h ago"}</span></div></div>
+			</div>}
+			{kind === "sigea" && <div class="result-list">
+				<div class="result-row" data-tone="positive"><span class="result-symbol" aria-hidden="true"></span><div><strong>8443 / HTTPS</strong><span>{es ? "Servicio observado nuevo" : "Newly observed service"}</span></div></div>
+				<div class="result-row" data-tone="negative"><span class="result-symbol" aria-hidden="true"></span><div><strong>22 / SSH</strong><span>{es ? "Ya no observado" : "No longer observed"}</span></div></div>
+				<div class="result-row"><span class="result-symbol" aria-hidden="true"></span><div><strong>443 / HTTPS</strong><span>{es ? "Sin cambios" : "Unchanged"}</span></div></div>
+			</div>}
+			{kind === "custodia" && <div class="correlation-result">
+				<span class="node-label">{es ? "Conclusión de Custodia" : "Custodia’s conclusion"}</span>
+				<div class="gap-verdict"><span aria-hidden="true"></span><strong>{es ? "Brecha" : "Gap"}</strong></div>
+				<p>{es ? "Acceso privilegiado sin señal de un equipo en Netskope." : "Privileged access with no device signal in Netskope."}</p>
+				<div class="rule-evidence"><span>CONN-001 v1</span><span>{es ? "2 fuentes · evidencia trazable" : "2 sources · traceable evidence"}</span></div>
+			</div>}
+		</div>
+	</div>
+	<div class="scene-controls" role="group" aria-label={common.stages} hidden>
+		{scene.steps.map((step, i) => <button type="button" aria-pressed={i === 2 ? "true" : "false"} data-frame-select={i}><span aria-hidden="true">{i + 1}</span>{step}</button>)}
+	</div>
+	<figcaption>
+		<p class="scene-description">{scene.details[2]}</p>
+		<span class="scene-example">{common.example}</span>
+	</figcaption>
+</figure>
+
+<script>
+	for (const scene of document.querySelectorAll<HTMLElement>("[data-scene]")) {
+		const details: string[] = JSON.parse(scene.dataset.details!);
+		const buttons = [...scene.querySelectorAll<HTMLButtonElement>("[data-frame-select]")];
+		const toggle = scene.querySelector<HTMLButtonElement>(".scene-toggle")!;
+		const description = scene.querySelector<HTMLElement>(".scene-description")!;
+		const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+		let frame = 2;
+		let timer = 0;
+		let paused = false;
+		let visible = false;
+		const schedule = () => {
+			clearTimeout(timer);
+			const running = !paused && visible && !motion.matches && !document.hidden;
+			scene.classList.toggle("is-playing", running);
+			if (running) timer = window.setTimeout(() => show((frame + 1) % buttons.length), 4200);
+		};
+		const show = (index: number) => {
+			frame = index;
+			scene.dataset.frame = String(index);
+			description.textContent = details[index];
+			buttons.forEach((button, i) => button.setAttribute("aria-pressed", String(i === index)));
+			schedule();
+		};
+		const pause = () => {
+			paused = true;
+			toggle.textContent = scene.dataset.play!;
+			toggle.setAttribute("aria-pressed", "true");
+		};
+		buttons.forEach((button, i) => button.addEventListener("click", () => {
+			pause();
+			description.setAttribute("aria-live", "polite");
+			show(i);
+		}));
+		toggle.addEventListener("click", () => {
+			if (paused) {
+				paused = false;
+				toggle.textContent = scene.dataset.pause!;
+				toggle.setAttribute("aria-pressed", "false");
+				description.setAttribute("aria-live", "off");
+			} else pause();
+			schedule();
+		});
+		const updateMotion = () => {
+			toggle.hidden = motion.matches;
+			if (motion.matches) show(2);
+			else schedule();
+		};
+		motion.addEventListener("change", updateMotion);
+		document.addEventListener("visibilitychange", schedule);
+		new IntersectionObserver(([entry]) => {
+			visible = entry.isIntersecting;
+			schedule();
+		}, { threshold: 0.25 }).observe(scene);
+		scene.querySelector<HTMLElement>(".scene-controls")!.hidden = false;
+		updateMotion();
+	}
+</script>
+
+<style>
+	.project-scene { --scene-positive: oklch(0.82 0.07 155); --scene-negative: oklch(0.78 0.11 25); --scene-caution: oklch(0.83 0.13 75); min-width: 0; margin: 0; padding: 1.4rem; border: 1px solid var(--border); border-radius: 0.9rem; background: var(--bg); }
+	.scene-topline { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.75rem; }
+	.scene-topline p { font-size: 0.9rem; font-weight: 600; color: var(--fg-soft); }
+	.scene-toggle { flex-shrink: 0; min-height: 2.75rem; padding: 0.4rem 0.7rem; border: 1px solid var(--border); border-radius: 0.4rem; background: transparent; color: var(--fg-soft); font: 0.72rem var(--font-mono); cursor: pointer; }
+	.scene-toggle:hover { border-color: var(--accent); color: var(--fg); }
+	.scene-canvas { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1fr) 6.5rem minmax(0, 1fr); align-items: center; gap: 1.4rem; min-height: 18rem; padding: 1.8rem 0; }
+	.scene-wires { position: absolute; z-index: -1; inset: 0; height: 100%; width: 100%; overflow: visible; }
+	.scene-wires path { fill: none; stroke: var(--accent-line); stroke-width: 1.25; stroke-dasharray: 3 5; }
+	.signal { fill: var(--accent); opacity: 0; }
+	.scene-inputs { display: grid; gap: 0.8rem; }
+	.scene-node { display: grid; gap: 0.4rem; min-width: 0; padding: 1rem; border: 1px solid var(--border); border-radius: 0.55rem; background: var(--bg-raised); transition: border-color 0.5s, transform 0.5s; }
+	.node-label { font: 0.72rem/1.5 var(--font-mono); color: var(--fg-muted); }
+	.scene-node > strong { font-size: 0.9rem; line-height: 1.45; font-weight: 600; overflow-wrap: anywhere; }
+	.node-detail { font: 0.7rem/1.5 var(--font-mono); color: var(--fg-muted); overflow-wrap: anywhere; }
+	.scene-hub { position: relative; display: grid; place-items: center; height: 5rem; text-align: center; }
+	.hub-mark { display: grid; position: relative; place-items: center; width: 5rem; height: 5rem; border: 1px solid var(--accent-line); border-radius: 1rem; background: var(--bg-raised); font: 500 1.55rem var(--font-mono); color: var(--accent); transition: border-color 0.5s; }
+	.hub-person { border-radius: 50%; }
+	.hub-mark::after { content: ""; position: absolute; inset: -7px; border: 1px solid transparent; border-radius: inherit; pointer-events: none; }
+	.scene-hub > strong { position: absolute; top: calc(100% + 0.8rem); left: -0.5rem; right: -0.5rem; font-size: 0.76rem; line-height: 1.4; }
+	.hub-detail { position: absolute; top: calc(100% + 2.2rem); left: -0.5rem; right: -0.5rem; font: 0.65rem/1.5 var(--font-mono); color: var(--fg-muted); }
+	.scene-output { min-width: 0; }
+	.result-list { display: grid; gap: 0.55rem; }
+	.result-row { display: flex; align-items: center; gap: 0.65rem; padding: 0.75rem; border: 1px solid var(--border); border-radius: 0.55rem; background: var(--bg-raised); transition: border-color 0.5s; }
+	.result-symbol { flex-shrink: 0; color: var(--fg-soft); font: 1.1rem var(--font-mono); }
+	.result-symbol::before { content: "="; }
+	[data-tone="positive"] .result-symbol::before { content: "+"; }
+	[data-tone="negative"] .result-symbol::before { content: "−"; }
+	[data-kind="switchboard"] [data-tone="positive"] .result-symbol::before { content: "✓"; }
+	[data-kind="switchboard"] [data-tone="negative"] .result-symbol::before { content: "×"; }
+	[data-tone="caution"] .result-symbol::before { content: "↻"; }
+	.scene-hub > strong, .hub-detail { background: var(--bg); z-index: 1; }
+	.result-row div { display: grid; gap: 0.2rem; }
+	.result-row strong { font: 500 0.85rem/1.4 var(--font-mono); }
+	.result-row div > span { color: var(--fg-muted); font-size: 0.7rem; line-height: 1.5; }
+	[data-tone="positive"] .result-symbol, [data-tone="positive"] strong { color: var(--scene-positive); }
+	[data-tone="negative"] .result-symbol, [data-tone="negative"] strong { color: var(--scene-negative); }
+	[data-tone="caution"] .result-symbol, [data-tone="caution"] strong { color: var(--scene-caution); }
+	.port-list { display: flex; flex-wrap: wrap; gap: 0.4rem; font: 0.76rem var(--font-mono); }
+	.port-list > span { padding: 0.25rem 0.4rem; border-radius: 0.25rem; background: var(--bg); }
+	.port-list small { font-size: 0.6rem; color: var(--fg-muted); }
+	.port-new { color: var(--scene-positive); }
+	.correlation-result { padding: 1.15rem; border: 1px solid var(--border); border-radius: 0.6rem; background: var(--bg-raised); transition: border-color 0.5s; }
+	.gap-verdict { display: flex; align-items: center; gap: 0.55rem; margin: 0.9rem 0 0.65rem; color: var(--scene-negative); }
+	.gap-verdict > span { display: block; width: 0.85rem; height: 0.85rem; border: 2px solid currentColor; transform: rotate(45deg); margin-inline: 0.2rem; }
+	.gap-verdict strong { font-size: clamp(1.5rem, 2.5vw, 2.35rem); letter-spacing: -0.04em; line-height: 1; }
+	.correlation-result > p { font-size: 0.82rem; line-height: 1.5; color: var(--fg-soft); }
+	.rule-evidence { display: grid; gap: 0.3rem; margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid var(--border); font: 0.65rem/1.5 var(--font-mono); color: var(--fg-muted); }
+	.scene-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+	.scene-controls button { display: flex; align-items: center; gap: 0.6rem; min-width: 0; min-height: 2.75rem; padding: 0.45rem 0.6rem; border: 0; border-bottom: 2px solid var(--border); background: transparent; color: var(--fg-muted); font: 500 0.78rem var(--font-sans); text-align: left; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
+	.scene-controls button > span { font: 0.68rem var(--font-mono); }
+	.scene-controls button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+	.scene-controls button:hover { color: var(--fg); }
+	.scene-description { min-height: 4.3em; margin-top: 0.9rem; font-size: 0.82rem; line-height: 1.55; color: var(--fg-soft); }
+	.scene-example { display: block; margin-top: 0.7rem; font: 0.64rem var(--font-mono); color: var(--fg-muted); }
+	[data-frame="0"] .scene-node, [data-frame="1"] .hub-mark, [data-frame="2"] .result-row, [data-frame="2"] .correlation-result { border-color: var(--accent-line); }
+	@media (prefers-reduced-motion: no-preference) {
+		.is-playing[data-frame="0"] .scene-node { animation: node-arrive 0.65s both; }
+		.is-playing[data-frame="0"] .scene-node:nth-child(2) { animation-delay: 0.12s; }
+		.is-playing[data-frame="1"] .hub-mark::after { border-color: var(--accent-line); animation: hub-link 1.8s ease-out infinite; }
+		.is-playing[data-frame="1"] .signal-in { animation: signal-in 1.8s ease-in-out infinite; }
+		.is-playing[data-frame="2"] .signal-out { animation: signal-out 1.8s ease-in-out infinite; }
+		.is-playing[data-frame="2"] .result-row, .is-playing[data-frame="2"] .correlation-result { animation: node-arrive 0.65s both; }
+		.is-playing[data-frame="2"] .result-row:nth-child(2) { animation-delay: 0.1s; }
+		.is-playing[data-frame="2"] .result-row:nth-child(3) { animation-delay: 0.2s; }
+	}
+	@keyframes node-arrive { from { transform: translateY(5px); } to { transform: translateY(0); } }
+	@keyframes hub-link { from { transform: scale(1); opacity: 0.8; } to { transform: scale(1.3); opacity: 0; } }
+	@keyframes signal-in { 0% { transform: translate(180px, 90px); opacity: 0; } 20% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate(350px, 150px); opacity: 0; } }
+	@keyframes signal-out { 0% { transform: translate(350px, 150px); opacity: 0; } 20% { opacity: 1; } 85% { opacity: 1; } 100% { transform: translate(560px, 150px); opacity: 0; } }
+	@media (max-width: 42rem) {
+		.project-scene { padding: 1rem; }
+		.scene-topline { align-items: start; }
+		.scene-topline p { max-width: 22ch; }
+		.scene-toggle { max-width: 7.5rem; font-size: 0.65rem; }
+		.scene-canvas { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding: 1.3rem 0; }
+		.scene-wires { display: none; }
+		.scene-inputs { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+		.scene-node { padding: 0.75rem; }
+		.scene-node > strong { font-size: 0.79rem; }
+		.node-label { font-size: 0.61rem; }
+	.scene-hub { height: auto; grid-template-columns: 3rem minmax(0, 1fr); gap: 0.5rem 0.9rem; place-items: start; text-align: left; padding: 0.3rem 0.65rem; }
+		.hub-mark { grid-row: span 2; width: 3rem; height: 3rem; font-size: 1.2rem; border-radius: 0.65rem; }
+		.hub-person { border-radius: 50%; }
+	.scene-hub > strong { position: static; align-self: end; }
+	.hub-detail { position: static; align-self: start; }
+		.result-row { padding: 0.65rem 0.8rem; }
+		.result-row div { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.75rem; }
+		.correlation-result { padding: 0.9rem; }
+		.gap-verdict { margin: 0.6rem 0; }
+		.rule-evidence { grid-template-columns: auto 1fr; gap: 0.8rem; }
+		.scene-controls button { gap: 0.35rem; font-size: 0.7rem; padding-inline: 0.2rem; }
+		.scene-description { min-height: 6.2em; }
+	}
+	@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+	@media (max-width: 26rem) {
+		.scene-controls button > span { display: none; }
+		.scene-controls button { font-size: 0.68rem; padding-inline: 0.15rem; }
+		.scene-topline { gap: 0.5rem; }
+		.scene-topline p { min-width: 0; overflow-wrap: anywhere; }
+	}
+</style>
