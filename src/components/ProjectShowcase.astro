@@ -29,11 +29,12 @@ const { projects, labels, stackLabel, locale } = Astro.props;
 		<div class="feature" id={`project-${project.key}`} role="tabpanel" aria-labelledby={`project-${project.key}-tab`}>
 			<div class="feature-main">
 				<div class="feature-copy">
-					<p class="feature-stage">{project.stage}</p>
+					<p class="feature-stage" data-status={project.status}>{project.stage}</p>
 					<h3>{project.title}</h3>
 					<p class="feature-subtitle">{project.subtitle}</p>
 					<p class="feature-intro">{project.body}</p>
 					<a class="text-link" href={project.href}>{project.linkLabel}<span aria-hidden="true"> ↗</span></a>
+					{project.demo && <a class="text-link" href={project.demo.href}>{project.demo.label}<span aria-hidden="true"> ↗</span></a>}
 					<ul class="tags tags-quiet" aria-label={stackLabel}>{project.tags.map(tag => <li>{tag}</li>)}</ul>
 				</div>
 				<ProjectScene kind={project.key} locale={locale} />

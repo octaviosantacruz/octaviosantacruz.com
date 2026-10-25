@@ -12,8 +12,10 @@ interface Project {
 	key: "switchboard" | "sigea" | "custodia";
 	title: string;
 	stage: string;
+	status: "live" | "pilot" | "demo";
 	href: string;
 	linkLabel: string;
+	demo?: { href: string; label: string };
 	subtitle: string;
 	body: string;
 	today: string;
@@ -149,6 +151,7 @@ export const content: Record<Locale, Content> = {
 				key: "switchboard",
 				title: "Switchboard",
 				stage: "Running on my own infrastructure",
+					status: "live",
 				href: "https://switchboard.octaviosantacruz.com/",
 				linkLabel: "Explore Switchboard",
 				subtitle: "Your apps. Your access rules.",
@@ -163,9 +166,29 @@ export const content: Record<Locale, Content> = {
 				]
 			},
 			{
+				key: "custodia",
+				title: "Custodia",
+				stage: "Public demo with a fictional company",
+					status: "demo",
+				href: "https://custodia.octaviosantacruz.com/",
+				linkLabel: "Explore the site",
+					demo: { href: "https://custodia.octaviosantacruz.com/demo/", label: "Open the live demo" },
+				subtitle: "The picture between your security tools.",
+				body: "People, devices and access belong in the same investigation. Keep each tool’s inventory intact, connect records with explicit rules and show the evidence behind the conclusion.",
+				today: "An interactive Acme Corp demo with synthetic CyberArk and Netskope records. No live tool is connected.",
+				next: "Verified access through Switchboard, a Go backend and more tools with explicit integration contracts.",
+				tags: [
+					"React",
+					"TypeScript",
+					"Correlation",
+					"Go planned"
+				]
+			},
+			{
 				key: "sigea",
 				title: "SIGEA",
 				stage: "Rebuilding for a self-hosted pilot",
+					status: "pilot",
 				href: "https://sigea.octaviosantacruz.com/",
 				linkLabel: "Follow the SIGEA devlog",
 				subtitle: "Know what changed on your network.",
@@ -177,23 +200,6 @@ export const content: Record<Locale, Content> = {
 					"PostgreSQL",
 					"Network inventory",
 					"Evidence"
-				]
-			},
-			{
-				key: "custodia",
-				title: "Custodia",
-				stage: "Public demo with a fictional company",
-				href: "https://custodia.octaviosantacruz.com/",
-				linkLabel: "Explore the site and demo",
-				subtitle: "The picture between your security tools.",
-				body: "People, devices and access belong in the same investigation. Keep each tool’s inventory intact, connect records with explicit rules and show the evidence behind the conclusion.",
-				today: "An interactive Acme Corp demo with synthetic CyberArk and Netskope records. No live tool is connected.",
-				next: "Verified access through Switchboard, a Go backend and more tools with explicit integration contracts.",
-				tags: [
-					"React",
-					"TypeScript",
-					"Correlation",
-					"Go planned"
 				]
 			}
 		],
@@ -305,6 +311,7 @@ export const content: Record<Locale, Content> = {
 				key: "switchboard",
 				title: "Switchboard",
 				stage: "En uso en mi infraestructura",
+					status: "live",
 				href: "https://switchboard.octaviosantacruz.com/",
 				linkLabel: "Explorar Switchboard",
 				subtitle: "Tus aplicaciones. Tus reglas de acceso.",
@@ -319,9 +326,29 @@ export const content: Record<Locale, Content> = {
 				]
 			},
 			{
+				key: "custodia",
+				title: "Custodia",
+				stage: "Demo pública de una empresa ficticia",
+					status: "demo",
+				href: "https://custodia.octaviosantacruz.com/",
+				linkLabel: "Explorar el sitio",
+					demo: { href: "https://custodia.octaviosantacruz.com/demo/", label: "Abrir la demo en vivo" },
+				subtitle: "La imagen entre tus herramientas de seguridad.",
+				body: "Personas, equipos y accesos forman parte de la misma investigación. Conservar el inventario de cada herramienta, vincular registros con reglas explícitas y mostrar la evidencia de cada conclusión.",
+				today: "Demo interactiva de Acme Corp con registros sintéticos de CyberArk y Netskope. Sin herramientas reales conectadas.",
+				next: "Acceso verificable por Switchboard, backend Go y más herramientas con contratos de integración explícitos.",
+				tags: [
+					"React",
+					"TypeScript",
+					"Correlación",
+					"Go previsto"
+				]
+			},
+			{
 				key: "sigea",
 				title: "SIGEA",
 				stage: "Reconstrucción para un piloto autohospedado",
+					status: "pilot",
 				href: "https://sigea.octaviosantacruz.com/",
 				linkLabel: "Seguir el devlog de SIGEA",
 				subtitle: "Saber qué cambió en tu red.",
@@ -333,23 +360,6 @@ export const content: Record<Locale, Content> = {
 					"PostgreSQL",
 					"Inventario de red",
 					"Evidencia"
-				]
-			},
-			{
-				key: "custodia",
-				title: "Custodia",
-				stage: "Demo pública de una empresa ficticia",
-				href: "https://custodia.octaviosantacruz.com/",
-				linkLabel: "Explorar el sitio y la demo",
-				subtitle: "La imagen entre tus herramientas de seguridad.",
-				body: "Personas, equipos y accesos forman parte de la misma investigación. Conservar el inventario de cada herramienta, vincular registros con reglas explícitas y mostrar la evidencia de cada conclusión.",
-				today: "Demo interactiva de Acme Corp con registros sintéticos de CyberArk y Netskope. Sin herramientas reales conectadas.",
-				next: "Acceso verificable por Switchboard, backend Go y más herramientas con contratos de integración explícitos.",
-				tags: [
-					"React",
-					"TypeScript",
-					"Correlación",
-					"Go previsto"
 				]
 			}
 		],
