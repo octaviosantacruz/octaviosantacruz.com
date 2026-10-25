@@ -24,7 +24,9 @@ token=$(curl -sSf --max-time 20 --config - "${ACTIONS_ID_TOKEN_REQUEST_URL}&audi
 echo "::add-mask::$token"
 auth="header = \"Authorization: Bearer ${token}\""
 
-response=$(curl -sS --max-time 120 --config - -X POST \
+headers=$(mktemp)
+trap 'rm -f "$headers"' EXIT
+response=$(curl -sS --max-time 120 --config - -X POST -D "$headers" \
 	-H "Content-Type: application/gzip" --data-binary "@${archive}" \
 	-w '\n%{http_code}' "${DEPLOY_ENDPOINT}/v1/projects/${DEPLOY_PROJECT}/deployments" <<<"$auth")
 code=${response##*$'\n'}
@@ -32,6 +34,11 @@ body=${response%$'\n'*}
 if [ "$code" != 201 ]; then
 	refusal=$(jq -r '.code // empty' <<<"$body" 2>/dev/null || true)
 	echo "deploy refused: HTTP ${code} ${refusal:-(no Switchboard code: a proxy answered?)}" >&2
+	if [ -z "$refusal" ]; then
+		# Who answered: a Cloudflare challenge carries cf-mitigated, the edge does not.
+		grep -iE '^(server|cf-mitigated|cf-ray|content-type):' "$headers" | tr -d '\r' >&2 || true
+		printf 'body: %.200s\n' "$(tr -d '\r\n' <<<"$body")" >&2
+	fi
 	exit 1
 fi
 id=$(jq -r '.id' <<<"$body")
