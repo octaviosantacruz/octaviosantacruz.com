@@ -1,101 +1,165 @@
 ---
-// A suspension bridge between two kinds of tool. Records travel from each
-// tower, meet in the middle and only then a finding appears. Colours follow
-// Custodia's own system: provenance by source type, verdict by shape.
+// Every tool sits on one ring around Custodia. Each step draws one
+// correlation between two of them; earlier ones stay as a trace, so the ring
+// fills into a web: the 360 view. Colours follow Custodia's own system
+// (provenance by source type, verdict by shape). Records are fictional.
 import type { Locale } from "../../i18n/translations";
 
+export type NodeId = "iam" | "dlp" | "scan" | "dspm" | "waf" | "edr" | "cloud" | "pam";
 export interface Plane {
 	step: string;
 	q: string;
-	a: { seal: string; name: string; src: string; record: string };
-	b: { seal: string; name: string; src: string; record: string };
+	a: { node: NodeId; record: string };
+	b: { node: NodeId | "all"; record: string };
 	verdict: "gap" | "partial";
 	finding: string;
 	out: string[];
 }
 
 interface Props { locale: Locale; planes: Plane[] }
-const { planes } = Astro.props;
+const { locale, planes } = Astro.props;
+const es = locale === "es";
+
+const W = 360, H = 300, CX = 180, CY = 150, R = 112;
+const nodes: { id: NodeId; seal: string; name: string; src: string; deg: number }[] = [
+	{ id: "iam", seal: "ID", name: "IAM", src: "pam", deg: -90 },
+	{ id: "dlp", seal: "DL", name: "DLP", src: "sse", deg: -45 },
+	{ id: "scan", seal: "VU", name: es ? "Escáner" : "Scanner", src: "vuln", deg: 0 },
+	{ id: "dspm", seal: "DS", name: "DSPM", src: "dspm", deg: 45 },
+	{ id: "waf", seal: "WA", name: "WAF · SSE", src: "fw", deg: 90 },
+	{ id: "edr", seal: "ED", name: "EDR · MDM", src: "edr", deg: 135 },
+	{ id: "cloud", seal: "CL", name: "Cloud", src: "cloud", deg: 180 },
+	{ id: "pam", seal: "PA", name: "PAM", src: "pam", deg: 225 },
+];
+const nodeOf = (id: NodeId | "all") => nodes.find(n => n.id === id);
+const at = (id: NodeId) => {
+	const r = (nodeOf(id)!.deg * Math.PI) / 180;
+	return { x: CX + R * Math.cos(r), y: CY + R * Math.sin(r) };
+};
+const fmt = (v: number) => v.toFixed(1);
+// A chord bends toward the centre: every correlation passes through Custodia.
+const chord = (a: NodeId, b: NodeId) => {
+	const p = at(a), q = at(b);
+	const c = { x: CX + ((p.x + q.x) / 2 - CX) * 0.2, y: CY + ((p.y + q.y) / 2 - CY) * 0.2 };
+	return `M ${fmt(p.x)} ${fmt(p.y)} Q ${fmt(c.x)} ${fmt(c.y)} ${fmt(q.x)} ${fmt(q.y)}`;
+};
+const links = planes.map(p =>
+	p.b.node === "all" ? nodes.filter(n => n.id !== p.a.node).map(n => chord(p.a.node, n.id)) : [chord(p.a.node, p.b.node)],
+);
+const uses = (id: NodeId) => planes.flatMap((p, i) => (p.a.node === id || p.b.node === id || p.b.node === "all" ? [i] : [])).join(" ");
+
+// State per step, generated because it depends on order: the current chord
+// draws itself and carries a pulse; earlier ones stay as a faint trace.
+const css: string[] = [];
+const motion: string[] = [];
+planes.forEach((_, f) => {
+	const scope = `[data-frame="${f}"] .cu`;
+	css.push(`${scope} .chord[data-i="${f}"] { opacity: 1; }`, `${scope} .node[data-p~="${f}"] { --lit: 1; }`);
+	motion.push(
+		`${scope} .chord[data-i="${f}"] .base { animation: cu-draw 1s 0.3s cubic-bezier(.2,.7,.2,1) both; }`,
+		`${scope} .chord[data-i="${f}"] .pulse { animation: cu-pulse 1.6s 1.3s linear infinite; }`,
+		`${scope} .mark::after { animation: cu-mark-${f} 1s 1.25s ease-out both; }`,
+		`@keyframes cu-mark-${f} { from { opacity: 0.9; transform: scale(0.7); } to { opacity: 0; transform: scale(1.6); } }`,
+	);
+	for (let i = 0; i < f; i++) css.push(`${scope} .chord[data-i="${i}"] { opacity: 0.3; }`, `${scope} .node[data-p~="${i}"] { --seen: 1; }`);
+});
+const stateCss = `${css.join("\n")}\n@media (prefers-reduced-motion: no-preference) {\n${motion.join("\n")}\n}`;
 ---
 
 <div class="cu">
-	{planes.map((plane, i) => (
-		<div class="plane" data-only={String(i)} style={`--a: var(--src-${plane.a.src}); --b: var(--src-${plane.b.src})`}>
-			<p class:list={["finding", `v-${plane.verdict}`]}><span class="shape" aria-hidden="true"></span>{plane.finding}</p>
-			<div class="span">
-				<div class="tower ta"><span class="seal">{plane.a.seal}</span><strong>{plane.a.name}</strong></div>
-				<div class="deck" aria-hidden="true">
-					<svg class="cable" viewBox="0 0 200 60" preserveAspectRatio="none">
-						<path class="main" d="M 0 58 Q 100 -46 200 58" />
-						{[20, 40, 60, 80, 100, 120, 140, 160, 180].map((x, k) => <line x1={x} x2={x} y1={58 - 208 * (x / 200) * (1 - x / 200)} y2="60" style={`--k: ${k}`} />)}
-					</svg>
-					<span class="road"></span>
-					<span class="rec ra">{plane.a.record}</span>
-					<span class="rec rb">{plane.b.record}</span>
-					<span class="spark"></span>
+	<div class="ring" style={`aspect-ratio: ${W} / ${H}`} aria-hidden="true">
+		<svg viewBox={`0 0 ${W} ${H}`}>
+			<circle class="orbit" cx={CX} cy={CY} r={R} />
+			{links.map((paths, i) => (
+				<g class="chord" data-i={i}>
+					{paths.map(d => <path class="base" d={d} pathLength="1" />)}
+					{paths.map(d => <path class="pulse" d={d} pathLength="1" />)}
+				</g>
+			))}
+		</svg>
+		<span class="mark"><i></i><i></i></span>
+		{nodes.map(n => {
+			const p = at(n.id);
+			return <span class:list={["node", { top: n.deg === -90 }]} data-p={uses(n.id)} style={`left: ${fmt((p.x / W) * 100)}%; top: ${fmt((p.y / H) * 100)}%; --tone: var(--src-${n.src})`}><b>{n.seal}</b><em>{n.name}</em></span>;
+		})}
+	</div>
+
+	<div class="info">
+		{planes.map((plane, i) => {
+			const a = nodeOf(plane.a.node)!, b = nodeOf(plane.b.node);
+			return (
+				<div class="plane" data-only={String(i)}>
+					<span class="step">{String(i + 1).padStart(2, "0")} / {String(planes.length).padStart(2, "0")} · {plane.step}</span>
+					<ul class="records">
+						<li style={`--tone: var(--src-${a.src})`}><b>{a.seal}</b><span>{plane.a.record}</span></li>
+						<li style={`--tone: var(--src-${b ? b.src : "all"})`}><b>{b ? b.seal : "∗"}</b><span>{plane.b.record}</span></li>
+					</ul>
+					<p class:list={["finding", `v-${plane.verdict}`]}><span class="shape" aria-hidden="true"></span>{plane.finding}</p>
+					<ul class="out">{plane.out.map((o, k) => <li style={`--k: ${k}`}>{o}</li>)}</ul>
 				</div>
-				<div class="tower tb"><span class="seal">{plane.b.seal}</span><strong>{plane.b.name}</strong></div>
-			</div>
-			<ul class="out">{plane.out.map((o, k) => <li style={`--k: ${k}`}>{o}</li>)}</ul>
-		</div>
-	))}
+			);
+		})}
+	</div>
 </div>
+<style is:inline set:html={stateCss}></style>
 
 <style>
 	.cu {
 		--src-pam: oklch(0.75 0.14 296); --src-sse: oklch(0.77 0.14 352); --src-dspm: oklch(0.77 0.12 232);
 		--src-edr: oklch(0.74 0.12 260); --src-vuln: oklch(0.76 0.1 205); --src-fw: oklch(0.74 0.07 275);
-		--src-all: oklch(0.91 0.19 124);
+		--src-cloud: oklch(0.79 0.1 175); --src-all: oklch(0.91 0.19 124);
+		--brand: oklch(0.91 0.19 124);
 		--v-gap: oklch(0.72 0.18 27); --v-partial: oklch(0.84 0.14 80);
-		display: grid; place-items: center; width: 100%;
+		display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; gap: 1.8rem; width: 100%;
 	}
-	.plane { display: grid; justify-items: center; gap: 1.6rem; width: min(100%, 36rem); }
 
-	/* The finding appears last: Custodia concludes only after the join. */
-	.finding { display: flex; align-items: center; gap: 0.7rem; min-height: 3.2rem; max-width: 30rem; padding: 0.7rem 1rem; border: 1px solid var(--border); border-radius: 0.6rem; background: var(--bg-raised); font-size: 0.86rem; line-height: 1.45; text-align: left; animation: rise 0.6s 2.3s var(--ease-out) both; }
-	.shape { flex-shrink: 0; width: 0.8rem; height: 0.8rem; background: var(--tone); }
+	/* The ring of tools around Custodia. */
+	.ring { position: relative; width: 100%; }
+	.ring svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+	.orbit { fill: none; stroke: var(--border); stroke-width: 1; stroke-dasharray: 2 5; }
+	.chord { opacity: 0; transition: opacity 0.6s; }
+	.chord path { fill: none; }
+	.chord .base { stroke: color-mix(in oklch, var(--brand) 55%, var(--fg-muted)); stroke-width: 1.2; stroke-dasharray: 1; }
+	.chord .pulse { stroke: var(--brand); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 0.06 1; stroke-dashoffset: 1.06; opacity: 0; }
+
+	.mark { position: absolute; left: 50%; top: 50%; width: 2.5rem; height: 2.5rem; translate: -50% -50%; }
+	.mark i { position: absolute; width: 1.6rem; height: 1.6rem; border: 2px solid var(--brand); border-radius: 0.45rem; background: oklch(0.135 0.006 260); }
+	.mark i:first-child { left: 0; top: 0; }
+	.mark i:last-child { right: 0; bottom: 0; background: color-mix(in oklch, var(--brand) 16%, oklch(0.135 0.006 260)); }
+	.mark::after { content: ""; position: absolute; inset: -0.7rem; border: 1px solid var(--brand); border-radius: 50%; opacity: 0; }
+
+	.node { --lit: 0; --seen: 0; position: absolute; translate: -50% -50%; }
+	.node b { display: grid; place-items: center; width: 2rem; height: 2rem; border: 1px solid color-mix(in oklch, var(--tone) calc(20% + var(--seen) * 30% + var(--lit) * 50%), var(--border)); border-radius: 0.35rem; background: color-mix(in oklch, var(--tone) calc(var(--seen) * 12% + var(--lit) * 88%), oklch(0.16 0.007 260)); color: color-mix(in oklch, oklch(0.2 0.02 260) calc(var(--lit) * 100%), var(--fg-muted)); font: 700 0.6rem var(--font-mono); box-shadow: 0 0 calc(var(--lit) * 18px) calc(var(--lit) * 1px) color-mix(in oklch, var(--tone) 50%, transparent); transition: background 0.5s, border-color 0.5s, color 0.5s, box-shadow 0.5s; }
+	.node em { position: absolute; left: 50%; top: calc(100% + 0.25rem); translate: -50% 0; white-space: nowrap; font: 0.58rem var(--font-mono); font-style: normal; color: color-mix(in oklch, var(--fg) calc(var(--lit) * 100%), var(--fg-muted)); transition: color 0.5s; }
+	.top em { top: auto; bottom: calc(100% + 0.25rem); }
+
+	/* The story of the current step. */
+	.info { display: grid; min-width: 0; }
+	.plane { display: grid; gap: 0.85rem; }
+	.step { font: 0.66rem var(--font-mono); color: var(--fg-muted); animation: rise 0.4s var(--ease-out) both; }
+	.records { display: grid; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+	.records li { display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.65rem; border: 1px solid var(--border); border-left: 2px solid var(--tone); border-radius: 0.35rem; background: var(--bg-raised); animation: rise 0.45s 0.45s var(--ease-out) both; }
+	.records li + li { animation-delay: 0.85s; }
+	.records b { flex-shrink: 0; display: grid; place-items: center; width: 1.4rem; height: 1.4rem; border-radius: 0.25rem; background: var(--tone); color: oklch(0.2 0.02 260); font: 700 0.54rem var(--font-mono); }
+	.records span { font: 0.7rem/1.4 var(--font-mono); color: var(--fg-soft); overflow-wrap: anywhere; }
+	.finding { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.8rem 0.9rem; border: 1px solid color-mix(in oklch, var(--tone) 35%, var(--border)); border-radius: 0.5rem; background: color-mix(in oklch, var(--tone) 6%, var(--bg-raised)); font-size: 0.86rem; line-height: 1.45; animation: rise 0.55s 1.9s var(--ease-out) both; }
+	.shape { flex-shrink: 0; width: 0.72rem; height: 0.72rem; margin-top: 0.32rem; background: var(--tone); }
 	.v-gap { --tone: var(--v-gap); } .v-gap .shape { rotate: 45deg; }
 	.v-partial { --tone: var(--v-partial); } .v-partial .shape { border-radius: 50%; background: linear-gradient(90deg, var(--tone) 50%, transparent 50%); box-shadow: inset 0 0 0 1.5px var(--tone); }
-
-	.span { display: grid; grid-template-columns: 6.2rem minmax(0, 1fr) 6.2rem; align-items: end; width: 100%; }
-	.tower { position: relative; display: grid; justify-items: center; gap: 0.35rem; padding: 0.9rem 0.4rem 0.75rem; border: 1px solid color-mix(in oklch, var(--tone) 40%, var(--border)); border-radius: 0.35rem; background: color-mix(in oklch, var(--tone) 7%, var(--bg-raised)); text-align: center; animation: rise 0.5s var(--ease-out) both; }
-	.ta { --tone: var(--a); } .tb { --tone: var(--b); animation-delay: 0.1s; }
-	.tower strong { font: 600 0.74rem/1.3 var(--font-mono); }
-	.seal { display: grid; place-items: center; width: 1.7rem; height: 1.7rem; border-radius: 0.3rem; background: var(--tone); color: oklch(0.2 0.02 260); font: 700 0.62rem var(--font-mono); }
-
-	.deck { position: relative; height: 6.5rem; container-type: inline-size; }
-	.cable { position: absolute; left: 0; right: 0; top: 0; bottom: 0.6rem; width: 100%; height: calc(100% - 0.6rem); overflow: visible; }
-	.cable .main { fill: none; stroke: color-mix(in oklch, var(--fg-muted) 80%, transparent); stroke-width: 1.4; vector-effect: non-scaling-stroke; stroke-dasharray: 1200; animation: draw 0.9s 0.25s var(--ease-out) both; }
-	.cable line { stroke: var(--border); stroke-width: 1; vector-effect: non-scaling-stroke; animation: fade 0.3s calc(0.6s + var(--k) * 0.04s) both; }
-	.road { position: absolute; left: 0; right: 0; bottom: 0.55rem; height: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--a), var(--b)); opacity: 0.55; transform-origin: center; animation: road 0.7s 0.15s var(--ease-out) both; }
-	.rec { position: absolute; bottom: 1.1rem; max-width: 46%; padding: 0.22rem 0.5rem; border: 1px solid color-mix(in oklch, var(--tone) 50%, transparent); border-radius: 0.3rem; background: oklch(0.15 0.006 260); font: 0.6rem/1.35 var(--font-mono); color: var(--tone); overflow-wrap: anywhere; }
-	.ra { --tone: var(--a); left: 0; animation: from-left 1.2s 0.9s var(--ease-out) both; }
-	.rb { --tone: var(--b); right: 0; animation: from-right 1.2s 0.9s var(--ease-out) both; }
-	.spark { position: absolute; left: 50%; bottom: 0.55rem; width: 0.5rem; height: 0.5rem; translate: -50% 50%; border-radius: 50%; background: var(--fg); box-shadow: 0 0 14px 4px oklch(1 0 0 / 0.35); animation: spark 0.9s 1.95s both; }
-
-	.out { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.45rem; margin: 0; padding: 0; list-style: none; }
-	.out li { padding: 0.25rem 0.7rem; border: 1px solid var(--border); border-radius: 999px; font: 0.68rem var(--font-mono); color: var(--fg-soft); animation: rise 0.4s calc(2.7s + var(--k) * 0.12s) var(--ease-out) both; }
+	.out { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+	.out li { padding: 0.22rem 0.65rem; border: 1px solid var(--border); border-radius: 999px; font: 0.66rem var(--font-mono); color: var(--fg-soft); animation: rise 0.4s calc(2.4s + var(--k) * 0.12s) var(--ease-out) both; }
 
 	@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
-	@keyframes fade { from { opacity: 0; } }
-	@keyframes draw { from { stroke-dashoffset: 1200; } to { stroke-dashoffset: 0; } }
-	@keyframes road { from { transform: scaleX(0); } }
-	@keyframes from-left { from { opacity: 0; transform: translateX(-0.5rem); } 20% { opacity: 1; } to { transform: translateX(calc(50cqw - 100% - 0.35rem)); } }
-	@keyframes from-right { from { opacity: 0; transform: translateX(0.5rem); } 20% { opacity: 1; } to { transform: translateX(calc(-50cqw + 100% + 0.35rem)); } }
-	@keyframes spark { from { opacity: 0; transform: scale(0.2); } 30% { opacity: 1; transform: scale(1.4); } to { opacity: 0; transform: scale(3); } }
-
-	@media (prefers-reduced-motion: reduce) {
-		.cu *, .cu *::before { animation: none !important; }
-		.ra { transform: translateX(calc(50cqw - 100% - 0.35rem)); }
-		.rb { transform: translateX(calc(-50cqw + 100% + 0.35rem)); }
-		.spark { display: none; }
-	}
+	@media (prefers-reduced-motion: reduce) { .cu *, .cu *::before, .cu *::after { animation: none !important; transition: none !important; } }
 	@media (max-width: 42rem) {
-		.span { grid-template-columns: 3.9rem minmax(0, 1fr) 3.9rem; }
-		.tower { padding-inline: 0.2rem; }
-		.tower strong { font-size: 0.58rem; overflow-wrap: anywhere; }
-		.deck { height: 7.5rem; }
-		.rec { max-width: 48%; padding: 0.2rem 0.35rem; font-size: 0.54rem; }
-		.finding { font-size: 0.8rem; }
+		.cu { grid-template-columns: 1fr; gap: 1.4rem; }
+		.ring { width: min(100%, 21rem); justify-self: center; }
+		.node b { width: 1.75rem; height: 1.75rem; font-size: 0.54rem; }
+		.node em { font-size: 0.52rem; }
 	}
+</style>
+
+<style is:global>
+	@keyframes cu-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+	@keyframes cu-pulse { from { stroke-dashoffset: 1.06; opacity: 1; } to { stroke-dashoffset: 0; opacity: 1; } }
 </style>

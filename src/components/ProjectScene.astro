@@ -12,42 +12,43 @@ const common = es
 	? { pause: "Pausar", play: "Reproducir", example: "Secuencia ilustrativa · datos ficticios", stages: "Pasos de la explicación" }
 	: { pause: "Pause", play: "Play", example: "Illustrative sequence · fictional data", stages: "Explanation steps" };
 
-// Custodia: one bridge per plane. Categories, not vendors: the product joins
-// whatever tool fills each role. Records and findings are fictional.
+// Custodia: one correlation per plane, drawn on a ring of tools. Categories,
+// not vendors: the product joins whatever tool fills each role. Records and
+// findings are fictional.
 const planes: Plane[] = [
 	{ step: t("Devices", "Equipos"), verdict: "gap",
-		a: { seal: "DL", name: "DLP", src: "sse", record: t("alice · 2.1 GB upload", "alice · subida 2,1 GB") },
-		b: { seal: "ED", name: "EDR · MDM", src: "edr", record: t("ALICE-LT01 · no agent", "ALICE-LT01 · sin agente") },
+		a: { node: "dlp", record: t("alice · 2.1 GB upload", "alice · subida 2,1 GB") },
+		b: { node: "edr", record: t("ALICE-LT01 · no agent", "ALICE-LT01 · sin agente") },
 		finding: t("Alice moves data from a laptop no agent protects.", "Alice mueve datos desde una laptop que ningún agente protege."),
 		out: es ? ["Cobertura", "UEBA", "Comportamiento"] : ["Coverage", "UEBA", "Behaviour"],
 		q: t("DLP and EDR together give coverage, user behaviour and a digital x-ray of each person.", "DLP y EDR juntos dan cobertura, comportamiento del usuario y una radiografía digital de cada persona.") },
 	{ step: t("Servers", "Servidores"), verdict: "gap",
-		a: { seal: "PA", name: "PAM", src: "pam", record: t("db-07 · 3 local admins", "db-07 · 3 admins locales") },
-		b: { seal: "VU", name: t("Scanner", "Escáner"), src: "vuln", record: t("db-07 · weak password", "db-07 · clave débil") },
+		a: { node: "pam", record: t("db-07 · 3 local admins", "db-07 · 3 admins locales") },
+		b: { node: "scan", record: t("db-07 · weak password", "db-07 · clave débil") },
 		finding: t("db-07 has privileged accounts outside the vault, one with a guessable password.", "db-07 tiene cuentas privilegiadas fuera del vault, una con clave adivinable."),
 		out: es ? ["Alcance", "Cuentas", "Claves débiles"] : ["Reach", "Accounts", "Weak passwords"],
 		q: t("The scanner widens PAM's reach; a password scan from PAM finds the accounts, the scanner flags the weak ones.", "El escáner amplía el alcance del PAM; un password scan desde PAM encuentra las cuentas y el escáner marca las débiles.") },
 	{ step: "Vulns", verdict: "gap",
-		a: { seal: "CN", name: "CNAPP", src: "dspm", record: t("web-02 · internet-facing", "web-02 · expuesto a internet") },
-		b: { seal: "VU", name: t("Scanner", "Escáner"), src: "vuln", record: "web-02 · CVE-2021-41773" },
+		a: { node: "cloud", record: t("web-02 · internet-facing", "web-02 · expuesto a internet") },
+		b: { node: "scan", record: "web-02 · CVE-2021-41773" },
 		finding: t("web-02 is exposed and vulnerable: fix it first.", "web-02 está expuesto y es vulnerable: va primero."),
 		out: es ? ["Contexto cloud", "Evidencia en host", "Prioridad"] : ["Cloud context", "Host evidence", "Priority"],
 		q: t("Cloud context and host evidence on the same finding turn a long list into a priority.", "Contexto cloud y evidencia del host sobre el mismo hallazgo convierten una lista larga en una prioridad.") },
 	{ step: t("Data", "Datos"), verdict: "gap",
-		a: { seal: "DS", name: "DSPM", src: "dspm", record: t("finance/ · card numbers", "finanzas/ · tarjetas") },
-		b: { seal: "DL", name: "DLP", src: "sse", record: t("payroll.xlsx · leaving", "nomina.xlsx · saliendo") },
+		a: { node: "dspm", record: t("finance/ · card numbers", "finanzas/ · tarjetas") },
+		b: { node: "dlp", record: t("payroll.xlsx · leaving", "nomina.xlsx · saliendo") },
 		finding: t("Sensitive data found at rest is the same data leaving in motion.", "El dato sensible que está en reposo es el mismo que sale en movimiento."),
 		out: es ? ["En reposo", "En movimiento", "Fuga"] : ["At rest", "In motion", "Leak"],
 		q: t("DSPM knows where sensitive data lives; DLP sees where it goes. Together they show a leak.", "El DSPM sabe dónde vive el dato sensible; el DLP ve a dónde va. Juntos muestran una fuga.") },
 	{ step: "Web", verdict: "partial",
-		a: { seal: "CL", name: "Cloud", src: "fw", record: t("api.acme · public", "api.acme · público") },
-		b: { seal: "WA", name: "WAF · SSE", src: "sse", record: t("api.acme · 1.2k probes/day", "api.acme · 1,2k sondeos/día") },
+		a: { node: "cloud", record: t("api.acme · public", "api.acme · público") },
+		b: { node: "waf", record: t("api.acme · 1.2k probes/day", "api.acme · 1,2k sondeos/día") },
 		finding: t("A public API probed every day, with its owner and exposure in one view.", "Una API pública sondeada todos los días, con su dueño y exposición en una vista."),
 		out: es ? ["Exposición", "Navegación", "Patrones"] : ["Exposure", "Browsing", "Patterns"],
 		q: t("Cloud inventory with edge and browsing data shows what is exposed and how people move around it.", "El inventario cloud con datos del borde y la navegación muestra qué está expuesto y cómo se mueve la gente alrededor.") },
 	{ step: t("Identity", "Identidad"), verdict: "gap",
-		a: { seal: "ID", name: "IAM", src: "pam", record: t("carol · offboarded", "carol · dada de baja") },
-		b: { seal: "∗", name: t("Every tool", "Cada herramienta"), src: "all", record: t("carol · active in PAM, SSE", "carol · activa en PAM, SSE") },
+		a: { node: "iam", record: t("carol · offboarded", "carol · dada de baja") },
+		b: { node: "all", record: t("carol · active in PAM, SSE", "carol · activa en PAM, SSE") },
 		finding: t("Carol left in May; two tools still let her in.", "Carol se fue en mayo; dos herramientas todavía la dejan entrar."),
 		out: es ? ["Quién", "A qué", "Visión 360"] : ["Who", "To what", "360 view"],
 		q: t("Identity across every tool answers who in the company has access to what: the 360 view.", "La identidad cruzada con cada herramienta responde quién de la empresa tiene acceso a qué: la visión 360.") },
@@ -55,37 +56,41 @@ const planes: Plane[] = [
 
 const scenes = {
 	switchboard: {
-		title: t("Every app behind a passkey and a policy", "Cada app detrás de una passkey y una política"),
-		duration: 5200,
-		steps: es ? ["Identidad", "Acceso", "Bloqueo"] : ["Identity", "Access", "Blocked"],
+		title: t("Access that understands context", "Un acceso que entiende el contexto"),
+		duration: 8000,
+		steps: es ? ["Identidad", "Contexto", "Just-in-time", "Explicado"] : ["Identity", "Context", "Just-in-time", "Explained"],
 		details: es ? [
-			"La app está detrás de Switchboard. Sin sesión, lo primero que aparece es el inicio de sesión.",
-			"Ana usa su passkey y pertenece al grupo que exige la ruta: la app se abre por el túnel hacia casa.",
-			"Leo también tiene passkey, pero no el grupo. Identidad verificada no es acceso: queda bloqueado y la app nunca recibe la petición.",
+			"Hoy: la app está detrás de Switchboard. Ana se autentica con su passkey, la política la deja pasar y la app se abre por el túnel hacia casa.",
+			"Próximo: señales de contexto. Ana aparece en Madrid 12 minutos después de Asunción; en vez de dejarla pasar, Switchboard pide una passkey nueva y confirmación en el teléfono.",
+			"Próximo: nadie tiene acceso permanente. Leo pide entrar a db-prod, la aprobación llega al teléfono y el acceso vence solo, con la sesión grabada.",
+			"Próximo: cada decisión se explica en lenguaje claro y queda en un log de transparencia que se puede verificar: nada se reescribe en silencio.",
 		] : [
-			"The app sits behind Switchboard. Without a session, the first thing you see is the sign-in.",
-			"Ana uses her passkey and belongs to the group the route requires: the app opens through the tunnel home.",
-			"Leo has a passkey too, but not the group. A verified identity is not access: he is blocked and the app never sees the request.",
+			"Today: the app sits behind Switchboard. Ana authenticates with her passkey, the policy lets her in and the app opens through the tunnel home.",
+			"Next: context signals. Ana appears in Madrid 12 minutes after Asunción; instead of letting her through, Switchboard asks for a fresh passkey and confirmation on her phone.",
+			"Next: no one keeps standing access. Leo requests db-prod, the approval reaches a phone and access expires on its own, with the session recorded.",
+			"Next: every decision is explained in plain language and lands in a verifiable transparency log: nothing is rewritten silently.",
 		],
 	},
 	custodia: {
-		title: t("A bridge between your tools", "Un puente entre tus herramientas"),
-		duration: 5600,
+		title: t("Every tool, correlated through Custodia", "Cada herramienta, correlacionada a través de Custodia"),
+		duration: 8000,
 		steps: planes.map(p => p.step),
 		details: planes.map(p => p.q),
 	},
 	sigea: {
 		title: t("Only what a probe confirms is reported", "Solo se reporta lo que un probe confirma"),
-		duration: 6000,
-		steps: es ? ["Descubrir", "Correlacionar", "Verificar"] : ["Discover", "Correlate", "Verify"],
+		duration: 8500,
+		steps: es ? ["Descubrir", "Correlacionar", "Verificar", "Camino"] : ["Discover", "Correlate", "Verify", "Path"],
 		details: es ? [
 			"El agente encuentra un puerto abierto y un detector lee el banner: Apache HTTP Server 2.4.49.",
 			"La API de NVD traduce el producto a su CPE, y ese CPE trae vulnerabilidades candidatas.",
-			"Un probe valida cada candidata contra el servicio real: finding, no_finding o inconclusive. Solo se reporta lo confirmado, y así bajan los falsos positivos.",
+			"Un probe valida cada candidata contra el servicio real: confirmada, inconclusa o no afectada. Solo se reporta lo confirmado, con su evidencia, y así bajan los falsos positivos.",
+			"Próximo: con hallazgos confirmados y alcanzabilidad verificada, SIGEA arma caminos de ataque: desde internet hasta el dato que importa.",
 		] : [
 			"The agent finds an open port and a detector reads the banner: Apache HTTP Server 2.4.49.",
 			"The NVD API maps the product to its CPE, and that CPE brings candidate vulnerabilities.",
-			"A probe checks each candidate against the real service: finding, no_finding or inconclusive. Only what is confirmed is reported, so false positives drop.",
+			"A probe checks each candidate against the real service: confirmed, inconclusive or not affected. Only what is confirmed is reported, with its evidence, so false positives drop.",
+			"Next: with confirmed findings and verified reachability, SIGEA builds attack paths, from the internet to the data that matters.",
 		],
 	},
 };
@@ -106,7 +111,7 @@ const scene = scenes[kind];
 		{kind === "custodia" && <CustodiaScene locale={locale} planes={planes} />}
 		{kind === "sigea" && <SigeaScene locale={locale} />}
 	</div>
-	<div class="scene-controls" role="group" aria-label={common.stages} style={`--steps: ${scene.steps.length}`} hidden>
+	<div class="scene-controls" role="group" aria-label={common.stages} style={`--steps: ${scene.steps.length}; --cols: ${scene.steps.length > 4 ? 3 : scene.steps.length === 4 ? 2 : scene.steps.length}`} hidden>
 		{scene.steps.map((step, i) => <button type="button" aria-pressed={i === 0 ? "true" : "false"} data-frame-select={i}><span class="bar" aria-hidden="true"></span><span class="num" aria-hidden="true">{i + 1}</span>{step}</button>)}
 	</div>
 	<figcaption>
@@ -184,7 +189,7 @@ const scene = scenes[kind];
 	}
 	[data-kind="switchboard"] { --scene-accent: oklch(0.83 0.13 75); }
 	[data-kind="custodia"] { --scene-accent: oklch(0.91 0.19 124); }
-	[data-kind="sigea"] { --scene-accent: oklch(0.68 0.21 350); }
+	[data-kind="sigea"] { --scene-accent: oklch(0.7 0.16 290); }
 	.scene-topline { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.75rem; }
 	.scene-topline p { font-size: 0.9rem; font-weight: 600; color: var(--fg-soft); }
 	.scene-toggle { flex-shrink: 0; min-height: 2.75rem; padding: 0.4rem 0.8rem; border: 1px solid var(--border); border-radius: 999px; background: oklch(0.15 0.006 260 / 0.8); color: var(--fg-soft); font: 0.7rem var(--font-mono); cursor: pointer; }
@@ -195,6 +200,7 @@ const scene = scenes[kind];
 	:global([data-frame="0"] [data-only]:not([data-only="0"])), :global([data-frame="1"] [data-only]:not([data-only="1"])),
 	:global([data-frame="2"] [data-only]:not([data-only="2"])), :global([data-frame="3"] [data-only]:not([data-only="3"])),
 	:global([data-frame="4"] [data-only]:not([data-only="4"])), :global([data-frame="5"] [data-only]:not([data-only="5"])) { display: none !important; }
+	:global([data-frame="0"] [data-not="0"]), :global([data-frame="1"] [data-not="1"]), :global([data-frame="2"] [data-not="2"]), :global([data-frame="3"] [data-not="3"]) { display: none !important; }
 
 	/* Step controls double as a progress bar while playing. */
 	.scene-controls { display: grid; grid-template-columns: repeat(var(--steps), minmax(0, 1fr)); gap: 0.5rem; }
@@ -215,7 +221,7 @@ const scene = scenes[kind];
 		.scene-topline { align-items: start; }
 		.scene-toggle { max-width: 7.5rem; font-size: 0.65rem; }
 		.stage { min-height: 18rem; }
-		.scene-controls { grid-template-columns: repeat(min(var(--steps), 3), minmax(0, 1fr)); row-gap: 0.2rem; }
+		.scene-controls { grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); row-gap: 0.2rem; }
 		.scene-controls button { gap: 0.35rem; font-size: 0.7rem; padding-inline: 0.2rem; }
 		.scene-description { min-height: 4.7em; }
 	}

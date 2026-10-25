@@ -68,7 +68,7 @@ export const content: Record<Locale, Content> = {
 			nowLabel: "At a glance",
 			now: [
 				{ label: "Based in", value: "Asunción, Paraguay · open to relocation and remote roles" },
-				{ label: "Now", value: "Security Operations Analyst at ITTI - Grupo Vazquez" },
+				{ label: "Now", value: "Security Operations Engineer at ITTI - Grupo Vazquez" },
 				{ label: "Building", value: "Switchboard, running my own public edge" },
 			],
 		},
@@ -103,7 +103,7 @@ export const content: Record<Locale, Content> = {
 		experience: [
 			{
 				period: "Sep 2025 - Present",
-				title: "Security Operations Analyst",
+				title: "Security Operations Engineer",
 				company: "ITTI - Grupo Vazquez",
 				location: "Asuncion, Paraguay",
 				bullets: [
@@ -117,7 +117,7 @@ export const content: Record<Locale, Content> = {
 			},
 			{
 				period: "May 2024 - Sep 2025",
-				title: "Information Security Analyst",
+				title: "Information Security Engineer",
 				company: "Personal Paraguay",
 				location: "Asuncion, Paraguay",
 				bullets: [
@@ -129,7 +129,7 @@ export const content: Record<Locale, Content> = {
 			},
 			{
 				period: "Jul 2023 - May 2024",
-				title: "Information Security Analyst",
+				title: "Cybersecurity Analyst",
 				company: "NEST Security",
 				location: "Asuncion, Paraguay",
 				bullets: [
