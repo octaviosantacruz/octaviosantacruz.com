@@ -6,149 +6,132 @@ const { kind, locale } = Astro.props;
 const es = locale === "es";
 const t = (en: string, esText: string) => (es ? esText : en);
 const common = es
-	? { pause: "Pausar", play: "Reproducir", example: "Secuencia ilustrativa · datos ficticios", stages: "Pasos de la explicación", next: "Hacia donde va" }
-	: { pause: "Pause", play: "Play", example: "Illustrative sequence · fictional data", stages: "Explanation steps", next: "Where it is going" };
+	? { pause: "Pausar", play: "Reproducir", example: "Secuencia ilustrativa · datos ficticios", stages: "Pasos de la explicación" }
+	: { pause: "Pause", play: "Play", example: "Illustrative sequence · fictional data", stages: "Explanation steps" };
+
+// Custodia: one bridge per plane. Categories, not vendors: the product
+// connects whatever tool fills each role.
+const planes = [
+	{ step: t("Devices", "Equipos"), a: "DLP", b: "EDR · MDM",
+		out: es ? ["Cobertura", "UEBA", "Comportamiento"] : ["Coverage", "UEBA", "Behaviour"],
+		q: t("Which people work from a device no agent protects, and how do they behave?", "¿Quién trabaja desde un equipo sin agente, y cómo se comporta?") },
+	{ step: t("Servers", "Servidores"), a: "PAM", b: t("Scanner", "Escáner"),
+		out: es ? ["Alcance", "Cuentas", "Claves débiles"] : ["Reach", "Accounts", "Weak passwords"],
+		q: t("Which privileged accounts sit on servers the vault never saw, with guessable passwords?", "¿Qué cuentas privilegiadas viven en servidores que el vault no vio, con claves adivinables?") },
+	{ step: t("Vulns", "Vulns"), a: "CNAPP", b: t("Scanner", "Escáner"),
+		out: es ? ["Contexto cloud", "Evidencia en host", "Prioridad"] : ["Cloud context", "Host evidence", "Priority"],
+		q: t("Which finding is exposed in the cloud and confirmed on the host?", "¿Qué hallazgo está expuesto en la nube y confirmado en el host?") },
+	{ step: t("Data", "Datos"), a: "DSPM", b: "DLP",
+		out: es ? ["En reposo", "En movimiento", "Fuga"] : ["At rest", "In motion", "Leak"],
+		q: t("Is the sensitive data found at rest the same data leaving in motion?", "¿El dato sensible que está en reposo es el mismo que sale en movimiento?") },
+	{ step: "Web", a: "Cloud", b: "WAF · SSE",
+		out: es ? ["Exposición", "Navegación", "Patrones"] : ["Exposure", "Browsing", "Patterns"],
+		q: t("What is exposed on the edge, and how do people browse toward it?", "¿Qué está expuesto en el borde, y cómo navega la gente hacia ahí?") },
+	{ step: t("Identity", "Identidad"), a: "IAM", b: t("Every tool", "Cada herramienta"),
+		out: es ? ["Quién", "A qué", "Visión 360"] : ["Who", "To what", "360 view"],
+		q: t("Who in the company has access to what, across every tool?", "¿Quién de la empresa tiene acceso a qué, en todas las herramientas?") },
+];
+
 const scenes = {
 	switchboard: {
-		title: t("Seven checks, always in the same order", "Siete controles, siempre en el mismo orden"),
-		steps: es ? ["Cabecera falsa", "Sin permiso", "Con permiso"] : ["Forged header", "No permission", "Allowed"],
+		title: t("A page asks who you are", "Una página pregunta quién sos"),
+		steps: es ? ["Identidad", "Acceso", "Bloqueo"] : ["Identity", "Access", "Blocked"],
 		details: es ? [
-			"Alguien envía un header de identidad inventado. La primera etapa lo descarta antes de que cuente: queda como anónimo y se rechaza.",
-			"Leo inicia sesión con su passkey, pero la ruta exige el grupo admins. Se rechaza en authorize con el motivo y las etapas siguientes no se ejecutan.",
-			"Ana cruza las siete etapas. El conector, desde casa, ya tenía un túnel saliente abierto: el homelab no expone puertos. La app recibe la identidad verificada.",
+			"La app está detrás de Switchboard. Antes de mostrar nada, pide identidad.",
+			"Ana usa su passkey. Pertenece al grupo que exige la ruta: la app se abre.",
+			"Leo usa su passkey, pero no tiene el grupo. Queda bloqueado y la app nunca recibe la petición.",
 		] : [
-			"Someone sends an invented identity header. The first stage discards it before it counts: the request becomes anonymous and is refused.",
-			"Leo signs in with his passkey, but the route requires the admins group. He is refused at authorize with the reason, and later stages never run.",
-			"Ana crosses all seven stages. The connector at home already holds an outbound tunnel: the homelab exposes no ports. The app receives the verified identity.",
+			"The app sits behind Switchboard. Before showing anything, it asks for identity.",
+			"Ana uses her passkey. She belongs to the group the route requires: the app opens.",
+			"Leo uses his passkey but lacks the group. He is blocked, and the app never sees the request.",
 		],
 	},
 	custodia: {
-		title: t("One person, every tool, an honest answer", "Una persona, cada herramienta, una respuesta honesta"),
-		steps: es ? ["Brecha", "Desconocido", "Otra fuente"] : ["Gap", "Unknown", "Another source"],
-		details: es ? [
-			"Alice tiene acceso privilegiado en CyberArk y Netskope la ve sin equipos, con una captura completa y reciente. La regla CONN-001 concluye una brecha de señal del cliente.",
-			"Ben tiene el mismo patrón, pero la captura de Netskope es parcial y tiene 12 días. Una ausencia no prueba nada: la conclusión es desconocido, no brecha.",
-			"Cada fuente nueva aporta su propia evidencia y puede cambiar una respuesta. Aún no existe el adaptador de CrowdStrike: esto muestra hacia dónde va el producto.",
-		] : [
-			"Alice has privileged access in CyberArk, and Netskope sees her with no devices in a complete, recent capture. Rule CONN-001 concludes a client-signal gap.",
-			"Ben has the same pattern, but the Netskope capture is partial and 12 days old. An absence proves nothing: the answer is unknown, not a gap.",
-			"Each new source brings its own evidence and can change an answer. The CrowdStrike adapter does not exist yet: this shows where the product is going.",
-		],
+		title: t("A bridge between your tools", "Un puente entre tus herramientas"),
+		steps: planes.map(p => p.step),
+		details: planes.map(p => p.q),
 	},
 	sigea: {
-		title: t("Authorization stays with the network being scanned", "La autorización queda del lado de la red escaneada"),
-		steps: es ? ["Política local", "Sobrevive", "Qué cambió"] : ["Local policy", "Survives", "What changed"],
+		title: t("Only what a probe confirms is reported", "Solo se reporta lo que un probe confirma"),
+		steps: es ? ["Puerto", "CPE", "Probe"] : ["Port", "CPE", "Probe"],
 		details: es ? [
-			"El servidor puede pedir un scan, pero la política vive en el agente. Acepta el rango permitido y rechaza el que queda fuera: nadie puede ampliarla desde arriba.",
-			"El resultado se guarda en un spool durable antes de subir. Si el agente muere a mitad de camino, retoma y el servidor registra el recibo una sola vez.",
-			"Una captura parcial no genera bajas. Con dos capturas completas, 22/SSH deja de observarse y cada cambio apunta a la observación que lo originó.",
+			"El scan encuentra un puerto abierto y el servicio que responde.",
+			"La API de NVD traduce el servicio a un CPE, y ese CPE trae vulnerabilidades candidatas.",
+			"Un probe valida cada candidata contra el servicio real. Las que no se reproducen se descartan: menos falsos positivos.",
 		] : [
-			"The server can request a scan, but the policy lives in the agent. It accepts the allowed range and refuses the one outside it: no one can widen it from above.",
-			"The result is saved to a durable spool before upload. If the agent dies midway it resumes, and the server records the receipt only once.",
-			"A partial capture produces no removals. With two complete captures, 22/SSH is no longer observed and each change points to the observation behind it.",
+			"The scan finds an open port and the service behind it.",
+			"The NVD API maps the service to a CPE, and that CPE brings candidate vulnerabilities.",
+			"A probe checks each candidate against the real service. What does not reproduce is dropped: fewer false positives.",
 		],
 	},
 };
 const scene = scenes[kind];
-const stages: { name: string; a: string; b: string; c: string }[] = [
-	{ name: "trust", a: "hit", b: "pass", c: "pass" },
-	{ name: "ratelimit", a: "pass", b: "pass", c: "pass" },
-	{ name: "shield", a: "pass", b: "pass", c: "pass" },
-	{ name: "identify", a: "hit", b: "hit", c: "hit" },
-	{ name: "authorize", a: "stop", b: "stop", c: "hit" },
-	{ name: "route", a: "skip", b: "skip", c: "hit" },
-	{ name: "forward", a: "skip", b: "skip", c: "hit" },
-];
 ---
 
-<!-- Each scene follows how its product really works, then shows the end goal
-     as dashed, clearly not-yet-built elements. Every label remains present
-     while playing; animation moves attention, not layout. -->
-<figure class="project-scene" data-scene data-kind={kind} data-frame="2"
+<!-- One idea per scene, told by motion: each step replaces the previous one
+     in the same space instead of adding more boxes. -->
+<figure class="project-scene" data-scene data-kind={kind} data-frame="0"
 	data-details={JSON.stringify(scene.details)} data-pause={common.pause} data-play={common.play}>
 	<div class="scene-topline">
 		<p>{scene.title}</p>
 		<button class="scene-toggle" type="button" aria-pressed="false" hidden>{common.pause}</button>
 	</div>
 
-	{kind === "switchboard" && <div class="sb">
-		<div class="sb-line">
-			<div class="sb-end"><span class="node-label">{t("Visitor", "Visitante")}</span>
-				<strong class="sb-who"><span data-only="0">{t("anonymous", "anónimo")}</span><span data-only="1">Leo</span><span data-only="2">Ana</span></strong></div>
-			<ol class="sb-stages">{stages.map((st, i) => <li class="stage" data-a={st.a} data-b={st.b} data-c={st.c}><span class="stage-n" aria-hidden="true">{i + 1}</span>{st.name}</li>)}</ol>
-			<div class="sb-end sb-home"><span class="node-label">{t("App at home", "App en casa")}</span>
-				<strong>{t("outbound tunnel", "túnel saliente")}</strong><span class="node-detail">{t("no open ports", "sin puertos abiertos")}</span></div>
-		</div>
-		<div class="sb-log" aria-hidden="false">
-			<p class="node-label">{t("Every stage records its decision", "Cada etapa registra su decisión")}</p>
-			<ul data-only="0"><li><b>trust</b> strip X-Auth-Request-User <i>{t("sent by the client", "enviado por el cliente")}</i></li><li><b>identify</b> {t("no session → anonymous", "sin sesión → anónimo")}</li><li class="neg"><b>authorize</b> deny · {t("identity required", "identidad requerida")}</li></ul>
-			<ul data-only="1"><li><b>identify</b> leo · passkey</li><li class="neg"><b>authorize</b> deny · group:admins {t("missing", "ausente")}</li><li class="mute"><b>route · forward</b> {t("not reached", "no se ejecutan")}</li></ul>
-			<ul data-only="2"><li><b>identify</b> ana · passkey</li><li class="pos"><b>authorize</b> allow · group:admins</li><li class="pos"><b>route · forward</b> {t("tunnel to the homelab · verified identity injected", "túnel al homelab · identidad verificada inyectada")}</li></ul>
-		</div>
-		<p class="next-strip"><span>{common.next}</span>{t("The app verifies a signed assertion from Switchboard instead of trusting headers, starting with Custodia.", "La app verifica una aserción firmada por Switchboard en vez de confiar en headers, empezando por Custodia.")}</p>
-	</div>}
-
-	{kind === "custodia" && <div class="cu">
-		<div class="cu-row cu-alice">
-			<div class="cu-person"><span class="cu-avatar" aria-hidden="true">AM</span><strong>Alice Morgan</strong></div>
-			<div class="cu-cell"><span class="node-label">CyberArk</span><strong>{t("Privileged access", "Acceso privilegiado")}</strong><span class="node-detail">Safe ACME-DEV</span></div>
-			<div class="cu-cell"><span class="node-label">Netskope</span><strong>{t("User · 0 devices", "Usuaria · 0 equipos")}</strong><span class="node-detail">{t("complete · 2 days", "completa · 2 días")}</span></div>
-			<div class="cu-cell cu-next"><span class="node-label">CrowdStrike <em>{t("next", "próximo")}</em></span>
-				<strong><span data-only="2">ALICE-LT01</span><span data-not="2">{t("no adapter yet", "sin adaptador aún")}</span></strong><span class="node-detail"><span data-only="2">{t("sensor active", "sensor activo")}</span></span></div>
-			<div class="cu-verdict"><span class="node-label">{t("Answer", "Respuesta")}</span>
-				<strong class="v-gap" data-not="2"><i aria-hidden="true"></i>{t("Gap", "Brecha")}</strong>
-				<strong class="v-ok" data-only="2"><i aria-hidden="true"></i>{t("Covered", "Cubierta")}</strong>
-				<span class="node-detail"><span data-not="2">CONN-001 v1</span><span data-only="2">{t("illustration", "ilustración")}</span></span></div>
-		</div>
-		<div class="cu-row cu-ben">
-			<div class="cu-person"><span class="cu-avatar" aria-hidden="true">BR</span><strong>Ben Ruiz</strong></div>
-			<div class="cu-cell"><span class="node-label">CyberArk</span><strong>{t("Privileged access", "Acceso privilegiado")}</strong><span class="node-detail">Safe ACME-FIN</span></div>
-			<div class="cu-cell cu-stale"><span class="node-label">Netskope</span><strong>{t("User · 0 devices", "Usuario · 0 equipos")}</strong><span class="node-detail">{t("partial · 12 days old", "parcial · 12 días")}</span></div>
-			<div class="cu-cell cu-next"><span class="node-label">CrowdStrike <em>{t("next", "próximo")}</em></span><strong>{t("not observed", "sin observación")}</strong><span class="node-detail">{t("an absence, not a gap", "una ausencia, no una brecha")}</span></div>
-			<div class="cu-verdict"><span class="node-label">{t("Answer", "Respuesta")}</span>
-				<strong class="v-unk"><i aria-hidden="true"></i>{t("Unknown", "Desconocido")}</strong>
-				<span class="node-detail">{t("stale evidence", "evidencia vieja")}</span></div>
-		</div>
-		<p class="next-strip"><span>{common.next}</span>{t("BigID, Cortex XDR, Tenable and firewalls as new columns, each one a source with its own contract. Inventories are never merged.", "BigID, Cortex XDR, Tenable y firewalls como columnas nuevas, cada una una fuente con su propio contrato. Los inventarios nunca se fusionan.")}</p>
-	</div>}
-
-	{kind === "sigea" && <div class="sg">
-		<div class="sg-sides"><span class="node-label">{t("Your network · agent + local policy", "Tu red · agente + política local")}</span><span class="sg-wire" aria-hidden="true">{t("signed requests", "pedidos firmados")}</span><span class="node-label">{t("Server · inventory + history", "Servidor · inventario + historial")}</span></div>
-		<div class="sg-stage">
-			<div class="sg-frame" data-only="0">
-				<div class="sg-card"><span class="node-label">policy</span><code>allow 192.0.2.0/24</code><code>ports 1–1024</code><code>profile nmap-safe</code></div>
-				<div class="sg-list">
-					<div class="sg-job pos"><span class="node-label">{t("server asks", "el servidor pide")}</span><strong>192.0.2.0/24</strong><em>{t("accepted", "aceptado")}</em></div>
-					<div class="sg-job neg"><span class="node-label">{t("server asks", "el servidor pide")}</span><strong>198.51.100.0/24</strong><em>{t("refused · outside local policy", "rechazado · fuera de la política local")}</em></div>
+	<div class="stage">
+		{kind === "switchboard" && <div class="sb-window">
+			<div class="sb-bar" aria-hidden="true"><i></i><i></i><i></i><span>grafana.home.example</span></div>
+			<div class="sb-body">
+				<div class="pane" data-only="0">
+					<svg class="sb-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
+					<strong>{t("Identity required", "Identidad requerida")}</strong>
+					<span class="sb-button">{t("Sign in with a passkey", "Entrar con passkey")}</span>
+				</div>
+				<div class="pane" data-only="1">
+					<div class="sb-pass ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></div>
+					<strong>Ana · passkey</strong>
+					<span class="sb-tag ok">group:admins ✓</span>
+					<div class="sb-app" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+				</div>
+				<div class="pane" data-only="2">
+					<div class="sb-pass no"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" /></svg></div>
+					<strong>Leo · passkey</strong>
+					<span class="sb-tag no">{t("Blocked · requires group:admins", "Bloqueado · requiere group:admins")}</span>
 				</div>
 			</div>
-			<div class="sg-frame" data-only="1">
-				<div class="sg-card"><span class="node-label">spool</span><strong>{t("2 results saved on disk", "2 resultados guardados en disco")}</strong><span class="node-detail">scan → spool → upload</span><span class="sg-kill">kill -9</span></div>
-				<div class="sg-list">
-					<div class="sg-job pos"><span class="node-label">{t("agent restarts", "el agente reinicia")}</span><strong>{t("resumes the upload", "retoma la subida")}</strong><em>receipt r-0412</em></div>
-					<div class="sg-job"><span class="node-label">{t("replayed request", "pedido repetido")}</span><strong>r-0412</strong><em>{t("recorded once · no duplicate", "registrado una vez · sin duplicado")}</em></div>
-				</div>
-			</div>
-			<div class="sg-frame" data-only="2">
-				<div class="sg-card sg-scans"><span class="node-label">{t("captures of 192.0.2.10", "capturas de 192.0.2.10")}</span>
-					<div><span>{t("1 complete", "1 completa")}</span><code>22 · 443</code></div>
-					<div class="sg-partial"><span>{t("2 partial", "2 parcial")}</span><code>443</code></div>
-					<div><span>{t("3 complete", "3 completa")}</span><code>443 · 8443</code></div></div>
-				<div class="sg-list">
-					<div class="sg-job"><span class="node-label">1 → 2</span><strong>{t("no removals", "sin bajas")}</strong><em>{t("a partial capture cannot justify them", "una parcial no las justifica")}</em></div>
-					<div class="sg-job neg"><span class="node-label">1 → 3</span><strong>22 / SSH {t("no longer observed", "ya no observado")}</strong><em>{t("evidence → raw observation", "evidencia → observación original")}</em></div>
-					<div class="sg-job pos"><span class="node-label">1 → 3</span><strong>8443 / HTTPS {t("new", "nuevo")}</strong><em>{t("evidence → raw observation", "evidencia → observación original")}</em></div>
-				</div>
-			</div>
-		</div>
-		<p class="next-strip"><span>{common.next}</span>{t("Open probes written by the community → CVE matches that explain themselves → attack paths built from verified findings.", "Probes abiertos escritos por la comunidad → coincidencias CVE que se explican solas → caminos de ataque a partir de hallazgos verificados.")}</p>
-	</div>}
+		</div>}
 
-	<div class="scene-controls" role="group" aria-label={common.stages} hidden>
-		{scene.steps.map((step, i) => <button type="button" aria-pressed={i === 2 ? "true" : "false"} data-frame-select={i}><span aria-hidden="true">{i + 1}</span>{step}</button>)}
+		{kind === "custodia" && planes.map((plane, i) => <div class="pane cu-pane" data-only={String(i)}>
+			<div class="cu-bridge">
+				<span class="cu-tool">{plane.a}</span>
+				<svg class="cu-arc" viewBox="0 0 300 90" preserveAspectRatio="none" aria-hidden="true"><path d="M 4 86 C 70 4, 230 4, 296 86" /></svg>
+				<span class="cu-tool">{plane.b}</span>
+				<span class="cu-plane">{plane.step}</span>
+			</div>
+			<ul class="cu-out">{plane.out.map(o => <li>{o}</li>)}</ul>
+		</div>)}
+
+		{kind === "sigea" && <div class="sg">
+			<ol class="sg-track">
+				{(es ? ["Puerto", "CPE", "Probe", "Vuln"] : ["Port", "CPE", "Probe", "Vuln"]).map((n, i) => <li data-i={i}>{n}</li>)}
+			</ol>
+			<div class="sg-detail">
+				<div class="pane" data-only="0"><code class="sg-big">192.0.2.10:443</code><span class="node-detail">open · Apache httpd 2.4.49</span></div>
+				<div class="pane" data-only="1"><code class="sg-cpe">cpe:2.3:a:apache:http_server:2.4.49</code>
+					<div class="sg-cands" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(() => <i></i>)}</div>
+					<span class="node-detail">{t("NVD API · 6 candidates", "API de NVD · 6 candidatas")}</span></div>
+				<div class="pane" data-only="2">
+					<div class="sg-cands sg-checked" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(i => <i class:list={{ hit: i === 2 }}></i>)}</div>
+					<code class="sg-big sg-hit">CVE-2021-41773</code>
+					<span class="node-detail">{t("1 confirmed by a probe · 5 dropped", "1 confirmada por un probe · 5 descartadas")}</span></div>
+			</div>
+		</div>}
+	</div>
+
+	<div class="scene-controls" role="group" aria-label={common.stages} style={`--steps: ${scene.steps.length}`} hidden>
+		{scene.steps.map((step, i) => <button type="button" aria-pressed={i === 0 ? "true" : "false"} data-frame-select={i}><span aria-hidden="true">{i + 1}</span>{step}</button>)}
 	</div>
 	<figcaption>
-		<p class="scene-description">{scene.details[2]}</p>
+		<p class="scene-description">{scene.details[0]}</p>
 		<span class="scene-example">{common.example}</span>
 	</figcaption>
 </figure>
@@ -160,7 +143,8 @@ const stages: { name: string; a: string; b: string; c: string }[] = [
 		const toggle = scene.querySelector<HTMLButtonElement>(".scene-toggle")!;
 		const description = scene.querySelector<HTMLElement>(".scene-description")!;
 		const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-		let frame = 2;
+		let frame = Number(scene.dataset.frame);
+		const initial = frame;
 		let timer = 0;
 		let paused = false;
 		let visible = false;
@@ -168,7 +152,7 @@ const stages: { name: string; a: string; b: string; c: string }[] = [
 			clearTimeout(timer);
 			const running = !paused && visible && !motion.matches && !document.hidden;
 			scene.classList.toggle("is-playing", running);
-			if (running) timer = window.setTimeout(() => show((frame + 1) % buttons.length), 4200);
+			if (running) timer = window.setTimeout(() => show((frame + 1) % buttons.length), 4600);
 		};
 		const show = (index: number) => {
 			frame = index;
@@ -198,7 +182,7 @@ const stages: { name: string; a: string; b: string; c: string }[] = [
 		});
 		const updateMotion = () => {
 			toggle.hidden = motion.matches;
-			if (motion.matches) show(2);
+			if (motion.matches) show(initial);
 			else schedule();
 		};
 		motion.addEventListener("change", updateMotion);
@@ -213,114 +197,101 @@ const stages: { name: string; a: string; b: string; c: string }[] = [
 </script>
 
 <style>
-	.project-scene { --scene-positive: oklch(0.82 0.07 155); --scene-negative: oklch(0.78 0.11 25); --scene-caution: oklch(0.83 0.13 75); min-width: 0; margin: 0; padding: 1.4rem; border: 1px solid var(--border); border-radius: 0.9rem; background: var(--bg); }
+	.project-scene { --ok: oklch(0.82 0.07 155); --no: oklch(0.78 0.11 25); min-width: 0; margin: 0; padding: 1.4rem; border: 1px solid var(--border); border-radius: 0.9rem; background: var(--bg); }
 	.scene-topline { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.75rem; }
 	.scene-topline p { font-size: 0.9rem; font-weight: 600; color: var(--fg-soft); }
 	.scene-toggle { flex-shrink: 0; min-height: 2.75rem; padding: 0.4rem 0.7rem; border: 1px solid var(--border); border-radius: 0.4rem; background: transparent; color: var(--fg-soft); font: 0.72rem var(--font-mono); cursor: pointer; }
 	.scene-toggle:hover { border-color: var(--accent); color: var(--fg); }
-	.node-label { font: 0.68rem/1.5 var(--font-mono); color: var(--fg-muted); }
-	.node-detail { font: 0.68rem/1.5 var(--font-mono); color: var(--fg-muted); overflow-wrap: anywhere; }
-	.sb, .cu, .sg { display: grid; gap: 1rem; margin: 1.1rem 0 1.2rem; min-height: 17rem; align-content: start; }
+	.node-detail { font: 0.72rem/1.5 var(--font-mono); color: var(--fg-muted); overflow-wrap: anywhere; }
 
-	/* Frame visibility: elements tagged for one frame, or for all but one. */
-	[data-frame="0"] [data-only]:not([data-only="0"]), [data-frame="1"] [data-only]:not([data-only="1"]), [data-frame="2"] [data-only]:not([data-only="2"]) { display: none; }
-	[data-frame="0"] [data-not="0"], [data-frame="1"] [data-not="1"], [data-frame="2"] [data-not="2"] { display: none; }
-	.pos { --tone: var(--scene-positive); } .neg { --tone: var(--scene-negative); }
-
-	/* The dashed strip is the end goal: everything inside is not built yet. */
-	.next-strip { display: grid; gap: 0.3rem; padding: 0.8rem 1rem; border: 1px dashed var(--accent-line); border-radius: 0.55rem; font-size: 0.78rem; line-height: 1.55; color: var(--fg-soft); }
-	.next-strip span { font: 0.66rem var(--font-mono); color: var(--accent); }
+	/* One fixed stage; panes replace each other in place. */
+	.stage { display: grid; place-items: center; min-height: 19rem; margin: 1rem 0; }
+	[data-frame="0"] [data-only]:not([data-only="0"]), [data-frame="1"] [data-only]:not([data-only="1"]), [data-frame="2"] [data-only]:not([data-only="2"]),
+	[data-frame="3"] [data-only]:not([data-only="3"]), [data-frame="4"] [data-only]:not([data-only="4"]), [data-frame="5"] [data-only]:not([data-only="5"]) { display: none; }
+	.pane { display: grid; justify-items: center; gap: 0.8rem; text-align: center; animation: rise 0.55s both; }
 
 	/* Switchboard */
-	.sb-line { display: grid; grid-template-columns: 6rem minmax(0, 1fr) 7.5rem; gap: 0.8rem; align-items: center; }
-	.sb-end { display: grid; gap: 0.25rem; padding: 0.75rem; border: 1px solid var(--border); border-radius: 0.55rem; background: var(--bg-raised); }
-	.sb-end strong { font-size: 0.85rem; line-height: 1.35; }
-	.sb-stages { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 0.3rem; margin: 0; padding: 0; list-style: none; }
-	.stage { display: grid; gap: 0.35rem; justify-items: center; padding: 0.6rem 0.1rem; border: 1px solid var(--border); border-radius: 0.45rem; background: var(--bg-raised); font: 0.58rem var(--font-mono); color: var(--fg-muted); transition: border-color 0.5s, color 0.5s, opacity 0.5s, background 0.5s; overflow-wrap: anywhere; text-align: center; }
-	.stage-n { font-size: 0.66rem; color: var(--fg-muted); }
-	[data-frame="0"] .stage[data-a="pass"], [data-frame="1"] .stage[data-b="pass"], [data-frame="2"] .stage[data-c="pass"] { color: var(--fg-soft); }
-	[data-frame="0"] .stage[data-a="hit"], [data-frame="1"] .stage[data-b="hit"], [data-frame="2"] .stage[data-c="hit"] { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
-	[data-frame="0"] .stage[data-a="stop"], [data-frame="1"] .stage[data-b="stop"], [data-frame="2"] .stage[data-c="stop"] { border-color: var(--scene-negative); color: var(--scene-negative); background: oklch(0.78 0.11 25 / 0.08); }
-	[data-frame="0"] .stage[data-a="skip"], [data-frame="1"] .stage[data-b="skip"], [data-frame="2"] .stage[data-c="skip"] { opacity: 0.35; border-style: dashed; }
-	.sb-home { border-style: solid; }
-	.sb-log { display: grid; gap: 0.5rem; padding: 0.9rem 1rem; border: 1px solid var(--border); border-radius: 0.55rem; background: var(--bg-raised); }
-	.sb-log ul { display: grid; gap: 0.35rem; margin: 0; padding: 0; list-style: none; font: 0.72rem/1.5 var(--font-mono); color: var(--fg-soft); }
-	.sb-log b { display: inline-block; min-width: 5.2rem; margin-right: 0.4rem; color: var(--fg); font-weight: 500; }
-	.sb-log i { color: var(--fg-muted); font-style: normal; }
-	.sb-log .neg, .sb-log .neg b { color: var(--scene-negative); } .sb-log .pos, .sb-log .pos b { color: var(--scene-positive); } .sb-log .mute { color: var(--fg-muted); }
+	.sb-window { width: min(100%, 26rem); border: 1px solid var(--border); border-radius: 0.7rem; background: var(--bg-raised); overflow: hidden; }
+	.sb-bar { display: flex; align-items: center; gap: 0.35rem; padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); }
+	.sb-bar i { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--border); }
+	.sb-bar span { margin-left: 0.6rem; font: 0.66rem var(--font-mono); color: var(--fg-muted); }
+	.sb-body { display: grid; place-items: center; min-height: 14rem; padding: 1.4rem; }
+	.sb-body strong { font-size: 1.05rem; letter-spacing: -0.02em; }
+	.sb-icon, .sb-pass svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+	.sb-icon { width: 2.4rem; color: var(--accent); }
+	.sb-button { padding: 0.5rem 0.9rem; border-radius: 0.4rem; background: var(--accent); color: var(--bg); font-size: 0.78rem; font-weight: 600; animation: pulse 1.6s 0.6s ease-in-out infinite; }
+	.sb-pass { display: grid; place-items: center; width: 3.2rem; height: 3.2rem; border: 1.5px solid currentColor; border-radius: 50%; }
+	.sb-pass svg { width: 1.5rem; stroke-dasharray: 30; animation: draw 0.5s 0.35s both; }
+	.ok { color: var(--ok); } .no { color: var(--no); }
+	.sb-tag { font: 0.7rem var(--font-mono); animation: rise 0.4s 0.6s both; }
+	.sb-app { display: grid; grid-template-columns: repeat(5, 1fr); align-items: end; gap: 0.3rem; width: 9rem; height: 2.2rem; margin-top: 0.3rem; }
+	.sb-app i { height: 100%; border-radius: 2px; background: var(--accent-line); transform-origin: bottom; animation: grow 0.5s both; }
+	.sb-app i:nth-child(1) { animation-delay: 0.8s; height: 40%; } .sb-app i:nth-child(2) { animation-delay: 0.88s; height: 70%; }
+	.sb-app i:nth-child(3) { animation-delay: 0.96s; height: 55%; } .sb-app i:nth-child(4) { animation-delay: 1.04s; height: 90%; } .sb-app i:nth-child(5) { animation-delay: 1.12s; height: 65%; }
 
-	/* Custodia */
-	.cu-row { display: grid; grid-template-columns: 7.2rem repeat(3, minmax(0, 1fr)) 7.4rem; gap: 0.5rem; align-items: stretch; padding: 0.55rem; border: 1px solid var(--border); border-radius: 0.65rem; background: var(--bg-raised); transition: border-color 0.5s; }
-	[data-frame="0"] .cu-alice, [data-frame="1"] .cu-ben, [data-frame="2"] .cu-alice { border-color: var(--accent-line); }
-	.cu-person { display: grid; gap: 0.4rem; align-content: center; justify-items: start; font-size: 0.8rem; }
-	.cu-avatar { display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border: 1px solid var(--accent-line); border-radius: 50%; font: 0.7rem var(--font-mono); color: var(--accent); }
-	.cu-cell, .cu-verdict { display: grid; gap: 0.2rem; align-content: start; min-width: 0; padding: 0.6rem; border: 1px solid var(--border); border-radius: 0.2rem; background: var(--bg); }
-	.cu-cell strong { font-size: 0.78rem; line-height: 1.35; }
-	.cu-cell em { color: var(--accent); font-style: normal; }
-	.cu-next { border-style: dashed; border-color: var(--accent-line); }
-	[data-frame="2"] .cu-alice .cu-next { border-style: solid; border-color: var(--accent); }
-	.cu-stale .node-detail { color: var(--scene-caution); }
-	.cu-verdict { border-color: transparent; background: transparent; }
-	.cu-verdict strong { display: flex; align-items: center; gap: 0.45rem; font-size: 1.15rem; letter-spacing: -0.03em; line-height: 1.1; }
-	.cu-verdict i { flex-shrink: 0; width: 0.7rem; height: 0.7rem; border: 2px solid currentColor; }
-	.v-gap { color: var(--scene-negative); } .v-gap i { transform: rotate(45deg); }
-	.v-ok { color: var(--scene-positive); } .v-ok i { border-radius: 50%; }
-	.v-unk { color: var(--scene-caution); } .v-unk i { border-radius: 50%; border-style: dotted; }
+	/* Custodia: the bridge is drawn, then the answers it enables appear. */
+	.cu-pane { width: min(100%, 32rem); gap: 1.6rem; }
+	.cu-bridge { position: relative; display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) 6.5rem; align-items: end; width: 100%; }
+	.cu-tool { display: grid; place-items: center; height: 4.2rem; padding: 0.4rem; border: 1px solid var(--border); border-radius: 0.3rem; background: var(--bg-raised); font: 600 0.8rem/1.3 var(--font-mono); }
+	.cu-arc { width: 100%; height: 5.5rem; margin-bottom: 2rem; overflow: visible; }
+	.cu-arc path { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 420; vector-effect: non-scaling-stroke; animation: draw-arc 0.9s 0.25s both; }
+	.cu-plane { position: absolute; top: -0.4rem; left: 50%; translate: -50% 0; padding: 0.15rem 0.6rem; border: 1px solid var(--accent-line); border-radius: 999px; background: var(--bg); font: 0.66rem var(--font-mono); color: var(--accent); animation: rise 0.4s 0.9s both; }
+	.cu-out { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+	.cu-out li { padding: 0.3rem 0.7rem; border-radius: 999px; background: var(--accent-dim); font: 0.74rem var(--font-mono); color: var(--fg-soft); animation: rise 0.4s both; }
+	.cu-out li:nth-child(1) { animation-delay: 1.1s; } .cu-out li:nth-child(2) { animation-delay: 1.25s; } .cu-out li:nth-child(3) { animation-delay: 1.4s; }
 
-	/* SIGEA */
-	.sg-sides { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0.8rem; align-items: center; }
-	.sg-sides > span:last-child { text-align: right; }
-	.sg-wire { padding: 0.15rem 0.6rem; border: 1px dashed var(--accent-line); border-radius: 999px; font: 0.62rem var(--font-mono); color: var(--accent); }
-	.sg-stage { display: grid; }
-	.sg-frame { grid-area: 1 / 1; display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 0.8rem; align-items: start; }
-	.sg-card, .sg-job { display: grid; gap: 0.3rem; padding: 0.8rem; border: 1px solid var(--border); border-radius: 0.55rem; background: var(--bg-raised); }
-	.sg-card code, .sg-scans code { font: 0.74rem var(--font-mono); color: var(--fg-soft); }
-	.sg-card > strong { font-size: 0.82rem; line-height: 1.4; }
-	.sg-kill { justify-self: start; margin-top: 0.3rem; padding: 0.1rem 0.5rem; border: 1px solid var(--scene-negative); border-radius: 0.3rem; font: 0.68rem var(--font-mono); color: var(--scene-negative); }
-	.sg-scans > div { display: flex; justify-content: space-between; gap: 0.5rem; padding: 0.35rem 0.5rem; border-radius: 0.3rem; background: var(--bg); font: 0.7rem var(--font-mono); color: var(--fg-soft); }
-	.sg-scans .sg-partial { border: 1px dashed var(--scene-caution); }
-	.sg-list { display: grid; gap: 0.5rem; }
-	.sg-job { border-left: 2px solid var(--tone, var(--border)); }
-	.sg-job strong { font: 500 0.82rem/1.4 var(--font-mono); color: var(--tone, var(--fg)); overflow-wrap: anywhere; }
-	.sg-job em { font: 0.7rem/1.5 var(--font-sans); font-style: normal; color: var(--fg-muted); }
+	/* SIGEA: a funnel that narrows to what is confirmed. */
+	.sg { display: grid; gap: 2.2rem; width: min(100%, 30rem); }
+	.sg-track { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; list-style: none; counter-reset: s; }
+	.sg-track li { position: relative; display: grid; justify-items: center; gap: 0.5rem; font: 0.7rem var(--font-mono); color: var(--fg-muted); transition: color 0.4s; }
+	.sg-track li::before { content: ""; width: 0.7rem; height: 0.7rem; border: 1.5px solid currentColor; border-radius: 50%; background: var(--bg); transition: background 0.4s; z-index: 1; }
+	.sg-track li + li::after { content: ""; position: absolute; top: 0.35rem; right: 50%; width: 100%; height: 1px; background: var(--border); }
+	[data-frame="0"] .sg-track [data-i="0"], [data-frame="1"] .sg-track [data-i="1"], [data-frame="2"] .sg-track [data-i="2"], [data-frame="2"] .sg-track [data-i="3"] { color: var(--accent); }
+	[data-frame="0"] .sg-track [data-i="0"]::before, [data-frame="1"] .sg-track li:nth-child(-n+2)::before, [data-frame="2"] .sg-track li::before { background: currentColor; }
+	[data-frame="1"] .sg-track li:first-child, [data-frame="2"] .sg-track li:nth-child(-n+2) { color: var(--fg-soft); }
+	[data-frame="2"] .sg-track [data-i="3"] { color: var(--ok); }
+	.sg-detail { display: grid; place-items: center; min-height: 9rem; }
+	.sg-big { font: 500 1.5rem var(--font-mono); letter-spacing: -0.02em; }
+	.sg-cpe { font: 0.8rem var(--font-mono); color: var(--fg-soft); overflow-wrap: anywhere; }
+	.sg-hit { color: var(--ok); animation: rise 0.4s 1s both; }
+	.sg-cands { display: flex; gap: 0.45rem; }
+	.sg-cands i { width: 1.4rem; height: 1.4rem; border: 1px solid var(--accent-line); border-radius: 0.25rem; background: var(--accent-dim); animation: rise 0.35s both; }
+	.sg-cands i:nth-child(2) { animation-delay: 0.08s; } .sg-cands i:nth-child(3) { animation-delay: 0.16s; } .sg-cands i:nth-child(4) { animation-delay: 0.24s; } .sg-cands i:nth-child(5) { animation-delay: 0.32s; } .sg-cands i:nth-child(6) { animation-delay: 0.4s; }
+	.sg-checked i { animation: drop 0.5s 0.4s both; }
+	.sg-checked i.hit { border-color: var(--ok); background: var(--ok); animation: none; }
 
-	.scene-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
-	.scene-controls button { display: flex; align-items: center; gap: 0.6rem; min-width: 0; min-height: 2.75rem; padding: 0.45rem 0.6rem; border: 0; border-bottom: 2px solid var(--border); background: transparent; color: var(--fg-muted); font: 500 0.78rem var(--font-sans); text-align: left; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
-	.scene-controls button > span { font: 0.68rem var(--font-mono); }
+	.scene-controls { display: grid; grid-template-columns: repeat(var(--steps), minmax(0, 1fr)); gap: 0.5rem; }
+	.scene-controls button { display: flex; align-items: center; gap: 0.5rem; min-width: 0; min-height: 2.75rem; padding: 0.45rem 0.5rem; border: 0; border-bottom: 2px solid var(--border); background: transparent; color: var(--fg-muted); font: 500 0.76rem var(--font-sans); text-align: left; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
+	.scene-controls button > span { font: 0.66rem var(--font-mono); }
 	.scene-controls button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 	.scene-controls button:hover { color: var(--fg); }
-	.scene-description { min-height: 6em; margin-top: 0.9rem; font-size: 0.82rem; line-height: 1.55; color: var(--fg-soft); }
+	.scene-description { min-height: 3.2em; margin-top: 0.9rem; font-size: 0.86rem; line-height: 1.55; color: var(--fg-soft); }
 	.scene-example { display: block; margin-top: 0.7rem; font: 0.64rem var(--font-mono); color: var(--fg-muted); }
 
-	@media (prefers-reduced-motion: no-preference) {
-		.is-playing .stage[data-c="hit"], .is-playing .cu-verdict strong, .is-playing .sg-job, .is-playing .sb-log li { animation: scene-in 0.6s both; }
-		.is-playing .sb-log li:nth-child(2), .is-playing .sg-job:nth-child(2) { animation-delay: 0.15s; }
-		.is-playing .sb-log li:nth-child(3), .is-playing .sg-job:nth-child(3) { animation-delay: 0.3s; }
-	}
-	@keyframes scene-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+	@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+	@keyframes draw { from { stroke-dashoffset: 30; } to { stroke-dashoffset: 0; } }
+	@keyframes draw-arc { from { stroke-dashoffset: 420; } to { stroke-dashoffset: 0; } }
+	@keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+	@keyframes pulse { 50% { box-shadow: 0 0 0 6px var(--accent-dim); } }
+	@keyframes drop { to { opacity: 0.18; transform: translateY(4px); } }
 	@media (max-width: 42rem) {
 		.project-scene { padding: 1rem; }
 		.scene-topline { align-items: start; }
-		.scene-topline p { max-width: 22ch; }
 		.scene-toggle { max-width: 7.5rem; font-size: 0.65rem; }
-		.sb-line { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-		.sb-stages { grid-column: 1 / -1; grid-row: 2; grid-template-columns: repeat(7, minmax(0, 1fr)); }
-		.stage { font-size: 0.5rem; padding-inline: 0; }
-		.sb-log b { display: block; min-width: 0; }
-		.cu-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-		.cu-person { grid-column: 1 / -1; grid-auto-flow: column; justify-content: start; align-items: center; }
-		.cu-verdict { grid-column: 1 / -1; padding-inline: 0.2rem; }
-		.sg-sides { grid-template-columns: 1fr; gap: 0.3rem; }
-		.sg-sides > span:last-child { text-align: left; }
-		.sg-wire { justify-self: start; }
-		.sg-frame { grid-template-columns: minmax(0, 1fr); }
+		.stage { min-height: 16rem; }
+		.cu-bridge { grid-template-columns: 4.8rem minmax(0, 1fr) 4.8rem; }
+		.cu-tool { font-size: 0.68rem; height: 3.6rem; }
+		.sg-big { font-size: 1.15rem; }
+		.scene-controls { grid-template-columns: repeat(min(var(--steps), 3), minmax(0, 1fr)); }
 		.scene-controls button { gap: 0.35rem; font-size: 0.7rem; padding-inline: 0.2rem; }
-		.scene-description { min-height: 9.5em; }
+		.scene-description { min-height: 4.7em; }
 	}
-	@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+	@media (prefers-reduced-motion: reduce) {
+		*, *::before, *::after { transition: none !important; animation: none !important; }
+		.sg-checked i:not(.hit) { opacity: 0.18; }
+	}
 	@media (max-width: 26rem) {
 		.scene-controls button > span { display: none; }
-		.scene-controls button { font-size: 0.68rem; padding-inline: 0.15rem; }
 		.scene-topline { gap: 0.5rem; }
 		.scene-topline p { min-width: 0; overflow-wrap: anywhere; }
 	}

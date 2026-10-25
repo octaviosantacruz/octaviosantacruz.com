@@ -173,10 +173,10 @@ export const content: Record<Locale, Content> = {
 				href: "https://custodia.octaviosantacruz.com/",
 				linkLabel: "Explore the site",
 					demo: { href: "https://custodia.octaviosantacruz.com/demo/", label: "Open the live demo" },
-				subtitle: "The picture between your security tools.",
-				body: "People, devices and access belong in the same investigation. Keep each tool’s inventory intact, connect records with explicit rules and show the evidence behind the conclusion.",
+				subtitle: "A bridge between your security tools.",
+				body: "DLP with EDR, PAM with a scanner, DSPM with DLP, IAM with everything. Each bridge answers a question no single tool can, toward a 360° view of people, devices, servers and data.",
 				today: "An interactive Acme Corp demo with synthetic CyberArk and Netskope records. No live tool is connected.",
-				next: "Verified access through Switchboard, a Go backend and more tools with explicit integration contracts.",
+				next: "More bridges, each with an explicit integration contract, verified access through Switchboard and a Go backend.",
 				tags: [
 					"React",
 					"TypeScript",
@@ -191,14 +191,14 @@ export const content: Record<Locale, Content> = {
 					status: "pilot",
 				href: "https://sigea.octaviosantacruz.com/",
 				linkLabel: "Follow the SIGEA devlog",
-				subtitle: "Know what changed on your network.",
-				body: "An exposure inventory with a memory. Collect what a network exposes, compare it with a previous observation and keep the evidence that makes each change explainable.",
-				today: "A Go agent, a backend foundation and a public devlog. The v2 product is still being rebuilt.",
-				next: "Prove the inventory → change → evidence workflow in a self-hosted pilot.",
+				subtitle: "An open scanner, built to rival OpenVAS.",
+				body: "Scan the ports, map each service to its CPE through the NVD API and let probes confirm every candidate before it becomes a finding. Fewer false positives, and evidence behind every vulnerability.",
+				today: "Agent, scans, inventory and change history work end to end in alpha. CPE matching and probes are in progress.",
+				next: "Confirm CVE candidates with open probes that the community can write and maintain.",
 				tags: [
 					"Go",
-					"PostgreSQL",
-					"Network inventory",
+					"NVD · CPE",
+					"Probes",
 					"Evidence"
 				]
 			}
@@ -333,10 +333,10 @@ export const content: Record<Locale, Content> = {
 				href: "https://custodia.octaviosantacruz.com/",
 				linkLabel: "Explorar el sitio",
 					demo: { href: "https://custodia.octaviosantacruz.com/demo/", label: "Abrir la demo en vivo" },
-				subtitle: "La imagen entre tus herramientas de seguridad.",
-				body: "Personas, equipos y accesos forman parte de la misma investigación. Conservar el inventario de cada herramienta, vincular registros con reglas explícitas y mostrar la evidencia de cada conclusión.",
+				subtitle: "Un puente entre tus herramientas de seguridad.",
+				body: "DLP con EDR, PAM con un escáner, DSPM con DLP, IAM con todo. Cada puente responde una pregunta que ninguna herramienta responde sola, hacia una visión 360 de personas, equipos, servidores y datos.",
 				today: "Demo interactiva de Acme Corp con registros sintéticos de CyberArk y Netskope. Sin herramientas reales conectadas.",
-				next: "Acceso verificable por Switchboard, backend Go y más herramientas con contratos de integración explícitos.",
+				next: "Más puentes, cada uno con un contrato de integración explícito, acceso verificable por Switchboard y backend Go.",
 				tags: [
 					"React",
 					"TypeScript",
@@ -351,14 +351,14 @@ export const content: Record<Locale, Content> = {
 					status: "pilot",
 				href: "https://sigea.octaviosantacruz.com/",
 				linkLabel: "Seguir el devlog de SIGEA",
-				subtitle: "Saber qué cambió en tu red.",
-				body: "Un inventario de exposición con memoria. Observar lo que expone una red, compararlo con una captura anterior y conservar la evidencia que permite explicar cada cambio.",
-				today: "Agente Go, base del backend y devlog público. El producto v2 sigue en reconstrucción.",
-				next: "Probar el recorrido inventario → cambio → evidencia en un piloto autohospedado.",
+				subtitle: "Un escáner abierto, pensado para competir con OpenVAS.",
+				body: "Escanear los puertos, traducir cada servicio a su CPE con la API de NVD y dejar que los probes confirmen cada candidata antes de que sea un hallazgo. Menos falsos positivos y evidencia detrás de cada vulnerabilidad.",
+				today: "Agente, scans, inventario e historial de cambios funcionan de punta a punta en alfa. La correlación CPE y los probes están en curso.",
+				next: "Confirmar candidatas CVE con probes abiertos que la comunidad pueda escribir y mantener.",
 				tags: [
 					"Go",
-					"PostgreSQL",
-					"Inventario de red",
+					"NVD · CPE",
+					"Probes",
 					"Evidencia"
 				]
 			}
