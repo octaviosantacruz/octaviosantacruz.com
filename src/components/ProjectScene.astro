@@ -1,5 +1,8 @@
 ---
 import type { Locale } from "../i18n/translations";
+import SwitchboardScene from "./scenes/SwitchboardScene.astro";
+import CustodiaScene, { type Plane } from "./scenes/CustodiaScene.astro";
+import SigeaScene from "./scenes/SigeaScene.astro";
 
 interface Props { kind: "switchboard" | "sigea" | "custodia"; locale: Locale }
 const { kind, locale } = Astro.props;
@@ -9,126 +12,102 @@ const common = es
 	? { pause: "Pausar", play: "Reproducir", example: "Secuencia ilustrativa · datos ficticios", stages: "Pasos de la explicación" }
 	: { pause: "Pause", play: "Play", example: "Illustrative sequence · fictional data", stages: "Explanation steps" };
 
-// Custodia: one bridge per plane. Categories, not vendors: the product
-// connects whatever tool fills each role.
-const planes = [
-	{ step: t("Devices", "Equipos"), a: "DLP", b: "EDR · MDM",
+// Custodia: one bridge per plane. Categories, not vendors: the product joins
+// whatever tool fills each role. Records and findings are fictional.
+const planes: Plane[] = [
+	{ step: t("Devices", "Equipos"), verdict: "gap",
+		a: { seal: "DL", name: "DLP", src: "sse", record: t("alice · 2.1 GB upload", "alice · subida 2,1 GB") },
+		b: { seal: "ED", name: "EDR · MDM", src: "edr", record: t("ALICE-LT01 · no agent", "ALICE-LT01 · sin agente") },
+		finding: t("Alice moves data from a laptop no agent protects.", "Alice mueve datos desde una laptop que ningún agente protege."),
 		out: es ? ["Cobertura", "UEBA", "Comportamiento"] : ["Coverage", "UEBA", "Behaviour"],
-		q: t("Which people work from a device no agent protects, and how do they behave?", "¿Quién trabaja desde un equipo sin agente, y cómo se comporta?") },
-	{ step: t("Servers", "Servidores"), a: "PAM", b: t("Scanner", "Escáner"),
+		q: t("DLP and EDR together give coverage, user behaviour and a digital x-ray of each person.", "DLP y EDR juntos dan cobertura, comportamiento del usuario y una radiografía digital de cada persona.") },
+	{ step: t("Servers", "Servidores"), verdict: "gap",
+		a: { seal: "PA", name: "PAM", src: "pam", record: t("db-07 · 3 local admins", "db-07 · 3 admins locales") },
+		b: { seal: "VU", name: t("Scanner", "Escáner"), src: "vuln", record: t("db-07 · weak password", "db-07 · clave débil") },
+		finding: t("db-07 has privileged accounts outside the vault, one with a guessable password.", "db-07 tiene cuentas privilegiadas fuera del vault, una con clave adivinable."),
 		out: es ? ["Alcance", "Cuentas", "Claves débiles"] : ["Reach", "Accounts", "Weak passwords"],
-		q: t("Which privileged accounts sit on servers the vault never saw, with guessable passwords?", "¿Qué cuentas privilegiadas viven en servidores que el vault no vio, con claves adivinables?") },
-	{ step: t("Vulns", "Vulns"), a: "CNAPP", b: t("Scanner", "Escáner"),
+		q: t("The scanner widens PAM's reach; a password scan from PAM finds the accounts, the scanner flags the weak ones.", "El escáner amplía el alcance del PAM; un password scan desde PAM encuentra las cuentas y el escáner marca las débiles.") },
+	{ step: "Vulns", verdict: "gap",
+		a: { seal: "CN", name: "CNAPP", src: "dspm", record: t("web-02 · internet-facing", "web-02 · expuesto a internet") },
+		b: { seal: "VU", name: t("Scanner", "Escáner"), src: "vuln", record: "web-02 · CVE-2021-41773" },
+		finding: t("web-02 is exposed and vulnerable: fix it first.", "web-02 está expuesto y es vulnerable: va primero."),
 		out: es ? ["Contexto cloud", "Evidencia en host", "Prioridad"] : ["Cloud context", "Host evidence", "Priority"],
-		q: t("Which finding is exposed in the cloud and confirmed on the host?", "¿Qué hallazgo está expuesto en la nube y confirmado en el host?") },
-	{ step: t("Data", "Datos"), a: "DSPM", b: "DLP",
+		q: t("Cloud context and host evidence on the same finding turn a long list into a priority.", "Contexto cloud y evidencia del host sobre el mismo hallazgo convierten una lista larga en una prioridad.") },
+	{ step: t("Data", "Datos"), verdict: "gap",
+		a: { seal: "DS", name: "DSPM", src: "dspm", record: t("finance/ · card numbers", "finanzas/ · tarjetas") },
+		b: { seal: "DL", name: "DLP", src: "sse", record: t("payroll.xlsx · leaving", "nomina.xlsx · saliendo") },
+		finding: t("Sensitive data found at rest is the same data leaving in motion.", "El dato sensible que está en reposo es el mismo que sale en movimiento."),
 		out: es ? ["En reposo", "En movimiento", "Fuga"] : ["At rest", "In motion", "Leak"],
-		q: t("Is the sensitive data found at rest the same data leaving in motion?", "¿El dato sensible que está en reposo es el mismo que sale en movimiento?") },
-	{ step: "Web", a: "Cloud", b: "WAF · SSE",
+		q: t("DSPM knows where sensitive data lives; DLP sees where it goes. Together they show a leak.", "El DSPM sabe dónde vive el dato sensible; el DLP ve a dónde va. Juntos muestran una fuga.") },
+	{ step: "Web", verdict: "partial",
+		a: { seal: "CL", name: "Cloud", src: "fw", record: t("api.acme · public", "api.acme · público") },
+		b: { seal: "WA", name: "WAF · SSE", src: "sse", record: t("api.acme · 1.2k probes/day", "api.acme · 1,2k sondeos/día") },
+		finding: t("A public API probed every day, with its owner and exposure in one view.", "Una API pública sondeada todos los días, con su dueño y exposición en una vista."),
 		out: es ? ["Exposición", "Navegación", "Patrones"] : ["Exposure", "Browsing", "Patterns"],
-		q: t("What is exposed on the edge, and how do people browse toward it?", "¿Qué está expuesto en el borde, y cómo navega la gente hacia ahí?") },
-	{ step: t("Identity", "Identidad"), a: "IAM", b: t("Every tool", "Cada herramienta"),
+		q: t("Cloud inventory with edge and browsing data shows what is exposed and how people move around it.", "El inventario cloud con datos del borde y la navegación muestra qué está expuesto y cómo se mueve la gente alrededor.") },
+	{ step: t("Identity", "Identidad"), verdict: "gap",
+		a: { seal: "ID", name: "IAM", src: "pam", record: t("carol · offboarded", "carol · dada de baja") },
+		b: { seal: "∗", name: t("Every tool", "Cada herramienta"), src: "all", record: t("carol · active in PAM, SSE", "carol · activa en PAM, SSE") },
+		finding: t("Carol left in May; two tools still let her in.", "Carol se fue en mayo; dos herramientas todavía la dejan entrar."),
 		out: es ? ["Quién", "A qué", "Visión 360"] : ["Who", "To what", "360 view"],
-		q: t("Who in the company has access to what, across every tool?", "¿Quién de la empresa tiene acceso a qué, en todas las herramientas?") },
+		q: t("Identity across every tool answers who in the company has access to what: the 360 view.", "La identidad cruzada con cada herramienta responde quién de la empresa tiene acceso a qué: la visión 360.") },
 ];
 
 const scenes = {
 	switchboard: {
-		title: t("A page asks who you are", "Una página pregunta quién sos"),
+		title: t("Every app behind a passkey and a policy", "Cada app detrás de una passkey y una política"),
+		duration: 5200,
 		steps: es ? ["Identidad", "Acceso", "Bloqueo"] : ["Identity", "Access", "Blocked"],
 		details: es ? [
-			"La app está detrás de Switchboard. Antes de mostrar nada, pide identidad.",
-			"Ana usa su passkey. Pertenece al grupo que exige la ruta: la app se abre.",
-			"Leo usa su passkey, pero no tiene el grupo. Queda bloqueado y la app nunca recibe la petición.",
+			"La app está detrás de Switchboard. Sin sesión, lo primero que aparece es el inicio de sesión.",
+			"Ana usa su passkey y pertenece al grupo que exige la ruta: la app se abre por el túnel hacia casa.",
+			"Leo también tiene passkey, pero no el grupo. Identidad verificada no es acceso: queda bloqueado y la app nunca recibe la petición.",
 		] : [
-			"The app sits behind Switchboard. Before showing anything, it asks for identity.",
-			"Ana uses her passkey. She belongs to the group the route requires: the app opens.",
-			"Leo uses his passkey but lacks the group. He is blocked, and the app never sees the request.",
+			"The app sits behind Switchboard. Without a session, the first thing you see is the sign-in.",
+			"Ana uses her passkey and belongs to the group the route requires: the app opens through the tunnel home.",
+			"Leo has a passkey too, but not the group. A verified identity is not access: he is blocked and the app never sees the request.",
 		],
 	},
 	custodia: {
 		title: t("A bridge between your tools", "Un puente entre tus herramientas"),
+		duration: 5600,
 		steps: planes.map(p => p.step),
 		details: planes.map(p => p.q),
 	},
 	sigea: {
 		title: t("Only what a probe confirms is reported", "Solo se reporta lo que un probe confirma"),
-		steps: es ? ["Puerto", "CPE", "Probe"] : ["Port", "CPE", "Probe"],
+		duration: 6000,
+		steps: es ? ["Descubrir", "Correlacionar", "Verificar"] : ["Discover", "Correlate", "Verify"],
 		details: es ? [
-			"El scan encuentra un puerto abierto y el servicio que responde.",
-			"La API de NVD traduce el servicio a un CPE, y ese CPE trae vulnerabilidades candidatas.",
-			"Un probe valida cada candidata contra el servicio real. Las que no se reproducen se descartan: menos falsos positivos.",
+			"El agente encuentra un puerto abierto y un detector lee el banner: Apache HTTP Server 2.4.49.",
+			"La API de NVD traduce el producto a su CPE, y ese CPE trae vulnerabilidades candidatas.",
+			"Un probe valida cada candidata contra el servicio real: finding, no_finding o inconclusive. Solo se reporta lo confirmado, y así bajan los falsos positivos.",
 		] : [
-			"The scan finds an open port and the service behind it.",
-			"The NVD API maps the service to a CPE, and that CPE brings candidate vulnerabilities.",
-			"A probe checks each candidate against the real service. What does not reproduce is dropped: fewer false positives.",
+			"The agent finds an open port and a detector reads the banner: Apache HTTP Server 2.4.49.",
+			"The NVD API maps the product to its CPE, and that CPE brings candidate vulnerabilities.",
+			"A probe checks each candidate against the real service: finding, no_finding or inconclusive. Only what is confirmed is reported, so false positives drop.",
 		],
 	},
 };
 const scene = scenes[kind];
 ---
 
-<!-- One idea per scene, told by motion: each step replaces the previous one
-     in the same space instead of adding more boxes. -->
-<figure class="project-scene" data-scene data-kind={kind} data-frame="0"
+<!-- Each scene wears its product's own identity and tells one idea through
+     motion. Without JavaScript or with reduced motion, every step is a
+     complete, still picture. -->
+<figure class="project-scene" data-scene data-kind={kind} data-frame="0" data-duration={scene.duration} style={`--duration: ${scene.duration}`}
 	data-details={JSON.stringify(scene.details)} data-pause={common.pause} data-play={common.play}>
 	<div class="scene-topline">
 		<p>{scene.title}</p>
 		<button class="scene-toggle" type="button" aria-pressed="false" hidden>{common.pause}</button>
 	</div>
-
 	<div class="stage">
-		{kind === "switchboard" && <div class="sb-window">
-			<div class="sb-bar" aria-hidden="true"><i></i><i></i><i></i><span>grafana.home.example</span></div>
-			<div class="sb-body">
-				<div class="pane" data-only="0">
-					<svg class="sb-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
-					<strong>{t("Identity required", "Identidad requerida")}</strong>
-					<span class="sb-button">{t("Sign in with a passkey", "Entrar con passkey")}</span>
-				</div>
-				<div class="pane" data-only="1">
-					<div class="sb-pass ok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></div>
-					<strong>Ana · passkey</strong>
-					<span class="sb-tag ok">group:admins ✓</span>
-					<div class="sb-app" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-				</div>
-				<div class="pane" data-only="2">
-					<div class="sb-pass no"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" /></svg></div>
-					<strong>Leo · passkey</strong>
-					<span class="sb-tag no">{t("Blocked · requires group:admins", "Bloqueado · requiere group:admins")}</span>
-				</div>
-			</div>
-		</div>}
-
-		{kind === "custodia" && planes.map((plane, i) => <div class="pane cu-pane" data-only={String(i)}>
-			<div class="cu-bridge">
-				<span class="cu-tool">{plane.a}</span>
-				<svg class="cu-arc" viewBox="0 0 300 90" preserveAspectRatio="none" aria-hidden="true"><path d="M 4 86 C 70 4, 230 4, 296 86" /></svg>
-				<span class="cu-tool">{plane.b}</span>
-				<span class="cu-plane">{plane.step}</span>
-			</div>
-			<ul class="cu-out">{plane.out.map(o => <li>{o}</li>)}</ul>
-		</div>)}
-
-		{kind === "sigea" && <div class="sg">
-			<ol class="sg-track">
-				{(es ? ["Puerto", "CPE", "Probe", "Vuln"] : ["Port", "CPE", "Probe", "Vuln"]).map((n, i) => <li data-i={i}>{n}</li>)}
-			</ol>
-			<div class="sg-detail">
-				<div class="pane" data-only="0"><code class="sg-big">192.0.2.10:443</code><span class="node-detail">open · Apache httpd 2.4.49</span></div>
-				<div class="pane" data-only="1"><code class="sg-cpe">cpe:2.3:a:apache:http_server:2.4.49</code>
-					<div class="sg-cands" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(() => <i></i>)}</div>
-					<span class="node-detail">{t("NVD API · 6 candidates", "API de NVD · 6 candidatas")}</span></div>
-				<div class="pane" data-only="2">
-					<div class="sg-cands sg-checked" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map(i => <i class:list={{ hit: i === 2 }}></i>)}</div>
-					<code class="sg-big sg-hit">CVE-2021-41773</code>
-					<span class="node-detail">{t("1 confirmed by a probe · 5 dropped", "1 confirmada por un probe · 5 descartadas")}</span></div>
-			</div>
-		</div>}
+		{kind === "switchboard" && <SwitchboardScene locale={locale} />}
+		{kind === "custodia" && <CustodiaScene locale={locale} planes={planes} />}
+		{kind === "sigea" && <SigeaScene locale={locale} />}
 	</div>
-
 	<div class="scene-controls" role="group" aria-label={common.stages} style={`--steps: ${scene.steps.length}`} hidden>
-		{scene.steps.map((step, i) => <button type="button" aria-pressed={i === 0 ? "true" : "false"} data-frame-select={i}><span aria-hidden="true">{i + 1}</span>{step}</button>)}
+		{scene.steps.map((step, i) => <button type="button" aria-pressed={i === 0 ? "true" : "false"} data-frame-select={i}><span class="bar" aria-hidden="true"></span><span class="num" aria-hidden="true">{i + 1}</span>{step}</button>)}
 	</div>
 	<figcaption>
 		<p class="scene-description">{scene.details[0]}</p>
@@ -152,7 +131,7 @@ const scene = scenes[kind];
 			clearTimeout(timer);
 			const running = !paused && visible && !motion.matches && !document.hidden;
 			scene.classList.toggle("is-playing", running);
-			if (running) timer = window.setTimeout(() => show((frame + 1) % buttons.length), 4600);
+			if (running) timer = window.setTimeout(() => show((frame + 1) % buttons.length), Number(scene.dataset.duration));
 		};
 		const show = (index: number) => {
 			frame = index;
@@ -197,101 +176,52 @@ const scene = scenes[kind];
 </script>
 
 <style>
-	.project-scene { --ok: oklch(0.82 0.07 155); --no: oklch(0.78 0.11 25); min-width: 0; margin: 0; padding: 1.4rem; border: 1px solid var(--border); border-radius: 0.9rem; background: var(--bg); }
+	.project-scene {
+		--ease-out: cubic-bezier(.2, .7, .2, 1);
+		--scene-accent: var(--accent);
+		position: relative; min-width: 0; margin: 0; padding: 1.4rem; border: 1px solid var(--border); border-radius: 1rem; overflow: hidden;
+		background: radial-gradient(120% 80% at 50% 0%, color-mix(in oklch, var(--scene-accent) 7%, transparent), transparent 60%), radial-gradient(oklch(1 0 0 / 0.045) 1px, transparent 1px) 0 0 / 18px 18px, oklch(0.135 0.006 260);
+	}
+	[data-kind="switchboard"] { --scene-accent: oklch(0.83 0.13 75); }
+	[data-kind="custodia"] { --scene-accent: oklch(0.91 0.19 124); }
+	[data-kind="sigea"] { --scene-accent: oklch(0.68 0.21 350); }
 	.scene-topline { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.75rem; }
 	.scene-topline p { font-size: 0.9rem; font-weight: 600; color: var(--fg-soft); }
-	.scene-toggle { flex-shrink: 0; min-height: 2.75rem; padding: 0.4rem 0.7rem; border: 1px solid var(--border); border-radius: 0.4rem; background: transparent; color: var(--fg-soft); font: 0.72rem var(--font-mono); cursor: pointer; }
-	.scene-toggle:hover { border-color: var(--accent); color: var(--fg); }
-	.node-detail { font: 0.72rem/1.5 var(--font-mono); color: var(--fg-muted); overflow-wrap: anywhere; }
+	.scene-toggle { flex-shrink: 0; min-height: 2.75rem; padding: 0.4rem 0.8rem; border: 1px solid var(--border); border-radius: 999px; background: oklch(0.15 0.006 260 / 0.8); color: var(--fg-soft); font: 0.7rem var(--font-mono); cursor: pointer; }
+	.scene-toggle:hover { border-color: var(--scene-accent); color: var(--fg); }
 
-	/* One fixed stage; panes replace each other in place. */
-	.stage { display: grid; place-items: center; min-height: 19rem; margin: 1rem 0; }
-	[data-frame="0"] [data-only]:not([data-only="0"]), [data-frame="1"] [data-only]:not([data-only="1"]), [data-frame="2"] [data-only]:not([data-only="2"]),
-	[data-frame="3"] [data-only]:not([data-only="3"]), [data-frame="4"] [data-only]:not([data-only="4"]), [data-frame="5"] [data-only]:not([data-only="5"]) { display: none; }
-	.pane { display: grid; justify-items: center; gap: 0.8rem; text-align: center; animation: rise 0.55s both; }
+	/* One fixed stage; each step replaces the previous one in place. */
+	.stage { display: grid; place-items: center; min-height: 21rem; margin: 1.2rem 0; }
+	:global([data-frame="0"] [data-only]:not([data-only="0"])), :global([data-frame="1"] [data-only]:not([data-only="1"])),
+	:global([data-frame="2"] [data-only]:not([data-only="2"])), :global([data-frame="3"] [data-only]:not([data-only="3"])),
+	:global([data-frame="4"] [data-only]:not([data-only="4"])), :global([data-frame="5"] [data-only]:not([data-only="5"])) { display: none !important; }
 
-	/* Switchboard */
-	.sb-window { width: min(100%, 26rem); border: 1px solid var(--border); border-radius: 0.7rem; background: var(--bg-raised); overflow: hidden; }
-	.sb-bar { display: flex; align-items: center; gap: 0.35rem; padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); }
-	.sb-bar i { width: 0.45rem; height: 0.45rem; border-radius: 50%; background: var(--border); }
-	.sb-bar span { margin-left: 0.6rem; font: 0.66rem var(--font-mono); color: var(--fg-muted); }
-	.sb-body { display: grid; place-items: center; min-height: 14rem; padding: 1.4rem; }
-	.sb-body strong { font-size: 1.05rem; letter-spacing: -0.02em; }
-	.sb-icon, .sb-pass svg { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-	.sb-icon { width: 2.4rem; color: var(--accent); }
-	.sb-button { padding: 0.5rem 0.9rem; border-radius: 0.4rem; background: var(--accent); color: var(--bg); font-size: 0.78rem; font-weight: 600; animation: pulse 1.6s 0.6s ease-in-out infinite; }
-	.sb-pass { display: grid; place-items: center; width: 3.2rem; height: 3.2rem; border: 1.5px solid currentColor; border-radius: 50%; }
-	.sb-pass svg { width: 1.5rem; stroke-dasharray: 30; animation: draw 0.5s 0.35s both; }
-	.ok { color: var(--ok); } .no { color: var(--no); }
-	.sb-tag { font: 0.7rem var(--font-mono); animation: rise 0.4s 0.6s both; }
-	.sb-app { display: grid; grid-template-columns: repeat(5, 1fr); align-items: end; gap: 0.3rem; width: 9rem; height: 2.2rem; margin-top: 0.3rem; }
-	.sb-app i { height: 100%; border-radius: 2px; background: var(--accent-line); transform-origin: bottom; animation: grow 0.5s both; }
-	.sb-app i:nth-child(1) { animation-delay: 0.8s; height: 40%; } .sb-app i:nth-child(2) { animation-delay: 0.88s; height: 70%; }
-	.sb-app i:nth-child(3) { animation-delay: 0.96s; height: 55%; } .sb-app i:nth-child(4) { animation-delay: 1.04s; height: 90%; } .sb-app i:nth-child(5) { animation-delay: 1.12s; height: 65%; }
-
-	/* Custodia: the bridge is drawn, then the answers it enables appear. */
-	.cu-pane { width: min(100%, 32rem); gap: 1.6rem; }
-	.cu-bridge { position: relative; display: grid; grid-template-columns: 6.5rem minmax(0, 1fr) 6.5rem; align-items: end; width: 100%; }
-	.cu-tool { display: grid; place-items: center; height: 4.2rem; padding: 0.4rem; border: 1px solid var(--border); border-radius: 0.3rem; background: var(--bg-raised); font: 600 0.8rem/1.3 var(--font-mono); }
-	.cu-arc { width: 100%; height: 5.5rem; margin-bottom: 2rem; overflow: visible; }
-	.cu-arc path { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 420; vector-effect: non-scaling-stroke; animation: draw-arc 0.9s 0.25s both; }
-	.cu-plane { position: absolute; top: -0.4rem; left: 50%; translate: -50% 0; padding: 0.15rem 0.6rem; border: 1px solid var(--accent-line); border-radius: 999px; background: var(--bg); font: 0.66rem var(--font-mono); color: var(--accent); animation: rise 0.4s 0.9s both; }
-	.cu-out { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
-	.cu-out li { padding: 0.3rem 0.7rem; border-radius: 999px; background: var(--accent-dim); font: 0.74rem var(--font-mono); color: var(--fg-soft); animation: rise 0.4s both; }
-	.cu-out li:nth-child(1) { animation-delay: 1.1s; } .cu-out li:nth-child(2) { animation-delay: 1.25s; } .cu-out li:nth-child(3) { animation-delay: 1.4s; }
-
-	/* SIGEA: a funnel that narrows to what is confirmed. */
-	.sg { display: grid; gap: 2.2rem; width: min(100%, 30rem); }
-	.sg-track { display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; list-style: none; counter-reset: s; }
-	.sg-track li { position: relative; display: grid; justify-items: center; gap: 0.5rem; font: 0.7rem var(--font-mono); color: var(--fg-muted); transition: color 0.4s; }
-	.sg-track li::before { content: ""; width: 0.7rem; height: 0.7rem; border: 1.5px solid currentColor; border-radius: 50%; background: var(--bg); transition: background 0.4s; z-index: 1; }
-	.sg-track li + li::after { content: ""; position: absolute; top: 0.35rem; right: 50%; width: 100%; height: 1px; background: var(--border); }
-	[data-frame="0"] .sg-track [data-i="0"], [data-frame="1"] .sg-track [data-i="1"], [data-frame="2"] .sg-track [data-i="2"], [data-frame="2"] .sg-track [data-i="3"] { color: var(--accent); }
-	[data-frame="0"] .sg-track [data-i="0"]::before, [data-frame="1"] .sg-track li:nth-child(-n+2)::before, [data-frame="2"] .sg-track li::before { background: currentColor; }
-	[data-frame="1"] .sg-track li:first-child, [data-frame="2"] .sg-track li:nth-child(-n+2) { color: var(--fg-soft); }
-	[data-frame="2"] .sg-track [data-i="3"] { color: var(--ok); }
-	.sg-detail { display: grid; place-items: center; min-height: 9rem; }
-	.sg-big { font: 500 1.5rem var(--font-mono); letter-spacing: -0.02em; }
-	.sg-cpe { font: 0.8rem var(--font-mono); color: var(--fg-soft); overflow-wrap: anywhere; }
-	.sg-hit { color: var(--ok); animation: rise 0.4s 1s both; }
-	.sg-cands { display: flex; gap: 0.45rem; }
-	.sg-cands i { width: 1.4rem; height: 1.4rem; border: 1px solid var(--accent-line); border-radius: 0.25rem; background: var(--accent-dim); animation: rise 0.35s both; }
-	.sg-cands i:nth-child(2) { animation-delay: 0.08s; } .sg-cands i:nth-child(3) { animation-delay: 0.16s; } .sg-cands i:nth-child(4) { animation-delay: 0.24s; } .sg-cands i:nth-child(5) { animation-delay: 0.32s; } .sg-cands i:nth-child(6) { animation-delay: 0.4s; }
-	.sg-checked i { animation: drop 0.5s 0.4s both; }
-	.sg-checked i.hit { border-color: var(--ok); background: var(--ok); animation: none; }
-
+	/* Step controls double as a progress bar while playing. */
 	.scene-controls { display: grid; grid-template-columns: repeat(var(--steps), minmax(0, 1fr)); gap: 0.5rem; }
-	.scene-controls button { display: flex; align-items: center; gap: 0.5rem; min-width: 0; min-height: 2.75rem; padding: 0.45rem 0.5rem; border: 0; border-bottom: 2px solid var(--border); background: transparent; color: var(--fg-muted); font: 500 0.76rem var(--font-sans); text-align: left; cursor: pointer; transition: color 0.2s, border-color 0.2s; }
-	.scene-controls button > span { font: 0.66rem var(--font-mono); }
-	.scene-controls button[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+	.scene-controls button { position: relative; display: flex; align-items: center; gap: 0.5rem; min-width: 0; min-height: 2.75rem; padding: 0.55rem 0.4rem 0.45rem; border: 0; background: transparent; color: var(--fg-muted); font: 500 0.76rem var(--font-sans); text-align: left; cursor: pointer; transition: color 0.2s; }
+	.scene-controls .bar { position: absolute; left: 0; right: 0; top: 0; height: 2px; border-radius: 2px; background: var(--border); overflow: hidden; }
+	.scene-controls .bar::after { content: ""; position: absolute; inset: 0; background: var(--scene-accent); transform: scaleX(0); transform-origin: left; }
+	.scene-controls button[aria-pressed="true"] { color: var(--fg); }
+	.scene-controls button[aria-pressed="true"] .bar::after { transform: scaleX(1); }
+	.is-playing .scene-controls button[aria-pressed="true"] .bar::after { animation: progress calc(var(--duration) * 1ms) linear both; }
+	.scene-controls .num { font: 0.64rem var(--font-mono); color: var(--fg-muted); }
 	.scene-controls button:hover { color: var(--fg); }
-	.scene-description { min-height: 3.2em; margin-top: 0.9rem; font-size: 0.86rem; line-height: 1.55; color: var(--fg-soft); }
+	.scene-description { min-height: 3.2em; margin-top: 0.9rem; font-size: 0.86rem; line-height: 1.55; color: var(--fg-soft); text-wrap: pretty; }
 	.scene-example { display: block; margin-top: 0.7rem; font: 0.64rem var(--font-mono); color: var(--fg-muted); }
+	@keyframes progress { from { transform: scaleX(0); } }
 
-	@keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-	@keyframes draw { from { stroke-dashoffset: 30; } to { stroke-dashoffset: 0; } }
-	@keyframes draw-arc { from { stroke-dashoffset: 420; } to { stroke-dashoffset: 0; } }
-	@keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-	@keyframes pulse { 50% { box-shadow: 0 0 0 6px var(--accent-dim); } }
-	@keyframes drop { to { opacity: 0.18; transform: translateY(4px); } }
 	@media (max-width: 42rem) {
 		.project-scene { padding: 1rem; }
 		.scene-topline { align-items: start; }
 		.scene-toggle { max-width: 7.5rem; font-size: 0.65rem; }
-		.stage { min-height: 16rem; }
-		.cu-bridge { grid-template-columns: 4.8rem minmax(0, 1fr) 4.8rem; }
-		.cu-tool { font-size: 0.68rem; height: 3.6rem; }
-		.sg-big { font-size: 1.15rem; }
-		.scene-controls { grid-template-columns: repeat(min(var(--steps), 3), minmax(0, 1fr)); }
+		.stage { min-height: 18rem; }
+		.scene-controls { grid-template-columns: repeat(min(var(--steps), 3), minmax(0, 1fr)); row-gap: 0.2rem; }
 		.scene-controls button { gap: 0.35rem; font-size: 0.7rem; padding-inline: 0.2rem; }
 		.scene-description { min-height: 4.7em; }
 	}
-	@media (prefers-reduced-motion: reduce) {
-		*, *::before, *::after { transition: none !important; animation: none !important; }
-		.sg-checked i:not(.hit) { opacity: 0.18; }
-	}
+	@media (prefers-reduced-motion: reduce) { .scene-controls .bar::after { animation: none !important; } }
 	@media (max-width: 26rem) {
-		.scene-controls button > span { display: none; }
+		.scene-controls .num { display: none; }
 		.scene-topline { gap: 0.5rem; }
 		.scene-topline p { min-width: 0; overflow-wrap: anywhere; }
 	}

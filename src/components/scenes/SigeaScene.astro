@@ -1,0 +1,115 @@
+---
+// Port → CPE → probe, as the open check engine does it: a detector reads the
+// banner, NVD maps the product to candidates, probes return a state.
+// Example taken from agent/checks/examples/apache-httpd.
+import type { Locale } from "../../i18n/translations";
+
+interface Props { locale: Locale }
+const es = Astro.props.locale === "es";
+const t = (en: string, esText: string) => (es ? esText : en);
+const candidates = [
+	{ id: "CVE-2021-41773", state: "finding", note: t("confirmed by a probe", "confirmada por un probe") },
+	{ id: "CVE-2021-42013", state: "inconclusive", note: t("needs a known configuration", "requiere una configuración conocida") },
+	{ id: "CVE-2021-41524", state: "no_finding", note: t("HTTP/2 not enabled", "HTTP/2 no habilitado") },
+];
+const blips = [[30, 34], [68, 26], [74, 66], [38, 72], [55, 48]];
+---
+
+<div class="sg">
+	<div class="radar" aria-hidden="true">
+		<span class="rings"></span>
+		<span class="sweep"></span>
+		{blips.map(([x, y], i) => <i class="blip" style={`left: ${x}%; top: ${y}%; --k: ${i}`}></i>)}
+		<i class="blip target" style="left: 70%; top: 30%"></i>
+		<span class="core"></span>
+	</div>
+
+	<div class="panel">
+		<div class="body">
+			<div class="pane" data-only="0">
+				<code class="target-line">192.0.2.14<b>:443</b> <em>open</em></code>
+				<code class="banner">Server: Apache/2.4.49 (Unix)</code>
+				<span class="meta">sigea.apache-httpd.detect → <b>Apache HTTP Server 2.4.49</b></span>
+			</div>
+
+			<div class="pane" data-only="1">
+				<span class="meta">NVD API</span>
+				<code class="cpe">cpe:2.3:a:apache:http_server:2.4.49</code>
+				<ul class="cands">{candidates.map((c, i) => <li style={`--k: ${i}`}><code>{c.id}</code><span>{t("candidate", "candidata")}</span></li>)}</ul>
+			</div>
+
+			<div class="pane" data-only="2">
+				<ul class="cands checked">{candidates.map((c, i) => (
+					<li class={`s-${c.state}`} style={`--k: ${i}`}>
+						<code>{c.id}</code><span class="state">{c.state}</span><small>{c.note}</small><i class="scan"></i>
+					</li>
+				))}</ul>
+				<span class="meta result">{t("Reported: 1 finding, with its evidence", "Se reporta: 1 finding, con su evidencia")}</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.sg {
+		--violet: oklch(0.65 0.21 290); --pink: oklch(0.68 0.21 350); --orange: oklch(0.76 0.16 55);
+		--grad: linear-gradient(90deg, var(--violet), var(--pink), var(--orange));
+		display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); align-items: center; gap: 1.6rem; width: 100%;
+	}
+
+	/* Radar: the agent discovering what the network exposes. */
+	.radar { position: relative; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, oklch(0.2 0.03 290 / 0.6), transparent 70%); }
+	.rings { position: absolute; inset: 0; border-radius: 50%; background: repeating-radial-gradient(circle, transparent 0 calc(25% - 1px), oklch(0.4 0.05 290 / 0.35) calc(25% - 1px) 25%); -webkit-mask: radial-gradient(circle, #000 70.5%, transparent 71%); mask: radial-gradient(circle, #000 70.5%, transparent 71%); }
+	.rings::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px solid transparent; background: conic-gradient(var(--violet), var(--pink), var(--orange), var(--violet)) border-box; -webkit-mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0); mask: linear-gradient(#000 0 0) padding-box exclude, linear-gradient(#000 0 0); opacity: 0.8; }
+	.sweep { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0 75%, oklch(0.76 0.16 55 / 0.05) 85%, oklch(0.76 0.16 55 / 0.35) 100%); animation: spin 4s linear infinite; animation-play-state: paused; }
+	:global(.is-playing) .sweep { animation-play-state: running; }
+	.core { position: absolute; left: 50%; top: 50%; width: 0.7rem; height: 0.7rem; translate: -50% -50%; border-radius: 50%; background: var(--grad); box-shadow: 0 0 16px 2px oklch(0.65 0.21 290 / 0.6); }
+	.blip { position: absolute; width: 0.4rem; height: 0.4rem; translate: -50% -50%; border-radius: 50%; background: var(--violet); opacity: 0.7; }
+	.target { width: 0.6rem; height: 0.6rem; background: var(--pink); opacity: 1; box-shadow: 0 0 0 0 var(--pink); }
+	:global([data-frame="0"]) .target { animation: ping 1.4s 0.6s ease-out 2 both; }
+	:global([data-frame="0"]) .blip:not(.target) { animation: fade 0.5s calc(var(--k) * 0.15s) both; }
+
+	.panel { display: grid; gap: 1rem; min-width: 0; }
+
+	.body { display: grid; min-height: 13rem; align-items: center; }
+	.pane { display: grid; gap: 0.7rem; min-width: 0; animation: rise 0.5s var(--ease-out) both; }
+	.target-line { font: 500 1.35rem var(--font-mono); letter-spacing: -0.02em; }
+	.target-line b { color: var(--pink); font-weight: 500; }
+	.target-line em { margin-left: 0.4rem; padding: 0.1rem 0.45rem; border-radius: 0.3rem; background: oklch(0.68 0.21 350 / 0.15); color: var(--pink); font: 0.66rem var(--font-mono); font-style: normal; vertical-align: middle; }
+	.banner { justify-self: start; padding: 0.5rem 0.7rem; border-left: 2px solid var(--violet); background: var(--bg-raised); font: 0.74rem var(--font-mono); color: var(--fg-soft); animation: type 1s 0.6s steps(28) both; }
+	.meta { font: 0.66rem/1.5 var(--font-mono); color: var(--fg-muted); overflow-wrap: anywhere; }
+	.meta b { color: var(--fg-soft); font-weight: 500; }
+	.pane .meta:last-child:not(.result) { animation: rise 0.4s 1.7s var(--ease-out) both; }
+	.cpe { font: 0.76rem var(--font-mono); color: var(--orange); overflow-wrap: anywhere; animation: type 1.1s 0.2s steps(36) both; }
+
+	.cands { display: grid; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+	.cands li { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.15rem 0.7rem; padding: 0.5rem 0.7rem; border: 1px solid var(--border); border-radius: 0.4rem; background: var(--bg-raised); overflow: hidden; animation: slide 0.45s calc(1.3s + var(--k) * 0.18s) var(--ease-out) both; }
+	.cands code { font: 500 0.74rem var(--font-mono); }
+	.cands li > span { justify-self: end; font: 0.62rem var(--font-mono); color: var(--fg-muted); }
+	.checked li { animation: none; }
+	.checked small { grid-column: 1 / -1; font: 0.62rem var(--font-mono); color: var(--fg-muted); animation: fade 0.3s calc(0.9s + var(--k) * 0.45s) both; }
+	.state { padding: 0.05rem 0.45rem; border-radius: 999px; animation: pop 0.35s calc(0.9s + var(--k) * 0.45s) var(--ease-out) both; }
+	.scan { position: absolute; inset: 0; background: linear-gradient(90deg, transparent, oklch(0.65 0.21 290 / 0.28), transparent); transform: translateX(-100%); animation: scan 0.7s calc(0.25s + var(--k) * 0.45s) ease-in-out both; pointer-events: none; }
+	.s-finding { border-color: oklch(0.68 0.21 350 / 0.6) !important; background: linear-gradient(90deg, oklch(0.65 0.21 290 / 0.12), oklch(0.76 0.16 55 / 0.1)) !important; }
+	.s-finding .state { background: var(--grad); color: oklch(0.15 0.02 290) !important; font-weight: 700; }
+	.s-inconclusive .state { border: 1px dashed var(--fg-muted); color: var(--fg-soft) !important; }
+	.s-no_finding { opacity: 0.55; }
+	.s-no_finding .state { color: var(--fg-muted); }
+	.result { color: var(--fg-soft); animation: rise 0.4s 2.4s var(--ease-out) both; }
+
+	@keyframes spin { to { transform: rotate(1turn); } }
+	@keyframes ping { 0% { box-shadow: 0 0 0 0 oklch(0.68 0.21 350 / 0.7); } 100% { box-shadow: 0 0 0 14px oklch(0.68 0.21 350 / 0); } }
+	@keyframes rise { from { opacity: 0; transform: translateY(8px); } }
+	@keyframes slide { from { opacity: 0; transform: translateX(14px); } }
+	@keyframes fade { from { opacity: 0; } }
+	@keyframes pop { from { opacity: 0; transform: scale(0.8); } }
+	@keyframes scan { to { transform: translateX(100%); } }
+	@keyframes type { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+	@media (prefers-reduced-motion: reduce) { .sg *, .sg *::before { animation: none !important; transition: none !important; } .scan { display: none; } }
+	@media (max-width: 42rem) {
+		.sg { grid-template-columns: 1fr; gap: 1rem; }
+		.radar { width: 9rem; justify-self: center; }
+		.target-line { font-size: 1.05rem; }
+	}
+</style>
