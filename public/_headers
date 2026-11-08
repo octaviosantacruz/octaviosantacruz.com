@@ -1,5 +1,5 @@
-# Read by Cloudflare Pages and by Switchboard Pages (PAGES-003). They merge a
-# header set twice differently (Pages joins the values, Switchboard keeps the
+# Read by Cloudflare Pages and by Ozal Pages (PAGES-003). They merge a
+# header set twice differently (Pages joins the values, Ozal keeps the
 # last), so no header appears in two rules that can match the same path.
 
 /*

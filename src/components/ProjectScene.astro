@@ -1,10 +1,10 @@
 ---
 import type { Locale } from "../i18n/translations";
-import SwitchboardScene from "./scenes/SwitchboardScene.astro";
+import OzalScene from "./scenes/OzalScene.astro";
 import CustodiaScene, { type Plane } from "./scenes/CustodiaScene.astro";
 import SigeaScene from "./scenes/SigeaScene.astro";
 
-interface Props { kind: "switchboard" | "sigea" | "custodia"; locale: Locale }
+interface Props { kind: "ozal" | "sigea" | "custodia"; locale: Locale }
 const { kind, locale } = Astro.props;
 const es = locale === "es";
 const t = (en: string, esText: string) => (es ? esText : en);
@@ -55,18 +55,18 @@ const planes: Plane[] = [
 ];
 
 const scenes = {
-	switchboard: {
+	ozal: {
 		title: t("Access that understands context", "Un acceso que entiende el contexto"),
 		duration: 8000,
 		steps: es ? ["Identidad", "Contexto", "Just-in-time", "Explicado"] : ["Identity", "Context", "Just-in-time", "Explained"],
 		details: es ? [
-			"Hoy: la app está detrás de Switchboard. Ana se autentica con su passkey, la política la deja pasar y la app se abre por el túnel hacia casa.",
-			"Próximo: señales de contexto. Ana aparece en Madrid 12 minutos después de Asunción; en vez de dejarla pasar, Switchboard pide una passkey nueva y confirmación en el teléfono.",
+			"Hoy: la app está detrás de Ozal. Ana se autentica con su passkey, la política la deja pasar y la app se abre por el túnel hacia casa.",
+			"Próximo: señales de contexto. Ana aparece en Madrid 12 minutos después de Asunción; en vez de dejarla pasar, Ozal pide una passkey nueva y confirmación en el teléfono.",
 			"Próximo: nadie tiene acceso permanente. Leo pide entrar a db-prod, la aprobación llega al teléfono y el acceso vence solo, con la sesión grabada.",
 			"Próximo: cada decisión se explica en lenguaje claro y queda en un log de transparencia que se puede verificar: nada se reescribe en silencio.",
 		] : [
-			"Today: the app sits behind Switchboard. Ana authenticates with her passkey, the policy lets her in and the app opens through the tunnel home.",
-			"Next: context signals. Ana appears in Madrid 12 minutes after Asunción; instead of letting her through, Switchboard asks for a fresh passkey and confirmation on her phone.",
+			"Today: the app sits behind Ozal. Ana authenticates with her passkey, the policy lets her in and the app opens through the tunnel home.",
+			"Next: context signals. Ana appears in Madrid 12 minutes after Asunción; instead of letting her through, Ozal asks for a fresh passkey and confirmation on her phone.",
 			"Next: no one keeps standing access. Leo requests db-prod, the approval reaches a phone and access expires on its own, with the session recorded.",
 			"Next: every decision is explained in plain language and lands in a verifiable transparency log: nothing is rewritten silently.",
 		],
@@ -107,7 +107,7 @@ const scene = scenes[kind];
 		<button class="scene-toggle" type="button" aria-pressed="false" hidden>{common.pause}</button>
 	</div>
 	<div class="stage">
-		{kind === "switchboard" && <SwitchboardScene locale={locale} />}
+		{kind === "ozal" && <OzalScene locale={locale} />}
 		{kind === "custodia" && <CustodiaScene locale={locale} planes={planes} />}
 		{kind === "sigea" && <SigeaScene locale={locale} />}
 	</div>
@@ -187,7 +187,7 @@ const scene = scenes[kind];
 		position: relative; min-width: 0; margin: 0; padding: 1.4rem; border: 1px solid var(--border); border-radius: 1rem; overflow: hidden;
 		background: radial-gradient(120% 80% at 50% 0%, color-mix(in oklch, var(--scene-accent) 7%, transparent), transparent 60%), radial-gradient(oklch(1 0 0 / 0.045) 1px, transparent 1px) 0 0 / 18px 18px, oklch(0.135 0.006 260);
 	}
-	[data-kind="switchboard"] { --scene-accent: oklch(0.83 0.13 75); }
+	[data-kind="ozal"] { --scene-accent: oklch(0.83 0.13 75); }
 	[data-kind="custodia"] { --scene-accent: oklch(0.91 0.19 124); }
 	[data-kind="sigea"] { --scene-accent: oklch(0.7 0.16 290); }
 	.scene-topline { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.75rem; }

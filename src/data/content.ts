@@ -9,7 +9,7 @@ interface Fact {
 }
 
 interface Project {
-	key: "switchboard" | "sigea" | "custodia";
+	key: "ozal" | "sigea" | "custodia";
 	title: string;
 	stage: string;
 	status: "live" | "pilot" | "demo";
@@ -69,7 +69,7 @@ export const content: Record<Locale, Content> = {
 			now: [
 				{ label: "Based in", value: "Asunción, Paraguay · open to relocation and remote roles" },
 				{ label: "Now", value: "Security Operations Engineer at ITTI - Grupo Vazquez" },
-				{ label: "Building", value: "Switchboard, running my own public edge" },
+				{ label: "Building", value: "Ozal, running my own public edge" },
 			],
 		},
 		sections: {
@@ -148,16 +148,16 @@ export const content: Record<Locale, Content> = {
 		],
 		projects: [
 			{
-				key: "switchboard",
-				title: "Switchboard",
+				key: "ozal",
+				title: "Ozal",
 				stage: "Running on my own infrastructure",
 					status: "live",
-				href: "https://switchboard.octaviosantacruz.com/",
-				linkLabel: "Explore Switchboard",
+				href: "https://ozal.dev/",
+				linkLabel: "Explore Ozal",
 				subtitle: "Your apps. Your access rules.",
 				body: "A front door for self-hosted applications. Identify the person, check the policy and explain every access decision, from the public edge to a service at home.",
 				today: "Passkeys, route policies, static sites and an outbound homelab tunnel run on my own edge.",
-				next: "Let applications verify the identity from Switchboard, starting with Custodia.",
+				next: "Let applications verify the identity from Ozal, starting with Custodia.",
 				tags: [
 					"Go",
 					"Passkeys",
@@ -176,7 +176,7 @@ export const content: Record<Locale, Content> = {
 				subtitle: "A bridge between your security tools.",
 				body: "DLP with EDR, PAM with a scanner, DSPM with DLP, IAM with everything. Each bridge answers a question no single tool can, toward a 360° view of people, devices, servers and data.",
 				today: "An interactive Acme Corp demo with synthetic CyberArk and Netskope records. No live tool is connected.",
-				next: "More bridges, each with an explicit integration contract, verified access through Switchboard and a Go backend.",
+				next: "More bridges, each with an explicit integration contract, verified access through Ozal and a Go backend.",
 				tags: [
 					"React",
 					"TypeScript",
@@ -229,7 +229,7 @@ export const content: Record<Locale, Content> = {
 			now: [
 				{ label: "Desde", value: "Asunción, Paraguay · abierto a reubicación y roles remotos" },
 				{ label: "Hoy", value: "Security Operations Analyst en ITTI - Grupo Vazquez" },
-				{ label: "Construyendo", value: "Switchboard, funcionando en mi propio edge público" },
+				{ label: "Construyendo", value: "Ozal, funcionando en mi propio edge público" },
 			],
 		},
 		sections: {
@@ -308,16 +308,16 @@ export const content: Record<Locale, Content> = {
 		],
 		projects: [
 			{
-				key: "switchboard",
-				title: "Switchboard",
+				key: "ozal",
+				title: "Ozal",
 				stage: "En uso en mi infraestructura",
 					status: "live",
-				href: "https://switchboard.octaviosantacruz.com/",
-				linkLabel: "Explorar Switchboard",
+				href: "https://ozal.dev/",
+				linkLabel: "Explorar Ozal",
 				subtitle: "Tus aplicaciones. Tus reglas de acceso.",
 				body: "Una puerta de entrada para aplicaciones autohospedadas. Identificar a la persona, comprobar la política y explicar cada decisión, desde el borde público hasta un servicio en casa.",
 				today: "Passkeys, políticas por ruta, sitios estáticos y un túnel saliente al homelab funcionan en mi propio edge.",
-				next: "Que las aplicaciones verifiquen la identidad de Switchboard, empezando por Custodia.",
+				next: "Que las aplicaciones verifiquen la identidad de Ozal, empezando por Custodia.",
 				tags: [
 					"Go",
 					"Passkeys",
@@ -336,7 +336,7 @@ export const content: Record<Locale, Content> = {
 				subtitle: "Un puente entre tus herramientas de seguridad.",
 				body: "DLP con EDR, PAM con un escáner, DSPM con DLP, IAM con todo. Cada puente responde una pregunta que ninguna herramienta responde sola, hacia una visión 360 de personas, equipos, servidores y datos.",
 				today: "Demo interactiva de Acme Corp con registros sintéticos de CyberArk y Netskope. Sin herramientas reales conectadas.",
-				next: "Más puentes, cada uno con un contrato de integración explícito, acceso verificable por Switchboard y backend Go.",
+				next: "Más puentes, cada uno con un contrato de integración explícito, acceso verificable por Ozal y backend Go.",
 				tags: [
 					"React",
 					"TypeScript",

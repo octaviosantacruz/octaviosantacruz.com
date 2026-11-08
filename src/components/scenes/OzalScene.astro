@@ -1,5 +1,5 @@
 ---
-// Switchboard today and where it is going (VISION.md): passkey and policy
+// Ozal today and where it is going (VISION.md): passkey and policy
 // first, then context signals, just-in-time access with phone approval and
 // decisions explained in plain language. Steps after the first are roadmap.
 import type { Locale } from "../../i18n/translations";
@@ -21,7 +21,7 @@ const finger = [
 			<i></i><i></i><i></i>
 			<span class="url">
 				<svg viewBox="0 0 16 16"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5" /><path d="M5.5 7V5.2a2.5 2.5 0 0 1 5 0V7" /></svg>
-				<span data-only="0">grafana.example</span><span data-only="1">grafana.example</span><span data-only="2">ssh db-prod</span><span data-only="3">switchboard · {t("decisions", "decisiones")}</span>
+				<span data-only="0">grafana.example</span><span data-only="1">grafana.example</span><span data-only="2">ssh db-prod</span><span data-only="3">ozal · {t("decisions", "decisiones")}</span>
 			</span>
 			<span class="next" data-not="0">{t("Next", "Próximo")}</span>
 		</div>
@@ -37,7 +37,7 @@ const finger = [
 
 			<!-- 1 · Identity: sign in, passkey, policy allows, the app opens. -->
 			<div class="card signin" data-only="0">
-				<span class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path class="cord" d="M9 22 C 9 8, 23 24, 23 10" /><circle class="jack" cx="9" cy="23" r="3.6" /><circle class="jack" cx="23" cy="9" r="3.6" /><circle class="led" cx="23" cy="9" r="1.3" /></svg>switchboard<b>_</b></span>
+				<span class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path class="cord" d="M9 22 C 9 8, 23 24, 23 10" /><circle class="jack" cx="9" cy="23" r="3.6" /><circle class="jack" cx="23" cy="9" r="3.6" /><circle class="led" cx="23" cy="9" r="1.3" /></svg>ozal<b>_</b></span>
 				<strong>{t("Sign in", "Iniciar sesión")}</strong>
 				<p>{t("This app is protected. Authenticate with your passkey to continue.", "Esta app está protegida. Autenticate con tu passkey para continuar.")}</p>
 				<span class="btn">{t("Sign in with a passkey", "Entrar con passkey")}</span>
@@ -89,13 +89,13 @@ const finger = [
 
 	<div class="phone" data-only="1" aria-hidden="true">
 		<span class="app-icon">SB</span>
-		<strong>Switchboard</strong>
+		<strong>Ozal</strong>
 		<p>{t("Is this you signing in from Madrid?", "¿Sos vos entrando desde Madrid?")}</p>
 		<span class="actions"><b class="yes">{t("Yes, it’s me", "Sí, soy yo")}</b><b>No</b></span>
 	</div>
 	<div class="phone" data-only="2" aria-hidden="true">
 		<span class="app-icon">SB</span>
-		<strong>Switchboard</strong>
+		<strong>Ozal</strong>
 		<p>{t("Leo wants ssh db-prod for 1 hour.", "Leo pide ssh db-prod por 1 hora.")}</p>
 		<span class="actions"><b class="yes">✓ {t("Approve 1 h", "Aprobar 1 h")}</b><b>✕ {t("Deny", "Rechazar")}</b></span>
 	</div>
