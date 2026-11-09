@@ -191,14 +191,14 @@ export const content: Record<Locale, Content> = {
 					status: "pilot",
 				href: "https://sigea.octaviosantacruz.com/",
 				linkLabel: "Follow the SIGEA devlog",
-				subtitle: "An open scanner, built to rival OpenVAS.",
-				body: "Scan the ports, map each service to its CPE through the NVD API and let probes confirm every candidate before it becomes a finding. Fewer false positives, and evidence behind every vulnerability.",
-				today: "Agent, scans, inventory and change history work end to end in alpha. CPE matching and probes are in progress.",
-				next: "Confirm CVE candidates with open probes that the community can write and maintain.",
+				subtitle: "What is exposed on your network, and what changed.",
+				body: "Agents scan only what their own local policy allows. The server turns each scan into an inventory and a change history, and every finding links back to the observation that produced it. A few detections, each confirmed by a probe, instead of a long list of maybes.",
+				today: "Agent, scans, inventory and change history work end to end in alpha, with recovery tested under crashes. Probe-confirmed detections are in progress.",
+				next: "Installation by outside operators, then open probes the community can write and review.",
 				tags: [
 					"Go",
-					"NVD · CPE",
-					"Probes",
+					"Exposure",
+					"Change history",
 					"Evidence"
 				]
 			}
@@ -351,14 +351,14 @@ export const content: Record<Locale, Content> = {
 					status: "pilot",
 				href: "https://sigea.octaviosantacruz.com/",
 				linkLabel: "Seguir el devlog de SIGEA",
-				subtitle: "Un escáner abierto, pensado para competir con OpenVAS.",
-				body: "Escanear los puertos, traducir cada servicio a su CPE con la API de NVD y dejar que los probes confirmen cada candidata antes de que sea un hallazgo. Menos falsos positivos y evidencia detrás de cada vulnerabilidad.",
-				today: "Agente, scans, inventario e historial de cambios funcionan de punta a punta en alfa. La correlación CPE y los probes están en curso.",
-				next: "Confirmar candidatas CVE con probes abiertos que la comunidad pueda escribir y mantener.",
+				subtitle: "Qué está expuesto en tu red y qué cambió.",
+				body: "Los agentes escanean sólo lo que permite su propia política local. El servidor convierte cada escaneo en inventario e historial de cambios, y cada hallazgo apunta a la observación que lo produjo. Pocas detecciones, cada una confirmada por un probe, en lugar de una lista larga de posibles.",
+				today: "Agente, scans, inventario e historial de cambios funcionan de punta a punta en alfa, con recuperación probada ante caídas. Las detecciones confirmadas por probes están en curso.",
+				next: "Instalación por operadores externos y luego probes abiertos que la comunidad pueda escribir y revisar.",
 				tags: [
 					"Go",
-					"NVD · CPE",
-					"Probes",
+					"Exposición",
+					"Historial de cambios",
 					"Evidencia"
 				]
 			}
