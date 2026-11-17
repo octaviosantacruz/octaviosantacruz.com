@@ -8,8 +8,9 @@ export default defineConfig({
 	output: 'static',
 	integrations: [
 		sitemap({
-			// The 404 page is a response, not a destination.
-			filter: (page) => !page.endsWith('/404/'),
+			// The 404 page is a response, not a destination; the HTML sitemap
+			// is a human index and stays out of the XML.
+			filter: (page) => !page.endsWith('/404/') && !page.endsWith('/sitemap/'),
 			i18n: {
 				defaultLocale: 'en',
 				locales: { en: 'en', es: 'es' },

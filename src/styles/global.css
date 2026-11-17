@@ -93,8 +93,9 @@ p {
 	padding: 0 1.25rem;
 }
 
-/* A response, not a page: one readable column with a way back. */
-.not-found {
+/* Response and utility pages: one readable column with a way back. */
+.not-found,
+.sitemap-page {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -103,16 +104,31 @@ p {
 	padding-block: 4rem;
 }
 
-.not-found .wordmark {
+.not-found .wordmark,
+.sitemap-page .wordmark {
 	margin-bottom: 2rem;
 }
 
-.not-found h1 {
+.not-found h1,
+.sitemap-page h1 {
 	max-width: 18ch;
 	font-size: clamp(2.25rem, 1.2rem + 4.5vw, 4rem);
 	font-weight: 800;
 	line-height: 1.02;
 	letter-spacing: -0.035em;
+}
+
+.sitemap-list {
+	display: grid;
+	gap: 0.75rem;
+	margin: 1rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.sitemap-list a {
+	color: var(--accent);
+	text-underline-offset: 4px;
 }
 
 .skip-link {
@@ -928,6 +944,12 @@ h3 {
 	color: var(--fg-muted);
 	font-family: var(--font-mono);
 	font-size: 0.8rem;
+}
+
+.site-footer a {
+	color: var(--fg-soft);
+	text-decoration: underline;
+	text-underline-offset: 3px;
 }
 
 /* ── Screen sizes ─────────────────────────────────────────────────────── */
