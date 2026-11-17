@@ -10,8 +10,18 @@ Implemented: header, hero and the project showcase. The original
 [design review and proposal, 2026-10-21](docs/DESIGN-REVIEW-2026-10-21.md)
 is kept as history; the project section is documented in
 [docs/PROJECTS-2026-10-22.md](docs/PROJECTS-2026-10-22.md). Publishing is a
-separate, explicit step: the apex is served from the edge, so a push to
-`main` does not deploy it.
+separate, explicit step. The live apex is the Cloudflare Pages project
+`octaviosantacruz-com` (direct upload, custom domain `octaviosantacruz.com`), so
+a push to `main` does not deploy it. The `deploy.yml` workflow targets the Ozal
+edge (`deploy.octaviosantacruz.com`) and stays as the migration path while that
+edge is unreachable. To publish the current build:
+
+```sh
+npm run build
+npx wrangler pages deploy dist --project-name octaviosantacruz-com --branch main
+```
+
+with `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in the environment.
 
 ## Stack
 

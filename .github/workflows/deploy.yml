@@ -1,6 +1,12 @@
 name: deploy
 
-# Builds the site and publishes it to the Switchboard edge (Switchboard
+# Deployment to the Ozal edge (migration path). The live site is the Cloudflare
+# Pages project `octaviosantacruz-com` (direct upload, custom domain
+# octaviosantacruz.com), so a push to main does not publish it. This workflow
+# stays disabled until the edge is reachable and the DNS is ready for the
+# migration: set OCTAVIO_EDGE_DEPLOY_ENABLED=true then.
+#
+# It builds the site and publishes it to the Switchboard edge (Switchboard
 # PAGES-004/PAGES-008). The edge trusts only this file, in this repository, on
 # main, run by a push or by hand, through a GitHub OIDC token: no deploy
 # secret is stored here. Renaming this file or the branch stops deployments
@@ -26,6 +32,7 @@ env:
 
 jobs:
   deploy:
+    if: vars.OCTAVIO_EDGE_DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:

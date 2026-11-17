@@ -93,6 +93,28 @@ p {
 	padding: 0 1.25rem;
 }
 
+/* A response, not a page: one readable column with a way back. */
+.not-found {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	min-height: 100vh;
+	padding-block: 4rem;
+}
+
+.not-found .wordmark {
+	margin-bottom: 2rem;
+}
+
+.not-found h1 {
+	max-width: 18ch;
+	font-size: clamp(2.25rem, 1.2rem + 4.5vw, 4rem);
+	font-weight: 800;
+	line-height: 1.02;
+	letter-spacing: -0.035em;
+}
+
 .skip-link {
 	position: absolute;
 	top: -3rem;

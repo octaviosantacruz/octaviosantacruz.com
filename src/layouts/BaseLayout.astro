@@ -15,12 +15,14 @@ interface Props {
 	// Route without the language prefix, so the alternates of a subpage
 	// point at the same page in the other language.
 	path?: string;
+	// A response page (404) is not a destination and gets no canonical.
+	noindex?: boolean;
 }
 
 const locale = (Astro.currentLocale ?? "en") as Locale;
 const t = translations[locale];
 
-const { title = t.siteTitle, description = t.siteDescription, path = "/" } = Astro.props;
+const { title = t.siteTitle, description = t.siteDescription, path = "/", noindex = false } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL("og-image.png", Astro.site);
@@ -58,10 +60,11 @@ const personSchema = {
 		<meta name="title" content={title} />
 		<meta name="description" content={description} />
 		<meta name="author" content={SITE.author} />
-		<link rel="canonical" href={canonicalURL} />
-		<link rel="alternate" hreflang="es" href={esURL} />
-		<link rel="alternate" hreflang="en" href={enURL} />
-		<link rel="alternate" hreflang="x-default" href={enURL} />
+		{noindex && <meta name="robots" content="noindex" />}
+		{!noindex && <link rel="canonical" href={canonicalURL} />}
+		{!noindex && <link rel="alternate" hreflang="es" href={esURL} />}
+		{!noindex && <link rel="alternate" hreflang="en" href={enURL} />}
+		{!noindex && <link rel="alternate" hreflang="x-default" href={enURL} />}
 
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
